@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ortiz\\Downloads\\Cansado\\NeoRemiseria\\NeoRemiseria.csproj": {}
+    "C:\\Users\\Usuario\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\NeoRemiseria.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ortiz\\Downloads\\Cansado\\NeoRemiseria\\NeoRemiseria.csproj": {
+    "C:\\Users\\Usuario\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\NeoRemiseria.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ortiz\\Downloads\\Cansado\\NeoRemiseria\\NeoRemiseria.csproj",
+        "projectUniqueName": "C:\\Users\\Usuario\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\NeoRemiseria.csproj",
         "projectName": "NeoRemiseria",
-        "projectPath": "C:\\Users\\ortiz\\Downloads\\Cansado\\NeoRemiseria\\NeoRemiseria.csproj",
-        "packagesPath": "C:\\Users\\ortiz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ortiz\\Downloads\\Cansado\\NeoRemiseria\\obj\\",
+        "projectPath": "C:\\Users\\Usuario\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\NeoRemiseria.csproj",
+        "packagesPath": "C:\\Users\\Usuario\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Usuario\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\ortiz\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Usuario\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -79,7 +79,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

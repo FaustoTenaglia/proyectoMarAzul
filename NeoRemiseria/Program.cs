@@ -5,7 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-
+//Conexion a la base de datos
+// Revisar Conexion: var connectionString=builder.Configuration.GetConnectionString
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

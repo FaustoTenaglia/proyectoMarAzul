@@ -1,13 +1,14 @@
 using NeoRemiseria.Components;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-//Conexion a la base de datos
-// Revisar Conexion: var connectionString=builder.Configuration.GetConnectionString
+
 var app = builder.Build();
+//Conexion de la base de datos
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

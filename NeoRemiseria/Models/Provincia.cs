@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NeoRemiseria.Models;
 
-public partial class Provincium
+public partial class Provincia
 {
     public byte Id { get; set; }
 

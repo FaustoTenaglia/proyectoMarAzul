@@ -1,5 +1,6 @@
 using NeoRemiseria.Components;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFramewors;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

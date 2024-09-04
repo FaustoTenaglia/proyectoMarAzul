@@ -1,0 +1,211 @@
+@page "/marcas"
+@using NeoRemiseria
+@using Models
+@using Services
+
+@inject IMarca MarcaService
+@inject DbremiseriaContext DBRemiseria
+@inject IJSRuntime JSRuntime
+
+@rendermode InteractiveServer
+
+@using Microsoft.EntityFrameworkCore
+
+<div class="container-sm m-auto" style="max-width: 420px;">
+    <h3>Marcas</h3>
+    
+    <div class="container-fluid mx-auto my-3">
+        <div class="input-group">
+            @* <span class="input-group-text">@marcaNueva.Id</span> *@
+            <span class="input-group-text">Nombre</span>
+            <input type="text" class="form-control" placeholder="Ingrese una marca" @bind="marcaNueva.Nombre">
+            <button class="btn btn-outline-success" @onclick="() => {AgregarMarca();}">
+                <i class="bi bi-plus-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    @if(marcas != null){
+        <ul class="list-unstyled list-group">
+            @foreach(var marca in marcas){
+                <li class="list-group-item d-flex justify-content-between">
+                    <div class="input-group">
+                        <span class="input-group-text">@marca.Id</span>
+                        <input type="text" class="form-control" @bind=@marca.Nombre disabled="@(!marca.EditMode)">
+                    </div>
+                    <div class="btn-group btn-group-sm" role="group">
+                        @if(!marca.EditMode){
+                            <button type="button" class="btn btn-outline-primary" @onclick="() => {marca.cambiarEditMode();}">
+                                <i class="bi bi-pen-fill"></i>
+                            </button>
+                            <button class="btn btn-outline-danger" @onclick="() => ShowModalEliminar(marca)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            }
+                        else{
+                            <button type="button" class="btn btn-outline-success" @onclick="() => ShowModalConfirmar(marca)">
+                                <i class="bi bi-check"></i>
+                            </button>
+                            <button class="btn btn-outline-danger" @onclick="() => {marca.cambiarEditMode();}">
+                                <i class="bi bi-x"></i>
+                            </button>
+                            }
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@* Modals *@
+<div class="modal fade" id="ConfirmDelForm" data-bs-backdrop="static">
+    <div class="modal-dialog modal-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmacion</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">¿Desea eliminar la marca <strong>@marcaActual.Nombre</strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" type="button" data-bs-dismiss="modal" @onclick="() => EliminarMarca(marcaActual.Id)">Si</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ConfirmForm" data-bs-backdrop="static">
+    <div class="modal-dialog modal-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" @onclick="() => marcaActual.cambiarEditMode()"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">¿Desea guardar los cambios?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" type="button" data-bs-dismiss="modal" @onclick="() => ActualizarMarca(marcaActual)">Si</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal" @onclick="() => marcaActual.cambiarEditMode()">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // Definir clase para poder trabajar individualmente con cada objeto de la lista
+    public class ItemMarca{
+        public uint Id {get; set;}
+        public string Nombre {get; set;} = null!;
+        public bool EditMode {get; set;} = false;
+        public void cambiarEditMode(){
+            EditMode = !EditMode;
+        }
+        public Marca ToMarca(){
+            return new Marca{
+                Id = this.Id, 
+                Nombre = this.Nombre};
+        }
+    }
+
+    private List<Marca> recordMarcas = new List<Marca>();
+    private ItemMarca marcaActual = new ItemMarca();
+    public Marca marcaNueva = new Marca ();
+    public List<ItemMarca> marcas = new List<ItemMarca>();
+    
+    protected override async Task OnInitializedAsync(){
+        // Cargar los datos desde la tabla de la base de datos
+        // Generalmente se hace antes que se cargue el componente, por eso se encuentra en éste método
+        await CargarMarcas();
+    }
+
+    private async Task CargarMarcas(){
+        recordMarcas =  await MarcaService.GetMarcas();
+
+        // Ya se trajo los registros de la tabla, pasarlo a otra lista, para agregar un atributo
+        // que refleja si se puede editar o no 
+        if(recordMarcas != null){
+            marcas = recordMarcas.Select(m => new ItemMarca {
+                Id = m.Id,
+                Nombre = m.Nombre,
+                EditMode = false //El atributo en cuestión
+            }).ToList();
+        }
+
+        marcaNueva.Id = await ObtenerId();
+        marcaNueva.Nombre = "";
+    }
+
+    public async Task<uint> ObtenerId(){
+        var idMax = await DBRemiseria.Marcas.MaxAsync(m => (uint?) m.Id);
+        return (idMax+1) ?? 0;
+    }
+
+    public async void AgregarMarca(){
+        if (!string.IsNullOrWhiteSpace(marcaNueva.Nombre)){
+            await MarcaService.AddMarca(marcaNueva);
+
+            // Volver a cargar la lista de marcas
+            await CargarMarcas();
+
+            // Opcional: Forzar la actualizacion del estado del componente
+            StateHasChanged();
+        }
+    }
+
+    public async void ActualizarMarca(ItemMarca marca){
+        Marca _marca;
+
+        if (marca.EditMode & !string.IsNullOrWhiteSpace(marca.Nombre)){
+            _marca = await MarcaService.GetMarcaById(marca.Id);
+            if (marca.Nombre != _marca.Nombre){
+                _marca.Nombre = marca.Nombre;
+                await MarcaService.UpdateMarca(_marca);
+            }
+        }
+        
+        marca.cambiarEditMode();
+
+        StateHasChanged();
+    }
+
+    public async Task EliminarMarca(uint id){
+        await MarcaService.DeleteMarca(id);
+
+        // Volver a cargar la lista de marcas
+        await CargarMarcas();
+
+
+        // Forzar la actualizacion del estado del componente
+        StateHasChanged();
+    }
+
+    private async Task CloseModal(string modalId){
+        await JSRuntime.InvokeVoidAsync("closeBSModal",modalId);
+    }
+
+    private void ShowModalConfirmar(ItemMarca marca){
+        marcaActual = marca;
+
+        JSRuntime.InvokeVoidAsync("showBSModal","ConfirmForm");
+    }
+
+    private void ShowModalEliminar(ItemMarca marca){
+        // Guardar la marca actual
+        marcaActual = marca;
+
+        //Mostrar el modal
+        JSRuntime.InvokeVoidAsync("showBSModal","ConfirmDelForm");
+    }
+
+    @* protected override void OnInitialized(){
+        marcas = new List<Marca>{
+            new Marca {Id=1, Nombre="Ford"},
+            new Marca {Id=2, Nombre="Fiat"},
+            new Marca {Id=3, Nombre="Volkswagen"},
+            new Marca {Id=4, Nombre="Renault"}
+        };
+    } *@
+}

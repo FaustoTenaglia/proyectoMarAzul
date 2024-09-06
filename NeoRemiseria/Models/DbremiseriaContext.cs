@@ -42,7 +42,7 @@ public partial class DbremiseriaContext : DbContext
 
     public virtual DbSet<Persona> Personas { get; set; }
 
-    public virtual DbSet<Provincium> Provincia { get; set; }
+    public virtual DbSet<Provincia> Provincias { get; set; }
 
     public virtual DbSet<Servicio> Servicios { get; set; }
 
@@ -455,7 +455,7 @@ public partial class DbremiseriaContext : DbContext
                 .HasConstraintName("Persona_fk_Localidad");
         });
 
-        modelBuilder.Entity<Provincium>(entity =>
+        modelBuilder.Entity<Provincia>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 

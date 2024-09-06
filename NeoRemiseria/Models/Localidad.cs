@@ -11,7 +11,7 @@ public partial class Localidad
 
     public byte? IdProvincia { get; set; }
 
-    public virtual Provincium? IdProvinciaNavigation { get; set; }
+    public virtual Provincia? IdProvinciaNavigation { get; set; }
 
     public virtual ICollection<Persona> Personas { get; set; } = new List<Persona>();
 }

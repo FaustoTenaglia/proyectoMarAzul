@@ -21,8 +21,12 @@ namespace NeoRemiseria.Services{
 
         public async Task<Marca> GetMarcaById(uint id){
             // Dado un id, debe devolver la Marca
-            return await _context.Marcas.FindAsync(id);
+            return await _context.Marcas.FindAsync(id) ?? new Marca();
         }
+
+        // public async Task<List<Marca>> GetMarcasOrderBy<TKey>(Func<Marca, TKey>keySelector){
+        //     return await _context.Marcas.OrderBy(keySelector).ToListAsync();
+        // }
 
         public async Task AddMarca(Marca marca){
             _context.Marcas.Add(marca);

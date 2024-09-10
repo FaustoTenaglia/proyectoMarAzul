@@ -1,0 +1,243 @@
+@page "/modelo"
+@using NeoRemiseria
+@using Models
+@using Services
+
+@inject IMarca MarcaService
+@inject DbremiseriaContext _context
+@inject IJSRuntime JSRuntime
+@inject ITable<Modelo> ModeloService
+
+@rendermode InteractiveServer
+
+<div class="input-group mb-3">
+    <h5 class="m-3">Modelos</h5>
+    <button type="button" class="btn btn-outline-success m-2" 
+            data-bs-toggle="tooltip" data-bs-title="Agregar nuevo modelo" data-bs-placement="top"
+            @onclick="() => AgregarItem()">
+        <i class="bi bi-plus-lg"></i>
+    </button>
+</div>
+
+@if(modelos != null){
+    <table class="table table-hover">
+        <thead>
+            <tr class="table-dark">
+                <th>#</th>
+                <th>Nombre</th>
+                <th colspan="2">Marca</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var modelo in modelos){
+                <tr>
+                    <td>@modelo.Id</td>
+                    <td>@modelo.Nombre</td>
+                    <td>@modelo.IdMarcaNavigation?.Nombre</td>
+                    <td class="btn-group-sm">
+                        @* <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#EditForm"> *@
+                        <button class="btn btn-outline-primary" @onclick="() => EditarItem(modelo)">
+                            <i class="bi bi-pen-fill"></i>
+                        </button>
+                        <button class="btn btn-outline-danger" @onclick="() => ConfirmarEliminacion(modelo)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<!-- Modales BS -->
+<div class="modal fade" id="addForm" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header alert-success">
+                <h1 class="modal-title fs-5">Agregar</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group p-2">
+                    <span class="input-group-text">Nombre</span>
+                    <input type="text" class="form-control" @bind-value="@modeloActual.Nombre">
+                </div>
+                <div class="input-group p-2">
+                    <span class="input-group-text">Marca</span>
+                    <select class="form-select" @bind="@marcaSeleccionadaId">
+                        <option value="0">Seleccione una marca de la lista</option>
+                        @foreach(var marca in marcas){
+                            <option value="@marca.Id">@marca.Nombre</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button"class="btn btn-success" data-bs-dismiss="modal" @onclick="() => AgregarModeloNuevo(modeloActual)">Aceptar</button>
+                <button type="button"class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="EditForm" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header alert-primary">
+                <h1 class="modal-title fs-5">Editar</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group p-2">
+                    <span class="input-group-text">Nombre</span>
+                    <input type="text" class="form-control" @bind-value="@modeloActual.Nombre">
+                </div>
+                <div class="input-group p-2">
+                    <span class="input-group-text">Marca</span>
+                    <select class="form-select" @bind="@marcaSeleccionadaId">
+                        <option value="0">Seleccione una marca de la lista</option>
+                        @foreach(var marca in marcas){
+                            <option value="@marca.Id">@marca.Nombre</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button"class="btn btn-primary" data-bs-dismiss="modal" @onclick="() => ActualizarModelo(modeloActual)">Aceptar</button>
+                <button type="button"class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ConfirmDelForm" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header alert-danger">
+                <h5 class="modal-title">Confirmacion</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">¿Desea eliminar el modelo de vehículo <strong>@modeloActual.Nombre</strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" type="button" data-bs-dismiss="modal" @onclick="() => EliminarModelo(modeloActual.Id)">Si</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalInfo" data-bs-backdrop="static">
+    <div class="modal-dialog modal-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Ocurrió un error.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" type="button" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+    private List<Modelo> modelos = new List<Modelo>();
+    private List<Marca> marcas = new List<Marca>();
+    private Modelo modeloActual = new Modelo();
+    private uint marcaSeleccionadaId;
+    private string errorMensaje = "";
+    
+    // Metodos
+    protected override async Task OnInitializedAsync(){
+        // Obtener datos desde la base de datos
+        modelos = await ModeloService.GetAll();
+        marcas = await MarcaService.GetMarcas();
+    }
+
+    private async Task AgregarModeloNuevo(Modelo modeloNuevo){
+        // Guardar la marca seleccionada desde la lista
+        modeloNuevo.IdMarca = marcaSeleccionadaId;
+
+        // Guardar el registro nuevo en la base
+        await ModeloService.AddItem(modeloNuevo);
+
+        // Actualizar formulario
+        await Refrescar();
+    }
+    private async Task ActualizarModelo(Modelo modeloActual){
+        try{
+            modeloActual.IdMarca = marcaSeleccionadaId; // Guardar la marca seleccionada
+            await ModeloService.UpdateItem(modeloActual); // Reflejar los cambios en la base de datos
+
+            // Actualizar formulario
+            await Refrescar();
+        }
+        catch (Exception e){
+            errorMensaje = e.Message; // Captura el mensaje
+        }
+    }
+
+    private async Task EliminarModelo(uint id){
+        // Eliminar registro, según e id pasado por parametro
+        await ModeloService.DeleteItem(id);
+        
+        // Actualizar formulario
+        await Refrescar();
+    }
+
+    private async Task Refrescar(){
+        // Actualizar lista de los modelos
+        modelos = await ModeloService.GetAll();
+
+        // Forzar la actualizacion del componente
+        StateHasChanged();
+    }
+
+    private void AgregarItem(){
+
+        modeloActual = new Modelo();
+
+        // Guardar datos del modelo actual
+        modeloActual.Id = 0; // En 0 que es un registro nuevo
+        marcaSeleccionadaId = (uint) 0; 
+
+        // Llamar al modal para agregar registro nuevo
+        JSRuntime.InvokeVoidAsync("showBSModal","addForm");
+
+        if (string.IsNullOrEmpty(errorMensaje)){
+            JSRuntime.InvokeVoidAsync("showBSModel","ModalInfo");
+        }
+    }
+    private void EditarItem(Modelo modelo){
+
+        modeloActual = new Modelo();
+
+        // Guardar datos del modelo actual
+        modeloActual.Id = modelo.Id;
+        modeloActual.Nombre = modelo.Nombre;
+        modeloActual.IdMarca = modelo.IdMarca;
+
+        marcaSeleccionadaId = (uint) modeloActual.IdMarca;
+
+        // Llamar al modal para la edicion
+        JSRuntime.InvokeVoidAsync("showBSModal","EditForm");
+
+        if (string.IsNullOrEmpty(errorMensaje)){
+            JSRuntime.InvokeVoidAsync("showBSModel","ModalInfo");
+        }
+    }
+
+    private void ConfirmarEliminacion(Modelo modelo){
+        modeloActual = new Modelo();
+        
+        // Guardar los datos
+        modeloActual.Id = modelo.Id;
+        modeloActual.Nombre = modelo.Nombre;
+        modeloActual.IdMarca = modelo.IdMarca;
+
+        JSRuntime.InvokeVoidAsync("showBSModal","ConfirmDelForm");
+    }
+}

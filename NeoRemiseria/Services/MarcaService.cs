@@ -15,8 +15,13 @@ namespace NeoRemiseria.Services{
         }
 
         //Implementar los métodos de la interface
-        public async Task<List<Marca>> GetMarcas(){
-            return await _context.Marcas.ToListAsync();
+        public async Task<List<Marca>> GetMarcas(Func<Marca, bool>? predicado = null){
+            // return await _context.Marcas.ToListAsync();
+            IQueryable<Marca> query = _context.Marcas;
+            if (predicado != null){
+                query = (IQueryable<Marca>)query.Where(predicado);
+            }
+            return await query.ToListAsync();
         }
 
         public async Task<Marca> GetMarcaById(uint id){

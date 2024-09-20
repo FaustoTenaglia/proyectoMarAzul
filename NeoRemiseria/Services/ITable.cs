@@ -6,7 +6,7 @@ public interface ITable<T> where T: class
        Task AddItem(T entity);
 
        // Recuperar registros
-       Task<List<T>> GetAll(); // Todos los registrs	
+       Task<List<T>> GetAll(Func<T, bool>? predicado = null); // Todos los registros	
        Task<T> GetById(uint id); // Un registro en particular, dado el id
 
        // Actualizar un registro

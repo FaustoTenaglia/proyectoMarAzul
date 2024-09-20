@@ -28,7 +28,7 @@ public partial class DbremiseriaContext : DbContext
 
     public virtual DbSet<Gasto> Gastos { get; set; }
 
-    public virtual DbSet<Localidad> Localidads { get; set; }
+    public virtual DbSet<Localidad> Localidades { get; set; }
 
     public virtual DbSet<Marca> Marcas { get; set; }
 

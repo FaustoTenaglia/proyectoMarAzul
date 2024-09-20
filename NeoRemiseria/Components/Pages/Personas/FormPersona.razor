@@ -1,0 +1,86 @@
+@page "/persona-form"
+
+@using NeoRemiseria
+@using Models
+@using Services
+
+@rendermode InteractiveServer
+
+<EditForm Model="persona" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group w-50 mb-3">
+        <label for="dni">DNI:</label>
+        <InputText id="dni" @bind-Value="persona.Dni" class="form-control" required />
+        <ValidationMessage For="@(() => persona.Dni)" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="apellido">Apellido:</label>
+        <InputText id="apellido" @bind-Value="persona.Apellido" class="form-control" required />
+        <ValidationMessage For="@(() => persona.Apellido)" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="nombre">Nombre:</label>
+        <InputText id="nombre" @bind-Value="persona.Nombre" class="form-control" required />
+        <ValidationMessage For="@(() => persona.Nombre)" />
+    </div>
+
+    <div class="row row-cols-1 row-cols-lg-2">
+        <div class="form-group mb-3">
+            <label for="sexo">Sexo:</label>
+            <InputSelect id="sexo" @bind-Value="persona.Sexo" class="form-control">
+                <option value="">Seleccione...</option>
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
+            </InputSelect>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="nacimiento">Fecha de Nacimiento:</label>
+            <InputDate id="nacimiento" @bind-Value="persona.Nacimiento" class="form-control" />
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-lg-2 mb-5">
+        <div class="form-group col-md-6">
+            <label for="calle">Calle:</label>
+            <InputText id="calle" @bind-Value="persona.Calle" class="form-control" />
+        </div>
+
+        <div class="form-group col-md-2">
+            <label for="numero">Número:</label>
+            @* <InputNumber id="numero" @bind-Value="persona.Numero" class="form-control" /> *@
+            <input type="text" id="numero" @bind:format="persona.Numero" class="form-control">
+        </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="my-3 text-right">
+        <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
+        <button type="button" class="btn btn-warning" @onclick="ClearForm">Limpiar</button>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </div>
+</EditForm>
+
+@code {
+    private Persona persona = new Persona();
+
+    private void HandleValidSubmit()
+    {
+        // Lógica para manejar el envío del formulario
+        // Aquí puedes guardar los datos en la base de datos
+    }
+
+    private void Cancel()
+    {
+        // Lógica para cerrar el formulario o navegar a otra página
+    }
+
+    private void ClearForm()
+    {
+        persona = new Persona(); // Reinicia el formulario
+    }
+}

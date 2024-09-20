@@ -16,12 +16,19 @@ public class ModeloService: ITable<Modelo>{
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<Modelo>> GetAll(){
+    public async Task<List<Modelo>> GetAll(Func<Modelo, bool>? predicado=null){
         // Devuelve todos los registros de la tabla
         // Contiene ademas el nombre de la marca a la cual pertenece el modelo
         // return await _context.Modelos.ToListAsync();
-        return await _context.Modelos
-            .Include(m => m.IdMarcaNavigation) // Incluye el nombre de la marca en el resultado
+        // return await _context.Modelos
+        //     .Include(m => m.IdMarcaNavigation) // Incluye el nombre de la marca en el resultado
+        //     .ToListAsync();
+        IQueryable<Modelo> query = _context.Modelos;
+        if (predicado != null){
+            query = (IQueryable<Modelo>)query.Where(predicado);
+        }
+        return await query
+            .Include(m => m.IdMarcaNavigation)
             .ToListAsync();
     }
 

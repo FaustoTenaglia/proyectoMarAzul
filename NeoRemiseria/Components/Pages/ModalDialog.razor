@@ -1,0 +1,43 @@
+@inject IJSRuntime JSRuntime;
+
+@code{
+    [Parameter]
+    public string Mensaje {get; set;} = "Hola, Mundo!";
+    [Parameter]
+    public string Tipo {get; set;} = "";
+    [Parameter]
+    public string Titulo {get; set;} = "Información";
+    [Parameter]
+    public string Id {get; set;} = "modalDialog";
+     // Parametro para devolver que botón se presiono
+    [Parameter]
+    public EventCallback<int> OnResult {get; set;}
+
+    // Controlador para devolver el resultado
+    private async Task HandleResult(int result){
+        await OnResult.InvokeAsync(result);
+    }
+
+    private string TipoModal(){
+        return $"modal-header{Tipo}"; // Cambiar la clase del encabezado según el tipo
+    }
+}
+
+<!-- Marcado para el modal -->
+<div class="modal fade" id="@Id" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class=@TipoModal()>
+                <h5 class="modal-title">@Titulo</h5>
+                <button class="btn btn-close" Tipo="button" data-bs-dismiss="modal" @onclick="() => HandleResult(0)"></button>
+            </div>
+            <div class="modal-body">
+                <p>@Mensaje</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="() => HandleResult(1)">Aceptar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="() => HandleResult(0)">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>

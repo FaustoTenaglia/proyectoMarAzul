@@ -1,0 +1,24 @@
+@page "/localidades"
+
+@using NeoRemiseria
+@using Models
+@using Services
+
+@inject IJSRuntime JSRuntime
+@inject ITable<Localidad> LocalidadService
+
+<div class="container">
+    <ul class="list-group list-group-flush">
+        @foreach(var localidad in localidades){
+            <li class="list-group-item">@localidad.Nombre</li>
+        }
+    </ul>
+</div>
+
+@code{
+    private List<Localidad> localidades = new List<Localidad>();
+
+    protected override async Task OnInitializedAsync(){
+        localidades = await LocalidadService.GetAll();
+    }
+}

@@ -4,10 +4,102 @@
 @using Models
 @using Services
 
+@inject ITable<Modelo> ModeloService
 @inject ITable<Persona> PersonaService
+@inject ITable<Movil> MovilService
 @inject IJSRuntime JSRuntime
 
-<div class="container">
-    <div class="row row-cols-lg-2 row-cols-1"></div>
-    <div class="row row-cols-lg-2 row-cols-1"></div>
-</div>
+@rendermode InteractiveServer
+
+<style>
+    ol{
+        counter-reset: var(item);
+    }
+    .list-group.item::before{
+        counter-increment: item;
+        content: counter(item) ". ";
+    }
+</style>
+@if(personas != null){
+    <h3>Listado de Dueños de los móviles</h3>
+
+    @foreach(var persona in personas){
+        <div class="row row-cols-lg-2">
+            <div class="col-md-6 mb-3 mb-sm-0">
+                <div class="card border-primary">
+                    <div class="card-header text-primary">
+                     @($"DNI: {persona.Dni}")  
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"> @($"Titular: {persona.Apellido} {persona.Nombre}")</h5>
+                        <p class="card-text mb-1">@($"Domicilio: {persona.Calle} N°{persona.Numero}")</p>
+                        <p class="card-text">@($"Localidad: {persona.IdLocalidadNavigation.Nombre}")</p>
+                    </div>
+                    <div class="card-footer border-primary">
+                        Teléfonos: 
+                    </div>
+                </div>
+            </div>
+            <div class="col-mb-6 mb-3 mb-sm-0">
+                <ol class="list-group list-group-numbered">
+                @foreach(var movil in moviles.Where(m => m.IdTitular == persona.Id)){
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold">@($"Movil N°{movil.Id} patente: {movil.Patente}")</div>
+                                @MarcaModelo(movil.IdModelo ?? 0)
+                            </div>
+                            <span class="badge text-bg-primary rounded-pill">@movil.Id</span>
+                        </li>
+                }
+                </ol>
+            </div>
+        </div>
+    }
+}
+else{
+    Console.WriteLine("No se encontró el dni ingresado");
+}
+
+@code{
+    private string dni = "";
+    private List<Persona> personas = new List<Persona>();
+    private List<Movil> moviles = new List<Movil>();
+    private List<Modelo> modelos = new List<Modelo>();
+    private Persona persona = new Persona();
+
+    protected override async Task OnInitializedAsync(){
+        // Cargar los moviles que tienen registrado su titular
+        moviles = await MovilService.GetAll(m => m.IdTitular != null);
+        
+        // Cargar informacion sobre los modelos de moviles
+        modelos = await ModeloService.GetAll();
+
+        // Cargar solo los datos de las personas que estan registradas como dueño de moviles
+        var personasId = moviles.Select(m => m.IdTitular)
+                            .Distinct()
+                            .ToList();
+        personas = await PersonaService.GetAll(p => personasId.Contains(p.Id));
+    }
+
+    private string MarcaModelo (uint IdModelo){
+        // Buscar el modelo de acuerdo al id pasado por parámetro
+        var modelo = modelos.FirstOrDefault(mo => mo.Id == IdModelo);
+
+        // Devolver en una cadena de texto la marca y el nombre del modelo
+        // desconocido si no se encontro el modelo
+        return modelo != null ? $"{modelo.IdMarcaNavigation.Nombre} {modelo.Nombre}" : "desconocido";
+    }
+
+    public async Task BuscarPersona(){
+        if(!string.IsNullOrWhiteSpace(dni)){
+            @* personas = await PersonaService.GetAll(p => p.Dni == dni); *@
+            personas = await PersonaService.GetAll(p => p.Dni.Contains(dni));
+            if(personas != null){
+                persona = personas[0];
+            }
+            else{
+                Console.WriteLine("No existe el dni ingresado.");
+            }
+        }
+    }
+}

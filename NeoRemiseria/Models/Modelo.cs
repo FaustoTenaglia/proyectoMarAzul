@@ -13,5 +13,5 @@ public partial class Modelo
 
     public virtual Marca? IdMarcaNavigation { get; set; }
 
-    public virtual ICollection<Movil> Movils { get; set; } = new List<Movil>();
+    public virtual ICollection<Movil> Moviles { get; set; } = new List<Movil>();
 }

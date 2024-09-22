@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NeoRemiseria.Models;
 
@@ -17,7 +18,8 @@ public partial class Persona
 
     public DateOnly? Nacimiento { get; set; }
 
-    public uint? Edad { get; set; }
+    // [NotMapped]
+    // public uint? Edad { get; set; }
 
     public string? Calle { get; set; }
 
@@ -25,9 +27,9 @@ public partial class Persona
 
     public uint? IdLocalidad { get; set; }
 
-    public virtual ICollection<Chofer> Chofers { get; set; } = new List<Chofer>();
+    public virtual ICollection<Chofer> Choferes { get; set; } = new List<Chofer>();
 
     public virtual Localidad? IdLocalidadNavigation { get; set; }
 
-    public virtual ICollection<Movil> Movils { get; set; } = new List<Movil>();
+    public virtual ICollection<Movil> Moviles { get; set; } = new List<Movil>();
 }

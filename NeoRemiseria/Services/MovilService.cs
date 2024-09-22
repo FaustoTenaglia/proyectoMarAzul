@@ -1,6 +1,7 @@
 using NeoRemiseria.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq.Expressions;
 
 namespace NeoRemiseria.Services
 {
@@ -13,15 +14,15 @@ namespace NeoRemiseria.Services
 
         // Implementar métodos de la interface de la que deriva
         public async Task AddItem(Movil entity){
-            _context.Movils.Add(entity);
+            _context.Moviles.Add(entity);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Movil>> GetAll(Func<Movil, bool>? predicado=null){
+        public async Task<List<Movil>> GetAll(Expression<Func<Movil, bool>>? predicado=null){
             // Devuelve todos los registros de la tabla si predicado es null
-            IQueryable<Movil> query = _context.Movils;
+            IQueryable<Movil> query = _context.Moviles;
             if (predicado != null){
-                query = (IQueryable<Movil>) query.Where(predicado);
+                query = query.Where(predicado);
             }
             return await query
                 .Include(m => m.IdModeloNavigation)
@@ -32,18 +33,18 @@ namespace NeoRemiseria.Services
         public async Task<Movil> GetById(uint id){
             // Busca un registro, de acuerdo al id dado
             // Si no lo encunentra, devuelve un registro vacio
-            return await _context.Movils.FindAsync(id) ?? new Movil();
+            return await _context.Moviles.FindAsync(id) ?? new Movil();
         }
 
         public async Task UpdateItem(Movil entity){
             try{
-                Movil entidadExistente = _context.Movils.Find(entity.Id);
+                Movil entidadExistente = _context.Moviles.Find(entity.Id);
                 if (entidadExistente != null){
                     _context.Entry(entidadExistente).State = EntityState.Detached;
                 }
                 
                 // Establecer que la entidad fue modificada
-                _context.Movils.Attach(entity);
+                _context.Moviles.Attach(entity);
                 _context.Entry(entity).State = EntityState.Modified;
 
                 // Guardar cambios
@@ -64,12 +65,12 @@ namespace NeoRemiseria.Services
         }
 
         public async Task<bool> DeleteItem(uint id){
-            var movil = await _context.Movils.FindAsync(id);
+            var movil = await _context.Moviles.FindAsync(id);
             if (movil == null){
                 return false;
             }
 
-            _context.Movils.Remove(movil);
+            _context.Moviles.Remove(movil);
             await _context.SaveChangesAsync();
             return true;
         }

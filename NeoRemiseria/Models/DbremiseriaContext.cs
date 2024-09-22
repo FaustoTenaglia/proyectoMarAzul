@@ -20,9 +20,9 @@ public partial class DbremiseriaContext : DbContext
 
     public virtual DbSet<Caja> Cajas { get; set; }
 
-    public virtual DbSet<Cartel> Cartels { get; set; }
+    public virtual DbSet<Cartel> Carteles { get; set; }
 
-    public virtual DbSet<Chofer> Chofers { get; set; }
+    public virtual DbSet<Chofer> Choferes { get; set; }
 
     public virtual DbSet<Cobro> Cobros { get; set; }
 
@@ -34,7 +34,7 @@ public partial class DbremiseriaContext : DbContext
 
     public virtual DbSet<Modelo> Modelos { get; set; }
 
-    public virtual DbSet<Movil> Movils { get; set; }
+    public virtual DbSet<Movil> Moviles { get; set; }
 
     public virtual DbSet<Movimiento> Movimientos { get; set; }
 
@@ -48,7 +48,7 @@ public partial class DbremiseriaContext : DbContext
 
     public virtual DbSet<VModelo> VModelos { get; set; }
 
-    public virtual DbSet<VMovil> VMovils { get; set; }
+    public virtual DbSet<VMovil> VMoviles { get; set; }
 
     public virtual DbSet<VPersona> VPersonas { get; set; }
 
@@ -123,7 +123,7 @@ public partial class DbremiseriaContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("observacion");
 
-            entity.HasOne(d => d.NumeroMovilNavigation).WithMany(p => p.Cartels)
+            entity.HasOne(d => d.NumeroMovilNavigation).WithMany(p => p.Carteles)
                 .HasForeignKey(d => d.NumeroMovil)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Cartel_fk_Movil");
@@ -156,12 +156,12 @@ public partial class DbremiseriaContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("observacion");
 
-            entity.HasOne(d => d.IdPersonaNavigation).WithMany(p => p.Chofers)
+            entity.HasOne(d => d.IdPersonaNavigation).WithMany(p => p.Choferes)
                 .HasForeignKey(d => d.IdPersona)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Chofer_fk_Persona");
 
-            entity.HasOne(d => d.NumeroMovilNavigation).WithMany(p => p.Chofers)
+            entity.HasOne(d => d.NumeroMovilNavigation).WithMany(p => p.Choferes)
                 .HasForeignKey(d => d.NumeroMovil)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Chofer_fk_Movil");
@@ -258,7 +258,7 @@ public partial class DbremiseriaContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("nombre");
 
-            entity.HasOne(d => d.IdProvinciaNavigation).WithMany(p => p.Localidads)
+            entity.HasOne(d => d.IdProvinciaNavigation).WithMany(p => p.Localidades)
                 .HasForeignKey(d => d.IdProvincia)
                 .HasConstraintName("Localidad_fk_Provincia");
         });
@@ -336,11 +336,11 @@ public partial class DbremiseriaContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("patente");
 
-            entity.HasOne(d => d.IdModeloNavigation).WithMany(p => p.Movils)
+            entity.HasOne(d => d.IdModeloNavigation).WithMany(p => p.Moviles)
                 .HasForeignKey(d => d.IdModelo)
                 .HasConstraintName("Movil_fk_Modelo");
 
-            entity.HasOne(d => d.IdTitularNavigation).WithMany(p => p.Movils)
+            entity.HasOne(d => d.IdTitularNavigation).WithMany(p => p.Moviles)
                 .HasForeignKey(d => d.IdTitular)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("Movil_fk_Persona");
@@ -430,9 +430,9 @@ public partial class DbremiseriaContext : DbContext
                 .HasMaxLength(8)
                 .IsFixedLength()
                 .HasColumnName("dni");
-            entity.Property(e => e.Edad)
-                .HasColumnType("int(10) unsigned")
-                .HasColumnName("edad");
+            // entity.Property(e => e.Edad)
+            //     .HasColumnType("int(10) unsigned")
+            //     .HasColumnName("edad");
             entity.Property(e => e.IdLocalidad)
                 .HasColumnType("int(10) unsigned")
                 .HasColumnName("id_localidad");

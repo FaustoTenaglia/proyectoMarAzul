@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NeoRemiseria.Models;
+using System.Linq.Expressions;
 
 namespace NeoRemiseria.Services;
 public class LocalidadService: ITable<Localidad>{
@@ -14,10 +15,10 @@ public class LocalidadService: ITable<Localidad>{
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<Localidad>> GetAll(Func<Localidad, bool>? predicado = null){
+    public async Task<List<Localidad>> GetAll(Expression<Func<Localidad, bool>>? predicado = null){
         IQueryable<Localidad> query = _context.Localidades;
         if (predicado != null){
-            query = (IQueryable<Localidad>)query.Where(predicado);
+            query = query.Where(predicado);
         }
         return await query.ToListAsync();
     }

@@ -17,9 +17,9 @@ public partial class Movil
 
     public uint? IdTitular { get; set; }
 
-    public virtual ICollection<Cartel> Cartels { get; set; } = new List<Cartel>();
+    public virtual ICollection<Cartel> Carteles { get; set; } = new List<Cartel>();
 
-    public virtual ICollection<Chofer> Chofers { get; set; } = new List<Chofer>();
+    public virtual ICollection<Chofer> Choferes { get; set; } = new List<Chofer>();
 
     public virtual ICollection<Cobro> Cobros { get; set; } = new List<Cobro>();
 

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Query;
 using NeoRemiseria.Models;
 using MySql.Data.MySqlClient;
+using System.Linq.Expressions;
 
 namespace NeoRemiseria.Services;
 public class ModeloService: ITable<Modelo>{
@@ -16,7 +17,7 @@ public class ModeloService: ITable<Modelo>{
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<Modelo>> GetAll(Func<Modelo, bool>? predicado=null){
+    public async Task<List<Modelo>> GetAll(Expression<Func<Modelo, bool>>? predicado=null){
         // Devuelve todos los registros de la tabla
         // Contiene ademas el nombre de la marca a la cual pertenece el modelo
         // return await _context.Modelos.ToListAsync();
@@ -25,7 +26,7 @@ public class ModeloService: ITable<Modelo>{
         //     .ToListAsync();
         IQueryable<Modelo> query = _context.Modelos;
         if (predicado != null){
-            query = (IQueryable<Modelo>)query.Where(predicado);
+            query = query.Where(predicado);
         }
         return await query
             .Include(m => m.IdMarcaNavigation)

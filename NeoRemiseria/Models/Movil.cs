@@ -15,6 +15,7 @@ public partial class Movil
 
     public uint? IdCartel { get; set; }
 
+    public DateOnly? Vencimiento_seguro { get; set;}
     public uint? IdTitular { get; set; }
 
     public virtual ICollection<Cartel> Carteles { get; set; } = new List<Cartel>();

@@ -17,6 +17,8 @@ public partial class Chofer
 
     public string? Estado { get; set; }
 
+    public DateOnly? Vencimiento_Carnet { get; set;}
+
     public virtual Persona IdPersonaNavigation { get; set; } = null!;
 
     public virtual Movil NumeroMovilNavigation { get; set; } = null!;

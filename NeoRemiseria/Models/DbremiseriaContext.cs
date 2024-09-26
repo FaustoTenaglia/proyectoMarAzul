@@ -46,6 +46,8 @@ public partial class DbremiseriaContext : DbContext
 
     public virtual DbSet<Servicio> Servicios { get; set; }
 
+    public virtual DbSet<Telefono> Telefonos {get; set;}
+
     public virtual DbSet<VModelo> VModelos { get; set; }
 
     public virtual DbSet<VMovil> VMoviles { get; set; }
@@ -443,7 +445,7 @@ public partial class DbremiseriaContext : DbContext
                 .HasColumnName("nombre");
             entity.Property(e => e.Numero)
                 .HasDefaultValueSql("'0'")
-                .HasColumnType("int(10) unsigned")
+                .HasColumnType("int(10)")
                 .HasColumnName("numero");
             entity.Property(e => e.Sexo)
                 .HasDefaultValueSql("'1'")
@@ -488,6 +490,17 @@ public partial class DbremiseriaContext : DbContext
                 .HasDefaultValueSql("'0'")
                 .HasColumnType("tinyint(4)")
                 .HasColumnName("tipo");
+        });
+
+        modelBuilder.Entity<Telefono>(entity =>{
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+            entity.ToTable("telefono");
+            
+            entity.Property(e => e.IdPersona)
+                .HasColumnName("id_persona");
+                
+            entity.HasOne(d => d.IdPersonaNavigation).WithMany(t => t.Telefonos)
+                .HasForeignKey(d => d.IdPersona);
         });
 
         modelBuilder.Entity<VModelo>(entity =>

@@ -23,7 +23,7 @@ public partial class Persona
 
     public string? Calle { get; set; }
 
-    public uint? Numero { get; set; }
+    public int? Numero { get; set; }
 
     public uint? IdLocalidad { get; set; }
 
@@ -32,4 +32,6 @@ public partial class Persona
     public virtual Localidad? IdLocalidadNavigation { get; set; }
 
     public virtual ICollection<Movil> Moviles { get; set; } = new List<Movil>();
+
+    public virtual ICollection<Telefono> Telefonos {get; set;} = new List<Telefono>();
 }

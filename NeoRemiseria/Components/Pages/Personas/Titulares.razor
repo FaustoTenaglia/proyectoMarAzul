@@ -11,19 +11,10 @@
 
 @rendermode InteractiveServer
 
-<style>
-    ol{
-        counter-reset: var(item);
-    }
-    .list-group.item::before{
-        counter-increment: item;
-        content: counter(item) ". ";
-    }
-</style>
 @if(personas != null){
     <h3>Listado de Dueños de los móviles</h3>
 
-    @foreach(var persona in personas){
+    @foreach(var persona in personas.OrderBy(p => p.Apellido).ThenBy(p => p.Nombre)){
         <div class="row row-cols-lg-2">
             <div class="col-md-6 mb-3 mb-sm-0">
                 <div class="card border-primary">

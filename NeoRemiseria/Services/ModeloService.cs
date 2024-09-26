@@ -12,9 +12,11 @@ public class ModeloService: ITable<Modelo>{
         _context = contexto;
     }
     // Implementar métodos de la interface de la que deriva
-    public async Task AddItem(Modelo entity){
+    public async Task<Modelo> AddItem(Modelo entity){
         _context.Modelos.Add(entity);
         await _context.SaveChangesAsync();
+
+        return entity;
     }
 
     public async Task<List<Modelo>> GetAll(Expression<Func<Modelo, bool>>? predicado=null){
@@ -35,11 +37,11 @@ public class ModeloService: ITable<Modelo>{
 
     public async Task<Modelo> GetById(uint id){
         // Busca un registro, de acuerdo al id dado
-        // Si no lo encunentra, devuelve un registro vacio
-        return await _context.Modelos.FindAsync(id) ?? new Modelo();
+        // Si no lo encunentra, devuelve null
+        return await _context.Modelos.FindAsync(id);
     }
 
-    public async Task UpdateItem(Modelo entity){
+    public async Task<Modelo> UpdateItem(Modelo entity){
         try{
             // _context.Modelos.Update(entity);
             // _context.Update<Modelo>(entity);
@@ -61,6 +63,8 @@ public class ModeloService: ITable<Modelo>{
 
             // Guardar cambios
             await _context.SaveChangesAsync();
+
+            return entity;
         }
         catch (DbUpdateConcurrencyException e){
             // Este error ocurre cuando se intenta actualizar un registro que ha sido modificado por otro usuario

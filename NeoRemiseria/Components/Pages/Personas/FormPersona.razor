@@ -1,8 +1,13 @@
-@page "/persona-form"
+@page "/persona-form/{id:int?}"
 
 @using NeoRemiseria
 @using Models
 @using Services
+
+@inject NavigationManager NavigationManager
+@inject ITable<Persona> PersonaService
+@inject ITable<Localidad> LocalidadService
+@inject ITable<Telefono> TelefonoService
 
 @rendermode InteractiveServer
 
@@ -10,9 +15,9 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="form-group w-50 mb-3">
+    <div class="form-group mb-3">
         <label for="dni">DNI:</label>
-        <InputText id="dni" @bind-Value="persona.Dni" class="form-control" required />
+        <InputText id="dni" @bind-Value="persona.Dni" class="form-control" style="width: 12em;" required />
         <ValidationMessage For="@(() => persona.Dni)" />
     </div>
 
@@ -28,59 +33,143 @@
         <ValidationMessage For="@(() => persona.Nombre)" />
     </div>
 
-    <div class="row row-cols-1 row-cols-lg-2">
-        <div class="form-group mb-3">
+    <div class="row">
+        <div class="form-group mb-3 col-sm-6">
             <label for="sexo">Sexo:</label>
-            <InputSelect id="sexo" @bind-Value="persona.Sexo" class="form-control">
-                <option value="">Seleccione...</option>
-                <option value="M">Masculino</option>
-                <option value="F">Femenino</option>
+            <InputSelect id="sexo" @bind-Value="persona.Sexo" class="form-control" style="width: 8em;">
+                <option value="-1">Seleccione...</option>
+                <option value="1">Masculino</option>
+                <option value="0">Femenino</option>
             </InputSelect>
         </div>
 
-        <div class="form-group mb-3">
+        <div class="form-group mb-3 col-sm-6">
             <label for="nacimiento">Fecha de Nacimiento:</label>
-            <InputDate id="nacimiento" @bind-Value="persona.Nacimiento" class="form-control" />
+            <InputDate id="nacimiento" @bind-Value="persona.Nacimiento" class="form-control" style="width: 10em"/>
         </div>
     </div>
 
-    <div class="row row-cols-1 row-cols-lg-2 mb-5">
+    <div class="row row-cols-1 row-cols-lg-2 mb-3">
         <div class="form-group col-md-6">
             <label for="calle">Calle:</label>
             <InputText id="calle" @bind-Value="persona.Calle" class="form-control" />
         </div>
 
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-2 mb-2">
             <label for="numero">Número:</label>
-            @* <InputNumber id="numero" @bind-Value="persona.Numero" class="form-control" /> *@
-            <input type="text" id="numero" @bind:format="persona.Numero" class="form-control">
+            <InputNumber id="numero" @bind-Value=@persona.Numero class="form-control sin-spinner" style="width: 8em;" />
+            @* <input type="text" id="numero" @bind:format="persona.Numero" class="form-control" style="width: 8em;" /> *@
         </div>
-    </div>
 
-    <!-- Botones -->
-    <div class="my-3 text-right">
-        <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
-        <button type="button" class="btn btn-warning" @onclick="ClearForm">Limpiar</button>
-        <button type="submit" class="btn btn-primary">Enviar</button>
-    </div>
+        <div class="form-group">
+            <label for="localidad">Localidad</label>
+            <InputSelect id="localidad" class="form-select" @bind-Value=@persona.IdLocalidad >
+                <option value="0">Seleccione o ingrese una localidad</option>
+                @foreach(var localidad in localidades.OrderBy(l => l.Nombre)){
+                    <option value=@localidad.Id>@($"{localidad.Nombre} - {localidad.IdProvinciaNavigation.Nombre}")</option>
+                }
+            </InputSelect>
+        </div>
+   </div>
+
+    <button type="button" class="btn btn-link mb-1" @onclick="AgregarTelefono">
+        Agregar <i class="bi bi-telephone-plus-fill"></i>
+    </button>
+    <ul class="list-group mb-3">
+        @if (telefonos != null){
+            @foreach(var telefono in telefonos){
+                <li class="list-group-item d-flex" style="width: fit-content;">
+                    <InputText class="form-control me-2" @bind-Value=@telefono.Numero style="width: 16em;"/>
+                    <button class="btn btn-outline-danger" type="button" @onclick="()=>{telefonos.Remove(telefono);}">
+                        <i class="bi bi-telephone-minus-fill"></i>
+                    </button>
+                </li>
+            }
+        }
+    </ul>
+
+<!-- Botones -->
+<div class="btn-group" role="group">
+    <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
+    <button type="button" class="btn btn-primary" @onclick="ClearForm">Limpiar</button>
+    <button type="submit" class="btn btn-success">Enviar</button>
+</div>
 </EditForm>
 
 @code {
-    private Persona persona = new Persona();
+    // Parámetro de ruta opcional
+    [Parameter] public int? Id {get; set;}
 
-    private void HandleValidSubmit()
+    private Persona persona = new Persona();
+    private List<Telefono> telefonos = new List<Telefono>();
+    private List<Localidad> localidades = new List<Localidad>();
+
+    protected override async Task OnInitializedAsync(){
+        localidades = await LocalidadService.GetAll();
+
+        // Comprobar si se pasó un id
+        if (Id.HasValue && Id.Value > 0){
+            persona = await PersonaService.GetById((uint)Id.Value);
+            telefonos = await TelefonoService.GetAll(t => t.IdPersona == Id);
+        }
+    }
+
+    private async Task HandleValidSubmit()
     {
         // Lógica para manejar el envío del formulario
-        // Aquí puedes guardar los datos en la base de datos
+        if (Id.Value == 0){// Insertar una persona nueva...
+            // Guardar datos en persona
+            await PersonaService.AddItem(persona);
+
+            // Extraer el id de la persona nueva
+            // var idPersona = persona.Id;
+
+            // Cargar el id nuevo en la lista de telefonos
+            foreach(var telefono in telefonos){
+                // Copiar el id
+                telefono.IdPersona = persona.Id; //idPersona;
+
+                // Insertar en la tabla Telefono
+                await TelefonoService.AddItem(telefono);
+            }
+        }
+        else{// Actualizar valores...
+            // Actualizar en Persona
+            await PersonaService.UpdateItem(persona);
+
+            // TODO: Actualizar cambios en Telefono
+            // Nota: Puede ser que se modifiquen numeros de telefono (telefono.Id != 0)
+            // o se agreguen nuevos numeros de telefonos (telefono.Id = 0)
+            // o se eliminen números de telefono (mandar a una lista los id que no se encuentren en Telefonos)
+        }
+
+        // Redirigir a la vista index
+        NavigationManager.NavigateTo("/personas", true);
     }
 
     private void Cancel()
     {
         // Lógica para cerrar el formulario o navegar a otra página
+        // Redirigir a la página index sin guardar
+        // El segundo parametro configurado como 'forceLoad' en tru
+        // refresca la página y evita que se guarde la ruta anterior
+        NavigationManager.NavigateTo("/personas", true);
     }
 
     private void ClearForm()
     {
         persona = new Persona(); // Reinicia el formulario
+        telefonos = new List<Telefono>();
+        this.Id = 0;
+    }
+
+    private void AgregarTelefono(){
+        // Agrega un nuevo elemento a la lista
+        telefonos.Add(new Telefono{
+            Id = 0,
+            Numero = "",
+            Estado = 'A',
+            IdPersona = persona.Id
+        });
     }
 }

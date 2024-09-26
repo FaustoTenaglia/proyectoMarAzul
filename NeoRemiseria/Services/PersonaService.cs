@@ -10,9 +10,11 @@ public class PersonaService: ITable<Persona>{
         _context = contexto;
     }
     // Implementar métodos de la interface de la que deriva
-    public async Task AddItem(Persona entity){
+    public async Task<Persona> AddItem(Persona entity){
         _context.Personas.Add(entity);
         await _context.SaveChangesAsync();
+
+        return entity;
     }
 
     public async Task<List<Persona>> GetAll(Expression<Func<Persona, bool>>? predicado = null){
@@ -26,10 +28,10 @@ public class PersonaService: ITable<Persona>{
     }
 
     public async Task<Persona> GetById(uint id){
-        return await _context.Personas.FindAsync(id) ?? new Persona();
+        return await _context.Personas.FindAsync(id);
     }
 
-    public async Task UpdateItem(Persona entity){
+    public async Task<Persona> UpdateItem(Persona entity){
         try{
             // Descartar entidades existentes
             var entidadExistente = _context.Personas.Find(entity.Id);
@@ -50,6 +52,8 @@ public class PersonaService: ITable<Persona>{
         catch(Exception e){
             Console.WriteLine("Error al actualizar: " + e.Message);
         }
+        
+        return entity;
     }
 
     public async Task<bool> DeleteItem(uint id){

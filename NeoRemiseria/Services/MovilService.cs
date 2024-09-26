@@ -13,9 +13,11 @@ namespace NeoRemiseria.Services
         }
 
         // Implementar métodos de la interface de la que deriva
-        public async Task AddItem(Movil entity){
+        public async Task<Movil> AddItem(Movil entity){
             _context.Moviles.Add(entity);
             await _context.SaveChangesAsync();
+
+            return entity;
         }
 
         public async Task<List<Movil>> GetAll(Expression<Func<Movil, bool>>? predicado=null){
@@ -32,11 +34,11 @@ namespace NeoRemiseria.Services
 
         public async Task<Movil> GetById(uint id){
             // Busca un registro, de acuerdo al id dado
-            // Si no lo encunentra, devuelve un registro vacio
-            return await _context.Moviles.FindAsync(id) ?? new Movil();
+            // Si no lo encunentra, devuelve null
+            return await _context.Moviles.FindAsync(id);
         }
 
-        public async Task UpdateItem(Movil entity){
+        public async Task<Movil> UpdateItem(Movil entity){
             try{
                 Movil entidadExistente = _context.Moviles.Find(entity.Id);
                 if (entidadExistente != null){
@@ -49,6 +51,8 @@ namespace NeoRemiseria.Services
 
                 // Guardar cambios
                 await _context.SaveChangesAsync();
+
+                return entity;
             }
             catch (DbUpdateConcurrencyException e){
                 // Este error ocurre cuando se intenta actualizar un registro que ha sido modificado por otro usuario

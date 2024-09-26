@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NeoRemiseria.Models;
@@ -15,7 +16,7 @@ namespace NeoRemiseria.Services{
         }
 
         //Implementar los métodos de la interface
-        public async Task<List<Marca>> GetMarcas(Func<Marca, bool>? predicado = null){
+        public async Task<List<Marca>> GetMarcas(Expression<Func<Marca, bool>>? predicado = null){
             // return await _context.Marcas.ToListAsync();
             IQueryable<Marca> query = _context.Marcas;
             if (predicado != null){

@@ -1,13 +1,16 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <div class="sidebar">
+    <div class="sidebar @SidebarClass">
         <NavMenu />
     </div>
 
-    <main>
+    <main class="@MainContentClass">
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank"></a>
+            <button class="btn btn-dark toggle-btn" @onclick="ToggleSidebar">
+                <i class="bi bi-list"></i> 
+            </button>
         </div>
 
         <article class="content px-4">
@@ -21,3 +24,18 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code {
+    private bool IsSidebarCollapsed { get; set; } = false;
+
+    // Clases CSS para el colapso de la barra lateral y el contenido principal
+    private string SidebarClass => IsSidebarCollapsed ? "collapsed-sidebar" : "expanded-sidebar";
+    private string MainContentClass => IsSidebarCollapsed ? "expanded-content" : "collapsed-content";
+
+    // Método que alterna el estado de colapso
+    private void ToggleSidebar()
+    {
+        IsSidebarCollapsed = !IsSidebarCollapsed;
+    }
+}
+

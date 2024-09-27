@@ -1,6 +1,6 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">NeoRemiseria</a>
+        <a class="navbar-brand" href="">Remiseria Mar Azul</a>
     </div>
 </div>
 
@@ -44,3 +44,26 @@
     </nav>
 </div>
 
+<button class="btn btn-dark toggle-btn" @onclick="ToggleSidebar">
+    <i class="bi bi-list"></i>
+</button>
+
+<div class="@SidebarClass" id="nav-scrollable">
+    <!-- Sidebar content -->
+</div>
+
+<div class="@MainContentClass" id="flex-column">
+    <!-- Main content -->
+</div>
+
+@code {
+    private bool isSidebarCollapsed = false;
+
+    private string SidebarClass => isSidebarCollapsed ? "nav-scrollable collapsed" : "nav-scrollable";
+    private string MainContentClass => isSidebarCollapsed ? "flex-column collapsed" : "flex-column";
+
+    private void ToggleSidebar()
+    {
+        isSidebarCollapsed = !isSidebarCollapsed;
+    }
+}

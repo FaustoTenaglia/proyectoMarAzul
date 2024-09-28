@@ -1,0 +1,202 @@
+@page "/provincias"
+@using NeoRemiseria
+@using Models
+@using Services
+@using Microsoft.EntityFrameworkCore
+
+@inject ITable<Provincia> ProvinciaService
+@inject DbremiseriaContext DBRemiseria
+@inject IJSRuntime JSRuntime
+
+@rendermode InteractiveServer
+
+<div class="container-sm m-auto" style="max-width: 420px;">
+    <h3>Provincias</h3>
+    
+    <div class="container-fluid mx-auto my-3">
+        <div class="input-group">
+            <span class="input-group-text">Agregar</span>
+            <input type="text" class="form-control" placeholder="Ingrese nombre" @bind="provinciaNueva.Nombre">
+            <button class="btn btn-outline-success" @onclick="() => {AgregarProvincia();}">
+                <i class="bi bi-plus-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    @if(provincias != null){
+        <ul class="list-unstyled list-group">
+            @foreach(var provincia in provincias){
+                <li class="list-group-item d-flex justify-content-between">
+                    <div class="input-group">
+                        <span class="input-group-text">@provincia.Id</span>
+                        <input type="text" class="form-control" @bind=@provincia.Nombre disabled="@(!provincia.EditMode)">
+                    </div>
+                    <div class="btn-group btn-group-sm" role="group">
+                        @if(!provincia.EditMode){
+                            <button type="button" class="btn btn-outline-primary" @onclick="() => {provincia.cambiarEditMode();}">
+                                <i class="bi bi-pen-fill"></i>
+                            </button>
+                            <button class="btn btn-outline-danger" @onclick="() => ShowModalEliminar(provincia)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            }
+                        else{
+                            <button type="button" class="btn btn-outline-success" @onclick="() => ShowModalConfirmar(provincia)">
+                                <i class="bi bi-check"></i>
+                            </button>
+                            <button class="btn btn-outline-danger" @onclick="() => {provincia.cambiarEditMode();}">
+                                <i class="bi bi-x"></i>
+                            </button>
+                            }
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@* Modals *@
+<div class="modal fade" id="ConfirmDelForm" data-bs-backdrop="static">
+    <div class="modal-dialog modal-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmacion</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">¿Desea eliminar la Provincia <strong>@provinciaActual.Nombre</strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" type="button" data-bs-dismiss="modal" @onclick="() => EliminarProvincia(provinciaActual.Id)">Si</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ConfirmForm" data-bs-backdrop="static">
+    <div class="modal-dialog modal-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Información</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" @onclick="() => provinciaActual.cambiarEditMode()"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">¿Desea guardar los cambios?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" type="button" data-bs-dismiss="modal" @onclick="() => ActualizarProvincia(provinciaActual)">Si</button>
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal" @onclick="() => provinciaActual.cambiarEditMode()">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // Definir clase para poder trabajar individualmente con cada objeto de la lista
+    public class ItemProvincia{
+        public uint Id {get; set;}
+        public string Nombre {get; set;} = null!;
+        public bool EditMode {get; set;} = false;
+        public void cambiarEditMode(){
+            EditMode = !EditMode;
+        }
+        public Provincia ToProvincia(){
+            return new Provincia{
+                Id = this.Id, 
+                Nombre = this.Nombre};
+        }
+    }
+
+    private List<Provincia> records = new List<Provincia>();
+    private ItemProvincia provinciaActual = new ItemProvincia();
+    public Provincia provinciaNueva = new Provincia ();
+    public List<ItemProvincia> provincias = new List<ItemProvincia>();
+    
+    protected override async Task OnInitializedAsync(){
+        // Cargar los datos desde la tabla de la base de datos
+        // Generalmente se hace antes que se cargue el componente, por eso se encuentra en éste método
+        await CargarProvincias();
+    }
+
+    private async Task CargarProvincias(){
+        records =  await ProvinciaService.GetAll();
+
+        // Ya se trajo los registros de la tabla, pasarlo a otra lista, para agregar un atributo
+        // que refleja si se puede editar o no 
+        if(records != null){
+            provincias = records.Select(m => new ItemProvincia {
+                Id = m.Id,
+                Nombre = m.Nombre,
+                EditMode = false //El atributo en cuestión
+            }).ToList();
+        }
+
+        provinciaNueva.Id = 0; //await ObtenerId();
+        provinciaNueva.Nombre = "";
+    }
+
+    public async Task<byte> ObtenerId(){
+        var idMax = await DBRemiseria.Provincias.MaxAsync(m => m.Id);
+        return (byte)(idMax+1);
+    }
+
+    public async void AgregarProvincia(){
+        if (!string.IsNullOrWhiteSpace(provinciaNueva.Nombre)){
+            provinciaNueva.Id = await ObtenerId();
+
+            await ProvinciaService.AddItem(provinciaNueva);
+
+            // Volver a cargar la lista de Provincias
+            await CargarProvincias();
+
+            // Opcional: Forzar la actualizacion del estado del componente
+            StateHasChanged();
+        }
+    }
+
+    public async void ActualizarProvincia(ItemProvincia provincia){
+        Provincia _provincia;
+
+        if (provincia.EditMode & !string.IsNullOrWhiteSpace(provincia.Nombre)){
+            _provincia = await ProvinciaService.GetById(provincia.Id);
+            if (provincia.Nombre != _provincia.Nombre){
+                _provincia.Nombre = provincia.Nombre;
+                await ProvinciaService.UpdateItem(_provincia);
+            }
+        }
+        
+        provincia.cambiarEditMode();
+
+        StateHasChanged();
+    }
+
+    public async Task EliminarProvincia(uint id){
+        await ProvinciaService.DeleteItem(id);
+
+        // Volver a cargar la lista de Provincias
+        await CargarProvincias();
+
+
+        // Forzar la actualizacion del estado del componente
+        StateHasChanged();
+    }
+
+    private async Task CloseModal(string modalId){
+        await JSRuntime.InvokeVoidAsync("closeBSModal",modalId);
+    }
+
+    private void ShowModalConfirmar(ItemProvincia provincia){
+        provinciaActual = provincia;
+
+        JSRuntime.InvokeVoidAsync("showBSModal","ConfirmForm");
+    }
+
+    private void ShowModalEliminar(ItemProvincia provincia){
+        // Guardar la Provincia actual
+        provinciaActual = provincia;
+
+        //Mostrar el modal
+        JSRuntime.InvokeVoidAsync("showBSModal","ConfirmDelForm");
+    }
+}

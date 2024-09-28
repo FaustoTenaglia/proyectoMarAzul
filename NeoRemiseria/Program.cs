@@ -24,6 +24,7 @@ builder.Services.AddScoped<ITable<Movil>, MovilService>();
 builder.Services.AddScoped<ITable<Persona>, PersonaService>();
 builder.Services.AddScoped<ITable<Localidad>, LocalidadService>();
 builder.Services.AddScoped<ITable<Telefono>, TelefonoService>();
+builder.Services.AddScoped<ITable<Provincia>, ProvinciaService>();
 
 var app = builder.Build();
 

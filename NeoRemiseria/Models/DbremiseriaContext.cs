@@ -253,7 +253,7 @@ public partial class DbremiseriaContext : DbContext
                 .HasColumnName("id");
             entity.Property(e => e.IdProvincia)
                 .HasDefaultValueSql("'22'")
-                .HasColumnType("tinyint(3) unsigned")
+                .HasColumnType("int(10) unsigned") // Modificado a entero sin signo
                 .HasColumnName("id_provincia");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(32)
@@ -464,8 +464,8 @@ public partial class DbremiseriaContext : DbContext
             entity.ToTable("provincia");
 
             entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnType("tinyint(3) unsigned")
+                //.ValueGeneratedOnAdd()
+                .HasColumnType("int(10) unsigned")
                 .HasColumnName("id");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(66)

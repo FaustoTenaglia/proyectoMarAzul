@@ -6,14 +6,46 @@
 
 @inject IJSRuntime JSRuntime
 @inject ITable<Localidad> LocalidadService
+@inject ITable<Persona> PersonaService
 
-<div class="container">
-    <ul class="list-group list-group-flush">
-        @foreach(var localidad in localidades){
-            <li class="list-group-item">@localidad.Nombre</li>
-        }
-    </ul>
+<div class="input-group mb-3 d-flex align-items-center">
+    <h3 class="mx-2">Localidades</h3>
+    <button type="button" class="btn btn-outline-success">
+        <i class="bi bi-plus-lg"></i>
+    </button>
 </div>
+
+@if(localidades != null){
+    <table class="table table-hover">
+        <thead>
+            <tr class="table-dark">
+                @* <th>#</th> *@
+                <th>Nombre</th>
+                <th colspan="2">Provincia</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var localidad in localidades.OrderBy(l => l.Nombre)){
+                <tr>
+                    @* <td>@localidad.Id</td> *@
+                    <td>@localidad.Nombre</td>
+                    <td>@localidad.IdProvinciaNavigation?.Nombre</td>
+                    <td class="btn-group-sm">
+                        <button type="button" class="btn btn-outline-primary">
+                            <i class="bi bi-pen-fill"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else{
+    <p>Cargando datos...</p>
+}
 
 @code{
     private List<Localidad> localidades = new List<Localidad>();

@@ -1,12 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using NeoRemiseria.Models;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
-namespace NeoRemiseria.Services{
+namespace NeoRemiseria.Services;
+public class MarcaService: TableService<Marca>{
+    public MarcaService(DbremiseriaContext contexto): base(contexto) { }
+    
+}
+/*
+{
     public class MarcaService: IMarca{
         private readonly DbremiseriaContext _context;
 
@@ -53,3 +55,4 @@ namespace NeoRemiseria.Services{
         }
     }
 }
+*/

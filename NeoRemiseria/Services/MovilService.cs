@@ -1,9 +1,23 @@
 using NeoRemiseria.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq.Expressions;
 
-namespace NeoRemiseria.Services
+namespace NeoRemiseria.Services;
+public class MovilService: TableService<Movil>{
+    public MovilService (DbremiseriaContext contexto): base(contexto) { }
+    public override async Task<List<Movil>> GetAll(Expression<Func<Movil, bool>>? predicado=null){
+        // Devuelve todos los registros de la tabla si predicado es null
+        IQueryable<Movil> query = _context.Moviles;
+        if (predicado != null){
+            query = query.Where(predicado);
+        }
+        return await query
+            .Include(m => m.IdModeloNavigation)
+            .Include(m => m.IdTitularNavigation)
+            .ToListAsync();
+    }
+}
+/*
 {
     public class MovilService: ITable<Movil>{
         private readonly DbremiseriaContext _context;
@@ -80,3 +94,4 @@ namespace NeoRemiseria.Services
         }
     }   
 }
+*/

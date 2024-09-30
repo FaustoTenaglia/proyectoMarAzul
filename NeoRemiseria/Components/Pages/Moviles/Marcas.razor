@@ -3,7 +3,7 @@
 @using Models
 @using Services
 
-@inject IMarca MarcaService
+@inject ITable<Marca> MarcaService
 @inject DbremiseriaContext DBRemiseria
 @inject IJSRuntime JSRuntime
 
@@ -122,7 +122,7 @@
     }
 
     private async Task CargarMarcas(){
-        recordMarcas =  await MarcaService.GetMarcas();
+        recordMarcas =  await MarcaService.GetAll();
 
         // Ya se trajo los registros de la tabla, pasarlo a otra lista, para agregar un atributo
         // que refleja si se puede editar o no 
@@ -145,7 +145,7 @@
 
     public async void AgregarMarca(){
         if (!string.IsNullOrWhiteSpace(marcaNueva.Nombre)){
-            await MarcaService.AddMarca(marcaNueva);
+            await MarcaService.AddItem(marcaNueva);
 
             // Volver a cargar la lista de marcas
             await CargarMarcas();
@@ -159,10 +159,10 @@
         Marca _marca;
 
         if (marca.EditMode & !string.IsNullOrWhiteSpace(marca.Nombre)){
-            _marca = await MarcaService.GetMarcaById(marca.Id);
+            _marca = await MarcaService.GetById(marca.Id);
             if (marca.Nombre != _marca.Nombre){
                 _marca.Nombre = marca.Nombre;
-                await MarcaService.UpdateMarca(_marca);
+                await MarcaService.UpdateItem(_marca);
             }
         }
         
@@ -172,7 +172,7 @@
     }
 
     public async Task EliminarMarca(uint id){
-        await MarcaService.DeleteMarca(id);
+        await MarcaService.DeleteItem(id);
 
         // Volver a cargar la lista de marcas
         await CargarMarcas();

@@ -1,7 +1,6 @@
 using NeoRemiseria.Models;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-//using Pomelo.EntityFrameworkCore.MySql.Query;
 
 namespace NeoRemiseria.Services;
 // Clase abstracta para implementar la interface ITable
@@ -37,15 +36,30 @@ public abstract class TableService<T>: ITable<T> where T: class{
         // Devolver en una lista
         return await query.ToListAsync();
     }
-    public virtual async Task<T> GetById(uint id){
+    public virtual async Task<T?> GetById(uint id){
         return await _context.FindAsync<T>(id); // buscar por el id
     }
 
     // Update
     public virtual async Task<T> UpdateItem(T entity){
         try{
-            uint id = (uint)typeof(T).GetProperty("Id").GetValue(entity);
-            T entidadExistente = _context.Find<T>(id);
+            // var id = (uint)typeof(T).GetProperty("Id").GetValue(entity);
+            // Obtener la propiedad "Id" de la entidad
+            var propiedadInfo = typeof(T).GetProperty("Id"); // Uso de reflexión
+            if (propiedadInfo == null){
+                throw new InvalidOperationException("La entidad no tiene una propiedad Id.");
+            }
+
+            // Obtener el valor del Id
+            var idValor = propiedadInfo.GetValue(entity);
+            if (idValor == null){
+                throw new InvalidOperationException("El Id no puede ser nulo.");
+            }
+
+            // Asegurar que es un valor entero sin signo
+            uint id = Convert.ToUInt32(idValor); // Si no es posible la conversión, lanza una excepción
+
+            var entidadExistente = await _context.FindAsync<T>(id);
             if (entidadExistente != null){
                 _context.Entry(entidadExistente).State = EntityState.Detached;
             }

@@ -3,7 +3,7 @@
 @using Models
 @using Services
 
-@inject IMarca MarcaService
+@inject ITable<Marca> MarcaService
 @inject DbremiseriaContext _context
 @inject IJSRuntime JSRuntime
 @inject ITable<Modelo> ModeloService
@@ -154,7 +154,7 @@
     protected override async Task OnInitializedAsync(){
         // Obtener datos desde la base de datos
         modelos = await ModeloService.GetAll();
-        marcas = await MarcaService.GetMarcas();
+        marcas = await MarcaService.GetAll();
     }
 
     private async Task AgregarModeloNuevo(Modelo modeloNuevo){

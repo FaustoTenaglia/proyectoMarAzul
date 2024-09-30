@@ -3,6 +3,21 @@ using NeoRemiseria.Models;
 using System.Linq.Expressions;
 
 namespace NeoRemiseria.Services;
+public class PersonaService: TableService<Persona>{
+    public PersonaService(DbremiseriaContext contexto): base(contexto) { }
+
+    public override async Task<List<Persona>> GetAll(Expression<Func<Persona, bool>>? predicado = null){
+        IQueryable<Persona> query = _context.Personas;
+        if (predicado != null){
+            query = query.Where(predicado);
+        }
+        return await query
+            .Include(p => p.IdLocalidadNavigation) // Incluye la localidad
+            .Include(p => p.Telefonos) // Incluye los teléfonos
+            .ToListAsync();
+    }
+}
+/*
 public class PersonaService: ITable<Persona>{
     private readonly DbremiseriaContext _context;
     // Constructor
@@ -27,7 +42,7 @@ public class PersonaService: ITable<Persona>{
             .ToListAsync();
     }
 
-    public async Task<Persona> GetById(uint id){
+    public async Task<Persona?> GetById(uint id){
         return await _context.Personas.FindAsync(id);
     }
 
@@ -67,3 +82,4 @@ public class PersonaService: ITable<Persona>{
         return true;
     }
 }
+*/

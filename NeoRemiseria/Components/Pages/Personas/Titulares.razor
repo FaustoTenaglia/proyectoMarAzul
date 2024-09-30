@@ -19,7 +19,7 @@
             <div class="col-md-6 mb-3 mb-sm-0">
                 <div class="card border-primary">
                     <div class="card-header text-primary">
-                     @($"DNI: {persona.Dni}")  
+                     <a href="/persona-form/@persona.Id">@($"DNI: {persona.Dni}")</a>  
                     </div>
                     <div class="card-body">
                         <h5 class="card-title"> @($"Titular: {persona.Apellido} {persona.Nombre}")</h5>
@@ -27,7 +27,11 @@
                         <p class="card-text">@($"Localidad: {persona.IdLocalidadNavigation.Nombre}")</p>
                     </div>
                     <div class="card-footer border-primary">
-                        Teléfonos: 
+                        <p class="text-start-sm text-wrap">Teléfonos:
+                            @foreach(var telefono in persona.Telefonos){
+                                <span class="form-text mx-1">@telefono.Numero</span>
+                            }
+                        </p> 
                     </div>
                 </div>
             </div>
@@ -37,7 +41,7 @@
                         <li class="list-group-item d-flex justify-content-between align-items-start">
                             <div class="ms-2 me-auto">
                                 <div class="fw-bold">@($"Movil N°{movil.Id} patente: {movil.Patente}")</div>
-                                @MarcaModelo(movil.IdModelo ?? 0)
+                                @($"{MarcaModelo(movil.IdModelo ?? 0)} - Año {movil.Año}")
                             </div>
                             <span class="badge text-bg-primary rounded-pill">@movil.Id</span>
                         </li>
@@ -78,7 +82,7 @@ else{
 
         // Devolver en una cadena de texto la marca y el nombre del modelo
         // desconocido si no se encontro el modelo
-        return modelo != null ? $"{modelo.IdMarcaNavigation.Nombre} {modelo.Nombre}" : "desconocido";
+        return modelo != null ? $"{modelo.IdMarcaNavigation.Nombre} {modelo.Nombre}" : "sin especificar";
     }
 
     public async Task BuscarPersona(){

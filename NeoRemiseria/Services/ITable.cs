@@ -9,7 +9,7 @@ public interface ITable<T> where T: class
 
        // Recuperar registros
        Task<List<T>> GetAll(Expression<Func<T, bool>>? predicado = null); // Todos los registros	
-       Task<T> GetById(uint id); // Un registro en particular, dado el id
+       Task<T?> GetById(uint id); // Un registro en particular, dado el id
 
        // Actualizar un registro
        Task<T> UpdateItem(T entity);

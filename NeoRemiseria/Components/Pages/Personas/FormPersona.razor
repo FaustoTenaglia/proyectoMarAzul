@@ -90,21 +90,23 @@
 
 <!-- Botones -->
 <div class="btn-group" role="group">
-    <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
-    <button type="button" class="btn btn-primary" @onclick="ClearForm">Limpiar</button>
     <button type="submit" class="btn btn-success">Enviar</button>
+    <button type="button" class="btn btn-primary" @onclick="ClearForm">Limpiar</button>
+    <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
 </div>
 </EditForm>
 
 @code {
     // Parámetro de ruta opcional
     [Parameter] public int? Id {get; set;}
-
+    
+    private string urlRegreso {get; set;} = "/personas";
     private Persona persona = new Persona();
     private List<Telefono> telefonos = new List<Telefono>();
     private List<Localidad> localidades = new List<Localidad>();
 
     protected override async Task OnInitializedAsync(){
+        @* urlRegreso = NavigationManager.Uri; *@
         localidades = await LocalidadService.GetAll();
 
         // Comprobar si se pasó un id
@@ -134,26 +136,42 @@
             }
         }
         else{// Actualizar valores...
+            // Eliminar teléfonos que no están en la lista actualizada
+            foreach (var telefono in persona.Telefonos.ToList()){
+                if(!telefonos.Any(t => t.Id == telefono.Id)){
+                    await TelefonoService.DeleteItem(telefono.Id); //Eliminar
+                }
+            }
+
+            // Actualizar o agregar teléfonos nuevos
+            foreach (var telefono in telefonos){
+                var telefonoExistente = persona.Telefonos.FirstOrDefault(t => t.Id == telefono.Id);
+                if (telefonoExistente != null){
+                    // Actualizar el número de telefono existente
+                    // telefonoExistente.Numero = telefono.Numero;
+                    await TelefonoService.UpdateItem(telefono);
+                }
+                else{
+                    // Agregar nuevo teléfono
+                    await TelefonoService.AddItem(telefono);
+                }
+            }
+
             // Actualizar en Persona
             await PersonaService.UpdateItem(persona);
-
-            // TODO: Actualizar cambios en Telefono
-            // Nota: Puede ser que se modifiquen numeros de telefono (telefono.Id != 0)
-            // o se agreguen nuevos numeros de telefonos (telefono.Id = 0)
-            // o se eliminen números de telefono (mandar a una lista los id que no se encuentren en Telefonos)
         }
 
         // Redirigir a la vista index
-        NavigationManager.NavigateTo("/personas", true);
+        NavigationManager.NavigateTo(urlRegreso, true);
     }
 
     private void Cancel()
     {
         // Lógica para cerrar el formulario o navegar a otra página
         // Redirigir a la página index sin guardar
-        // El segundo parametro configurado como 'forceLoad' en tru
+        // El segundo parametro configurado como 'forceLoad' en true
         // refresca la página y evita que se guarde la ruta anterior
-        NavigationManager.NavigateTo("/personas", true);
+        NavigationManager.NavigateTo(urlRegreso, true);
     }
 
     private void ClearForm()

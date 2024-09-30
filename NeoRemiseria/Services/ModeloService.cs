@@ -1,10 +1,22 @@
-using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Query;
 using NeoRemiseria.Models;
-using MySql.Data.MySqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace NeoRemiseria.Services;
+public class ModeloService: TableService<Modelo>{
+    public ModeloService(DbremiseriaContext contexto): base(contexto) { }
+
+    public override async Task<List<Modelo>> GetAll(Expression<Func<Modelo, bool>>? predicado=null){
+        IQueryable<Modelo> query = _context.Modelos;
+        if (predicado != null){
+            query = query.Where(predicado);
+        }
+        return await query
+            .Include(m => m.IdMarcaNavigation)
+            .ToListAsync();
+    }
+}
+/*
 public class ModeloService: ITable<Modelo>{
     private readonly DbremiseriaContext _context;
     // Constructor
@@ -91,3 +103,4 @@ public class ModeloService: ITable<Modelo>{
         return true;
     }
 }
+*/

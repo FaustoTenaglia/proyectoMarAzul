@@ -16,15 +16,15 @@ builder.Services.AddDbContext<DbremiseriaContext>(options =>
         ServerVersion.AutoDetect(connection)));
 
 // Registrar servicios
-// Debe haber uno por cada servicio utilizado
-builder.Services.AddScoped<IVista<VModelo>, VModeloService>(); // No se usa
-builder.Services.AddScoped<IMarca, MarcaService>();
+// Debe haber uno por cada tabla utilizada
+builder.Services.AddScoped<ITable<Localidad>, LocalidadService>();
+builder.Services.AddScoped<ITable<Marca>, MarcaService>();
 builder.Services.AddScoped<ITable<Modelo>, ModeloService>();
 builder.Services.AddScoped<ITable<Movil>, MovilService>();
 builder.Services.AddScoped<ITable<Persona>, PersonaService>();
-builder.Services.AddScoped<ITable<Localidad>, LocalidadService>();
-builder.Services.AddScoped<ITable<Telefono>, TelefonoService>();
 builder.Services.AddScoped<ITable<Provincia>, ProvinciaService>();
+builder.Services.AddScoped<ITable<Telefono>, TelefonoService>();
+builder.Services.AddScoped<IVista<VModelo>, VModeloService>(); // No se usa
 
 var app = builder.Build();
 

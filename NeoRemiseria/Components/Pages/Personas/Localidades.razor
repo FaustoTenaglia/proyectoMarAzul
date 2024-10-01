@@ -6,14 +6,23 @@
 
 @inject IJSRuntime JSRuntime
 @inject ITable<Localidad> LocalidadService
-@inject ITable<Persona> PersonaService
+@inject ITable<Provincia> ProvinciaService
+@inject NavigationManager Navigation
 
-<div class="input-group mb-3 d-flex align-items-center">
+@rendermode InteractiveServer
+
+<div class="input-group mb-3">
     <h3 class="mx-2">Localidades</h3>
-    <button type="button" class="btn btn-outline-success">
+    <button type="button" class="btn btn-outline-success" @onclick="() => Handle(localidadSeleccionada)">
         <i class="bi bi-plus-lg"></i>
     </button>
 </div>
+
+<ModalDialog 
+    Mensaje=@($"¿Desea eliminar la localidad {@localidadSeleccionada.Nombre}?") 
+    Id="modalEliminar" 
+    Titulo = "Confirmación"
+    OnResult=" async Task (int res) => {if(res == 1){await LocalidadService.DeleteItem(localidadSeleccionada.Id); await CargarDatos();}}" />
 
 @if(localidades != null){
     <table class="table table-hover">
@@ -31,10 +40,10 @@
                     <td>@localidad.Nombre</td>
                     <td>@localidad.IdProvinciaNavigation?.Nombre</td>
                     <td class="btn-group-sm">
-                        <button type="button" class="btn btn-outline-primary">
+                        <button type="button" class="btn btn-outline-primary" @onclick="() => Handle(localidad)">
                             <i class="bi bi-pen-fill"></i>
                         </button>
-                        <button type="button" class="btn btn-outline-danger">
+                        <button type="button" class="btn btn-outline-danger" @onclick="() => ConfirmarEliminacion(localidad.Id)">
                             <i class="bi bi-trash"></i>
                         </button>
                     </td>
@@ -49,8 +58,30 @@ else{
 
 @code{
     private List<Localidad> localidades = new List<Localidad>();
+    private List<Provincia> provincias = new List<Provincia>();
+    private Localidad localidadSeleccionada = new Localidad();
 
     protected override async Task OnInitializedAsync(){
         localidades = await LocalidadService.GetAll();
+        provincias = await ProvinciaService.GetAll();
+    }
+
+    private async Task CargarDatos(){
+        localidades = await LocalidadService.GetAll();
+        localidadSeleccionada = new Localidad();
+    }
+
+    private async Task ConfirmarEliminacion(uint id){
+        localidadSeleccionada = await LocalidadService.GetById(id);
+        JSRuntime.InvokeVoidAsync("showBSModal","modalEliminar");
+    }
+
+    private async Task Handle(Localidad localidad){
+        if(localidad.Id > 0){
+            Navigation.NavigateTo($"/localidad-form/{localidad.Id}");
+        }
+        else{
+            Navigation.NavigateTo($"/localidad-form");
+        }
     }
 }

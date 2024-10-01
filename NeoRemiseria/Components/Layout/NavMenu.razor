@@ -14,10 +14,45 @@
             </NavLink>
         </div>
 
+        <!--
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="personas">
                 <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Personas
             </NavLink>
+        </div>
+        -->
+
+        <div class="nav-item px-3 flex-shrink-0 p-3">
+            <ul class="list-unstyled ps-0">
+                <li class="mb-1">
+                    <button href="personas"class="btn btn-toggle nav-link collapsed d-inline-flex align-items-center" data-bs-toggle="collapse" data-bs-target="#personas-collapse" aria-expanded="true">
+                        <i class="bi bi-plus-square-fill-nav-menu"></i>
+                        Personas
+                    </button>
+                    <div class="collapse show" id="personas-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 px-2">
+                            <li><NavLink href="persona-form" class="nav-link">
+                                <span class="bi bi-person-plus-fill"></span>Agregar
+                            </NavLink></li>
+                            <li><NavLink href="personas/dueños" class="nav-link">    
+                                <span class="bi bi-person-vcard"></span>Dueños
+                            </NavLink></li>
+                            <li><NavLink class="nav-link">
+                                <span class="bi"></span>Chofer
+                            </NavLink></li>
+                            <li><NavLink class="nav-link">
+                                <span class="bi"></span>Listado
+                            </NavLink></li>
+                            <li><NavLink class="nav-link" href="localidades">
+                                <span class="bi"></span>Localidades
+                            </NavLink></li>
+                            <li><NavLink class="nav-link" href="provincias">
+                                <span class="bi"></span>Provincias
+                            </NavLink></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
         </div>
 
         <div class="nav-item px-3">
@@ -28,17 +63,17 @@
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="moviles">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="ture"></span> Móviles
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Móviles
             </NavLink>
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="modelo">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="ture"></span> Modelos
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Modelos
             </NavLink>
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="marcas">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="ture"></span> Marcas
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Marcas
             </NavLink>
         </div>
     </nav>

@@ -28,7 +28,7 @@
                     </div>
                     <div class="card-footer border-primary">
                         <p class="text-start-sm text-wrap">Teléfonos:
-                            @foreach(var telefono in persona.Telefonos){
+                            @foreach(var telefono in persona.Telefonos.Where(t => t.Estado == 'A')){
                                 <span class="form-text mx-1">@telefono.Numero</span>
                             }
                         </p> 

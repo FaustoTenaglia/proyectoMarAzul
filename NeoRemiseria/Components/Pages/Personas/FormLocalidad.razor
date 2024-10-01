@@ -1,0 +1,98 @@
+@page "/localidad-form/{Id:int?}"
+
+@using NeoRemiseria
+@using Models
+@using Services
+
+@using Microsoft.AspNetCore.Components.Forms
+
+@inject ITable<Localidad> LocalidadService
+@inject ITable<Provincia> ProvinciaService
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+
+@rendermode InteractiveServer
+
+<div class="modal fade" id="modalFormLocalidad" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <EditForm Model="localidad" OnValidSubmit="Enviar">
+                <div class="modal-header">
+                    <h3 class="text-center">Localidad</h3>
+                    <button class="btn btn-close" type="button" data-bs-dismiss="modal" @onclick="Cancel"></button>
+                </div>
+                <div class="modal-body">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="form-group mb-3">
+                            <label for="localidadNombre" class="fw-bold">Nombre</label>
+                            <InputText id="localidadNombre" class="form-control" @bind-Value="localidad.Nombre" />
+                            <ValidationMessage For="@(()=> localidad.Nombre)"/>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="localidadProvincia" class="fw-bold">Provincia</label>
+                            <InputSelect id="localidadProvincia" class="form-select" @bind-Value="localidad.IdProvincia">
+                                <option value="0">Seleccione...</option>
+                                @foreach(var provincia in provincias.OrderBy(p => p.Nombre)){
+                                    <option value=@provincia.Id>@provincia.Nombre</option>
+                                }
+                            </InputSelect>
+                        </div>
+                </div>
+                <div class="modal-footer btn-group" role="group">
+                    <button type="submit" class="btn btn-success">Enviar</button>
+                    <button type="button" class="btn btn-primary" @onclick="ClearForm">Limpiar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="Cancel">Cancelar</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code{
+    // Parametro de ruta
+    [Parameter] public int? Id {get; set;}
+
+    private string urlRegreso {get; set;} = "/localidades";
+    private Localidad localidad = new Localidad();
+    private List<Provincia> provincias = new List<Provincia>();
+
+    protected override async Task OnInitializedAsync(){
+        provincias = await ProvinciaService.GetAll();
+        JSRuntime.InvokeVoidAsync("showBSModal","modalFormLocalidad");
+
+        // Comprobar si se paso el id de una localidad
+        if(Id.HasValue && Id.Value > 0){
+            // Se pasó un id
+            localidad = await LocalidadService.GetById((uint)Id.Value) ?? new Localidad();
+        }
+    }
+
+    private async Task Enviar(){
+        if (!Id.HasValue){// No se pasó el id de una localidad
+            // Insertar una localidad nueva...
+            await LocalidadService.AddItem(localidad);
+        }
+        else{
+            // Actualizar valores en localidad
+            await LocalidadService.UpdateItem(localidad);
+        }
+
+        // Cerrar modal
+        JSRuntime.InvokeVoidAsync("closeBSModal","modalFormLocalidad");
+        // Redirigir a la vista anterior
+        Navigation.NavigateTo(urlRegreso, true);
+    }
+
+    private void ClearForm(){
+        // Reiniciar valores del form
+        localidad = new Localidad();
+        this.Id = 0;
+    }
+
+    private void Cancel(){
+        Navigation.NavigateTo(urlRegreso,true);
+    }
+}

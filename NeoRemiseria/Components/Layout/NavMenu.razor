@@ -14,20 +14,11 @@
             </NavLink>
         </div>
 
-        <!--
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="personas">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Personas
-            </NavLink>
-        </div>
-        -->
-
         <div class="nav-item px-3 flex-shrink-0 p-3">
             <ul class="list-unstyled ps-0">
                 <li class="mb-1">
                     <button href="personas"class="btn btn-toggle nav-link collapsed d-inline-flex align-items-center" data-bs-toggle="collapse" data-bs-target="#personas-collapse" aria-expanded="true">
-                        <i class="bi bi-plus-square-fill-nav-menu"></i>
-                        Personas
+                        <i class="bi bi-plus-square-fill-nav-menu"></i>Personas
                     </button>
                     <div class="collapse show" id="personas-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 px-2">
@@ -40,7 +31,7 @@
                             <li><NavLink class="nav-link">
                                 <span class="bi"></span>Chofer
                             </NavLink></li>
-                            <li><NavLink class="nav-link">
+                            <li><NavLink class="nav-link" href="personas/listado">
                                 <span class="bi"></span>Listado
                             </NavLink></li>
                             <li><NavLink class="nav-link" href="localidades">
@@ -52,30 +43,30 @@
                         </ul>
                     </div>
                 </li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle nav-link collapsed d-inline-flex align-items-center" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#moviles-collapse"
+                        aria-expanded="true">
+                        <i class="bi bi-plus-square-fill-nav-menu"></i>Móviles
+                    </button>
+                    <div class="collapse show" id="moviles-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-nomrmal pb-1 px-2">
+                            <li><NavLink class="nav-link" href="modelo">
+                                <span class="bi"></span>Modelos
+                            </NavLink></li>
+                            <li><NavLink class="nav-link" href="marcas">
+                                <span class="bi"></span>Marcas
+                            </NavLink></li>
+                        </ul>
+                    </div>
+                </li>
             </ul>
         </div>
 
-        <div class="nav-item px-3">
+        @* <div class="nav-item px-3">
             <NavLink class="nav-link" href="weather">
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
             </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="moviles">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Móviles
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="modelo">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Modelos
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="marcas">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Marcas
-            </NavLink>
-        </div>
+        </div> *@
     </nav>
 </div>
-

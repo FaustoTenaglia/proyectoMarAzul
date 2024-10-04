@@ -160,7 +160,7 @@
 
         if (marca.EditMode & !string.IsNullOrWhiteSpace(marca.Nombre)){
             _marca = await MarcaService.GetById(marca.Id);
-            if (marca.Nombre != _marca.Nombre){
+            if (_marca != null && marca.Nombre != _marca.Nombre){
                 _marca.Nombre = marca.Nombre;
                 await MarcaService.UpdateItem(_marca);
             }

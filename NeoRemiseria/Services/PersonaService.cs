@@ -11,10 +11,38 @@ public class PersonaService: TableService<Persona>{
         if (predicado != null){
             query = query.Where(predicado);
         }
-        return await query
+        return await query.Where(p => p.Estado == 'A')
             .Include(p => p.IdLocalidadNavigation) // Incluye la localidad
             .Include(p => p.Telefonos) // Incluye los teléfonos
             .ToListAsync();
+    }
+
+    public override async Task<bool> DeleteItem(uint id){
+        // Implementa la baja lógica
+        // Buscar el registro por el id
+        var persona = await _context.FindAsync<Persona>(id);
+
+        // Si no se lo encuentra, devolver falso
+        if (persona == null){
+            return false;
+        }
+
+        var telefonos = _context.Telefonos.Where(t => t.IdPersona == id && t.Estado == 'A');
+
+        // Borrar los teléfonos relacionados en Telefono
+        // Marcar los telefónos como eliminados
+        foreach (var telefono in telefonos){
+            telefono.Estado = 'B';
+        }
+        await _context.SaveChangesAsync();
+
+        // Baja lógica
+        persona.Estado = 'B';
+        await this.UpdateItem(persona);
+
+
+        // No hubo problemas, devolver verdadero
+        return true;
     }
 }
 /*

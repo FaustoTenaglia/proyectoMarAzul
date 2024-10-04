@@ -18,8 +18,7 @@ public partial class Persona
 
     public DateOnly? Nacimiento { get; set; }
 
-    // [NotMapped]
-    // public uint? Edad { get; set; }
+    public char Estado { get; set; } = 'A';
 
     public string? Calle { get; set; }
 

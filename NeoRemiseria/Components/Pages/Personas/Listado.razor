@@ -1,0 +1,133 @@
+@page "/personas/listado"
+
+@using System.Reflection
+@using Models
+@using Services
+
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@inject ITable<Persona> PersonaService
+
+@rendermode InteractiveServer
+
+<ModalDialog 
+    Mensaje=@($"¿Desea eliminar a la persona {personaSeleccionada?.Apellido}, {personaSeleccionada?.Nombre}?") 
+    Id="modalEliminar" 
+    Titulo = "Confirmación"
+    OnResult=" async Task (int res) => {if(res == 1){await PersonaService.DeleteItem(personaSeleccionada.Id); await CargarDatos();}}" />
+
+<div class="hstack gap-3 mb-3">
+    <span class="fs-3">Personas</span>
+    <div class="input-group" style="width: 320px;">
+        <input type="text" class="form-control" @bind="query" @oninput="OnInputChanged">
+        <button type="button" class="btn btn-outline-primary">buscar</button>
+    </div>
+</div>
+@if (personas != null){
+    <table class="table table-sm table-hover">
+        <thead class="sticky-top">
+            <tr>
+                @* @foreach(var propiedad in typeof(Persona).GetProperties().Where(p => p.Name != "Id")){ *@
+                @foreach (var campo in campos){<th>@campo</th>}
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var persona in personas.OrderBy(p => p.Apellido).ThenBy(p => p.Nombre).ThenBy(p => p.Dni)){
+                <tr>
+                    <td>@persona.Dni</td>
+                    <td>@persona.Apellido</td>
+                    <td>@persona.Nombre</td>
+                    <td>@(persona.Sexo == 1 ? "Masc." : "Fem.")</td>
+                    <td class="text-end">
+                        @(DateTime.Now.Year - persona.Nacimiento?.Year - 
+                        (DateTime.Now < persona.Nacimiento?.ToDateTime(TimeOnly.MinValue) ? 1 : 0))
+                    </td>
+                    <td>@persona.Calle</td>
+                    <td class="text-end">@persona.Numero</td>
+                    <td>@(persona.IdLocalidadNavigation != null ? persona.IdLocalidadNavigation.Nombre : "")</td>
+                    <td>
+                        @(persona.IdLocalidadNavigation?.IdProvinciaNavigation?.Nombre)
+                    </td>
+                    <td>
+                        @foreach(var telefono in persona.Telefonos.Where(t => t.Estado == 'A')){
+                            <div class="container form-text mx-1">@telefono.Numero</div>
+                        }
+                    </td>
+                    <td class="btn-group-sm">
+                        <button type="button" class="btn btn-outline-primary" @onclick="() => Editar(persona.Id)">
+                            <i class="bi bi-pen-fill"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger" @onclick="() => Eliminar(persona.Id)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="fw-bold">
+                <td class="sticky-bottom" colspan=@campos.Count()>Total</td>
+                <td class="text-start">@personas.Count()</td>
+            </tr>
+        </tfoot>
+    </table>
+}
+else{
+    <div class="container text-center mx-auto my-auto">
+        <p>Cargando datos...</p>
+    </div>
+}
+
+@code{
+    private static List<string> campos = new List<string>(){"DNI","Apellido","Nombre","Sexo"," Edad", "Calle", "N°","Localidad","Provincia","Telefonos"};
+    private static List<string> propiedades = new List<string>{"Dni","Apellido","Nombre","Sexo","Nacimiento","Calle","Numero","IdLocalidadNavigation.Nombre","IdLocalidadNavigation.IdProvinciaNavigation.Nombre"};
+    private List<Persona> personas = new List<Persona>();
+    private string? query = "";
+    private Persona? personaSeleccionada;
+
+    protected override async Task OnInitializedAsync(){
+        await CargarDatos();
+    }
+    private async Task CargarDatos(){
+        personas = await PersonaService.GetAll();
+    }
+
+    private async Task Editar(uint id){
+        Navigation.NavigateTo($"persona-form/{id}",true);
+    }
+
+    private async Task Eliminar(uint id){
+        personaSeleccionada = await PersonaService.GetById(id);
+        JSRuntime.InvokeVoidAsync("showBSModal","modalEliminar");
+    }
+
+    private void OnInputChanged(ChangeEventArgs e){
+        CargarDatos();
+        query = e.Value.ToString();
+        Filtrar(query);
+    }
+
+    private void Filtrar(string valor){
+        // Filtrar usando reflection
+        @* var personasFiltradas = personas.Where(p => p.GetType().GetProperties()
+            propiedades.Any(prop => prop.GetValue(p)?
+            .ToString()?
+            .Contains(valor, StringComparison.OrdinalIgnoreCase) == true)).ToList(); *@
+        
+        var personasFiltradas = personas.Where(p => 
+            propiedades.Any(propiedad => 
+            {
+                var propInfo = p.GetType().GetProperty(propiedad);
+                if (propInfo != null)
+                {
+                    var propValue = propInfo.GetValue(p)?.ToString();
+                    return propValue != null && propValue.Contains(valor, StringComparison.OrdinalIgnoreCase);
+                }
+                return false;
+            })).ToList();
+        
+        // Limpiar la lista original y agregar los elementos filtrados
+        personas.Clear();
+        personas.AddRange(personasFiltradas);
+    }
+}

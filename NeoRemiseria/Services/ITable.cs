@@ -16,4 +16,7 @@ public interface ITable<T> where T: class
 
        // Eliminar un registro
        Task<bool> DeleteItem(uint id);
+
+       // Filtrar registros por valor y propiedades
+       Task<List<T>> FilterItems(string valor, List<string>? proiedades = null);
 }

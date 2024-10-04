@@ -24,7 +24,7 @@
                     <div class="card-body">
                         <h5 class="card-title"> @($"Titular: {persona.Apellido} {persona.Nombre}")</h5>
                         <p class="card-text mb-1">@($"Domicilio: {persona.Calle} N°{persona.Numero}")</p>
-                        <p class="card-text">@($"Localidad: {persona.IdLocalidadNavigation.Nombre}")</p>
+                        <p class="card-text">@($"Localidad: {persona.IdLocalidadNavigation?.Nombre}")</p>
                     </div>
                     <div class="card-footer border-primary">
                         <p class="text-start-sm text-wrap">Teléfonos:

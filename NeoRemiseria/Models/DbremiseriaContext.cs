@@ -432,9 +432,9 @@ public partial class DbremiseriaContext : DbContext
                 .HasMaxLength(8)
                 .IsFixedLength()
                 .HasColumnName("dni");
-            // entity.Property(e => e.Edad)
-            //     .HasColumnType("int(10) unsigned")
-            //     .HasColumnName("edad");
+            entity.Property(e => e.Estado)
+                .HasColumnType("char")
+                .HasColumnName("estado");
             entity.Property(e => e.IdLocalidad)
                 .HasColumnType("int(10) unsigned")
                 .HasColumnName("id_localidad");

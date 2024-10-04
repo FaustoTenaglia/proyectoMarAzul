@@ -1,5 +1,6 @@
 using NeoRemiseria.Models;
 using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
 namespace NeoRemiseria.Services;
@@ -101,6 +102,35 @@ public abstract class TableService<T>: ITable<T> where T: class{
 
         // Devolver verdadero
         return true;
+    }
+
+    // Filter
+    public virtual async Task<List<T>> FilterItems(string valor, List<string>? properties = null){
+        
+        var query = _context.Set<T>().AsQueryable();
+
+        // Si no se especifican propiedades, obtenemos todas las propiedades excepto "Id"
+        if (properties == null || !properties.Any()){
+            properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                   .Where(p => p.Name != "Id")
+                                   .Select(p => p.Name)
+                                   .ToList();
+        }
+
+        foreach (var property in properties){
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var member = Expression.Property(parameter, property);
+            var constant = Expression.Constant(valor);
+            var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+
+            if (containsMethod != null){
+                var containsExpression = Expression.Call(member, containsMethod, constant);
+                var predicate = Expression.Lambda<Func<T, bool>>(containsExpression, parameter);
+                query = query.Where(predicate);
+            }
+        }
+
+        return await query.ToListAsync();
     }
 }
 

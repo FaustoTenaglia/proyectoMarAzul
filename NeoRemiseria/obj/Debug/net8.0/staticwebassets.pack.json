@@ -5,6 +5,14 @@
       "PackagePath": "staticwebassets\\NeoRemiseria.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\MarAzul.ico",
+      "PackagePath": "staticwebassets\\MarAzul.ico"
+    },
+    {
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\MarAzul.png",
+      "PackagePath": "staticwebassets\\MarAzul.png"
+    },
+    {
       "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\app.css",
       "PackagePath": "staticwebassets\\app.css"
     },

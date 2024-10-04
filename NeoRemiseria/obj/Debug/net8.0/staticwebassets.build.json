@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "r66434O7HIDKBcS/Osx3df8De+hkiwwEiqA/9xWSsFo=",
+  "Hash": "P2WRGBU3E4HHp5YUWshKJzG/quWnzZnSIbWWSegzwyU=",
   "Source": "NeoRemiseria",
   "BasePath": "_content/NeoRemiseria",
   "Mode": "Default",
@@ -1953,6 +1953,44 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\site.js"
+    },
+    {
+      "Identity": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\MarAzul.ico",
+      "SourceId": "NeoRemiseria",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\",
+      "BasePath": "_content/NeoRemiseria",
+      "RelativePath": "MarAzul.ico",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\MarAzul.ico"
+    },
+    {
+      "Identity": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\MarAzul.png",
+      "SourceId": "NeoRemiseria",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\",
+      "BasePath": "_content/NeoRemiseria",
+      "RelativePath": "MarAzul.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\MarAzul.png"
     }
   ]
 }

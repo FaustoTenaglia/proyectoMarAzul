@@ -7,6 +7,7 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
 @inject ITable<Persona> PersonaService
+@inject ITable<Localidad> LocalidadService
 
 @rendermode InteractiveServer
 
@@ -82,10 +83,12 @@ else{
     private static List<string> campos = new List<string>(){"DNI","Apellido","Nombre","Sexo"," Edad", "Calle", "N°","Localidad","Provincia","Telefonos"};
     private static List<string> propiedades = new List<string>{"Dni","Apellido","Nombre","Sexo","Nacimiento","Calle","Numero","IdLocalidadNavigation.Nombre","IdLocalidadNavigation.IdProvinciaNavigation.Nombre"};
     private List<Persona> personas = new List<Persona>();
+    private List<Localidad> localidades = new List<Localidad>();
     private string? query = "";
     private Persona? personaSeleccionada;
 
     protected override async Task OnInitializedAsync(){
+        localidades = await LocalidadService.GetAll();
         await CargarDatos();
     }
     private async Task CargarDatos(){

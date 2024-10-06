@@ -337,6 +337,12 @@ public partial class DbremiseriaContext : DbContext
                 .HasMaxLength(7)
                 .IsFixedLength()
                 .HasColumnName("patente");
+            entity.Property(e => e.Habilitacion)
+                .HasColumnType("int(10)")
+                .HasColumnName("habilitacion");
+            entity.Property(e => e.Estado)
+                .HasColumnType("char")
+                .HasColumnName("estado");
 
             entity.HasOne(d => d.IdModeloNavigation).WithMany(p => p.Moviles)
                 .HasForeignKey(d => d.IdModelo)

@@ -8,6 +8,7 @@ public partial class Movil
     public uint Id { get; set; }
 
     public string Patente { get; set; } = null!;
+    public int Habilitacion {get; set;} = 0;
 
     public ushort? Año { get; set; }
 
@@ -16,6 +17,7 @@ public partial class Movil
     public uint? IdCartel { get; set; }
 
     public uint? IdTitular { get; set; }
+    public char Estado {get; set;} = 'A';
 
     public virtual ICollection<Cartel> Carteles { get; set; } = new List<Cartel>();
 

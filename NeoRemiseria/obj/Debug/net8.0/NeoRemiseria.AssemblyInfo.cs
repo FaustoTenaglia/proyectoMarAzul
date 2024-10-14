@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NeoRemiseria")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+495ae1e9d9a397d47f3b45c2eb8fa0ee6060bc3e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6ba658c5b260969216d71739dac5a885815fe002")]
 [assembly: System.Reflection.AssemblyProductAttribute("NeoRemiseria")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NeoRemiseria")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

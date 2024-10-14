@@ -1,6 +1,6 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Remiseria Mar Azul</a>
+        <a class="navbar-brand" href="">NeoRemiseria</a>
     </div>
 </div>
 
@@ -14,56 +14,64 @@
             </NavLink>
         </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
+        <div class="nav-item px-3 flex-shrink-0 p-3">
+            <ul class="list-unstyled ps-0">
+                <li class="mb-1">
+                    <button href="personas"class="btn btn-toggle nav-link collapsed d-inline-flex align-items-center" data-bs-toggle="collapse" data-bs-target="#personas-collapse" aria-expanded="true">
+                        <i class="bi bi-plus-square-fill-nav-menu"></i>Personas
+                    </button>
+                    <div class="collapse show" id="personas-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 px-2">
+                            <li><NavLink href="persona-form" class="nav-link">
+                                <span class="bi bi-person-plus-fill"></span>Agregar
+                            </NavLink></li>
+                            <li><NavLink href="personas/dueños" class="nav-link">    
+                                <span class="bi bi-person-vcard"></span>Dueños
+                            </NavLink></li>
+                            <li><NavLink class="nav-link">
+                                <span class="bi"></span>Chofer
+                            </NavLink></li>
+                            <li><NavLink class="nav-link" href="personas/listado">
+                                <span class="bi"></span>Listado
+                            </NavLink></li>
+                            <li><NavLink class="nav-link" href="localidades">
+                                <span class="bi"></span>Localidades
+                            </NavLink></li>
+                            <li><NavLink class="nav-link" href="provincias">
+                                <span class="bi"></span>Provincias
+                            </NavLink></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle nav-link collapsed d-inline-flex align-items-center" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#moviles-collapse"
+                        aria-expanded="true">
+                        <i class="bi bi-plus-square-fill-nav-menu"></i>Móviles
+                    </button>
+                    <div class="collapse show" id="moviles-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-nomrmal pb-1 px-2">
+                            <li>
+                                <NavLink class="nav-link" href="moviles">
+                                    <span class="bi"></span>Autos
+                                </NavLink>
+                            </li>
+                            <li><NavLink class="nav-link" href="modelo">
+                                <span class="bi"></span>Modelos
+                            </NavLink></li>
+                            <li><NavLink class="nav-link" href="marcas">
+                                <span class="bi"></span>Marcas
+                            </NavLink></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
         </div>
 
-        <div class="nav-item px-3">
+        @* <div class="nav-item px-3">
             <NavLink class="nav-link" href="weather">
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
             </NavLink>
-        </div>
-
-        <div>
-            <NavLink class="nav-link" href="moviles">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="ture"></span> Móviles
-            </NavLink>
-        </div>
-        <div>
-            <NavLink class="nav-link" href="modelo">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="ture"></span> Modelos
-            </NavLink>
-        </div>
-        <div>
-            <NavLink class="nav-link" href="marcas">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="ture"></span> Marcas
-            </NavLink>
-        </div>
+        </div> *@
     </nav>
 </div>
-
-<button class="btn btn-dark toggle-btn" @onclick="ToggleSidebar">
-    <i class="bi bi-list"></i>
-</button>
-
-<div class="@SidebarClass" id="nav-scrollable">
-    <!-- Sidebar content -->
-</div>
-
-<div class="@MainContentClass" id="flex-column">
-    <!-- Main content -->
-</div>
-
-@code {
-    private bool isSidebarCollapsed = false;
-
-    private string SidebarClass => isSidebarCollapsed ? "nav-scrollable collapsed" : "nav-scrollable";
-    private string MainContentClass => isSidebarCollapsed ? "flex-column collapsed" : "flex-column";
-
-    private void ToggleSidebar()
-    {
-        isSidebarCollapsed = !isSidebarCollapsed;
-    }
-}

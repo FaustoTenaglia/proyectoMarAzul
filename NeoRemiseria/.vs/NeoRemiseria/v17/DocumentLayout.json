@@ -1,0 +1,349 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\models\\persona.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:models\\persona.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\components\\pages\\moviles\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:components\\pages\\moviles\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\components\\pages\\personas\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:components\\pages\\personas\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\models\\movil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:models\\movil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\services\\movilservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:services\\movilservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:components\\layout\\mainlayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\components\\pages\\modaldialog.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:components\\pages\\modaldialog.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\services\\tableservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:services\\tableservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\components\\pages\\personas\\listado.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:components\\pages\\personas\\listado.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\wwwroot\\bootstrap\\5.3.3\\content\\content\\bootstrap-grid.css.map||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:wwwroot\\bootstrap\\5.3.3\\content\\content\\bootstrap-grid.css.map||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\wwwroot\\bootstrap\\5.3.3\\contentfiles\\any\\any\\wwwroot\\css\\bootstrap-grid.min.css.map||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:wwwroot\\bootstrap\\5.3.3\\contentfiles\\any\\any\\wwwroot\\css\\bootstrap-grid.min.css.map||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\wwwroot\\bootstrap\\5.3.3\\content\\content\\bootstrap-grid.min.css.map||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:wwwroot\\bootstrap\\5.3.3\\content\\content\\bootstrap-grid.min.css.map||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\wwwroot\\bootstrap\\5.3.3\\contentfiles\\any\\any\\wwwroot\\css\\bootstrap-grid.css.map||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:wwwroot\\bootstrap\\5.3.3\\contentfiles\\any\\any\\wwwroot\\css\\bootstrap-grid.css.map||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\models\\pago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:models\\pago.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\models\\dbremiseriacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:models\\dbremiseriacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|c:\\users\\eduel\\onedrive\\documentos\\github\\proyectomarazul\\neoremiseria\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{6362DCBE-EC5F-4C19-9CA8-138D7FEFEB04}|NeoRemiseria.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0174dea2-fdbe-4ef1-8f99-c0beae78880f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Persona.cs",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Models\\Persona.cs",
+              "RelativeDocumentMoniker": "Models\\Persona.cs",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Models\\Persona.cs",
+              "RelativeToolTip": "Models\\Persona.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-14T23:13:02.135Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Movil.cs",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Models\\Movil.cs",
+              "RelativeDocumentMoniker": "Models\\Movil.cs",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Models\\Movil.cs",
+              "RelativeToolTip": "Models\\Movil.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-14T23:05:29.588Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MovilService.cs",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Services\\MovilService.cs",
+              "RelativeDocumentMoniker": "Services\\MovilService.cs",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Services\\MovilService.cs",
+              "RelativeToolTip": "Services\\MovilService.cs",
+              "ViewState": "AgIAADYAAAAAAAAAAAAAwGAAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-14T23:04:31.484Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Components\\Layout\\NavMenu.razor",
+              "RelativeDocumentMoniker": "Components\\Layout\\NavMenu.razor",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Components\\Layout\\NavMenu.razor",
+              "RelativeToolTip": "Components\\Layout\\NavMenu.razor",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAADUAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-10-14T23:02:52.528Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "MainLayout.razor",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Components\\Layout\\MainLayout.razor",
+              "RelativeDocumentMoniker": "Components\\Layout\\MainLayout.razor",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Components\\Layout\\MainLayout.razor",
+              "RelativeToolTip": "Components\\Layout\\MainLayout.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-10-14T23:02:50.736Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ModalDialog.razor",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Components\\Pages\\ModalDialog.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\ModalDialog.razor",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Components\\Pages\\ModalDialog.razor",
+              "RelativeToolTip": "Components\\Pages\\ModalDialog.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-10-14T23:02:39.591Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Home.razor",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Components\\Pages\\Home.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Home.razor",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Components\\Pages\\Home.razor",
+              "RelativeToolTip": "Components\\Pages\\Home.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-10-14T23:02:37.773Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Index.razor",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Components\\Pages\\Moviles\\Index.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Moviles\\Index.razor",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Components\\Pages\\Moviles\\Index.razor",
+              "RelativeToolTip": "Components\\Pages\\Moviles\\Index.razor",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAkwFQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-10-14T23:02:31.248Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "TableService.cs",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Services\\TableService.cs",
+              "RelativeDocumentMoniker": "Services\\TableService.cs",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Services\\TableService.cs",
+              "RelativeToolTip": "Services\\TableService.cs",
+              "ViewState": "AgIAAEYAAAAAAAAAAAAgwGkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-14T22:58:03.493Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Listado.razor",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Components\\Pages\\Personas\\Listado.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Personas\\Listado.razor",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Components\\Pages\\Personas\\Listado.razor",
+              "RelativeToolTip": "Components\\Pages\\Personas\\Listado.razor",
+              "ViewState": "AgIAAEMAAAAAAAAAAAAiwGAAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-10-14T22:56:47.874Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Index.razor",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Components\\Pages\\Personas\\Index.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Personas\\Index.razor",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Components\\Pages\\Personas\\Index.razor",
+              "RelativeToolTip": "Components\\Pages\\Personas\\Index.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACsAAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-10-14T22:56:02.387Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "bootstrap-grid.min.css.map",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.min.css.map",
+              "RelativeDocumentMoniker": "wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.min.css.map",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.min.css.map",
+              "RelativeToolTip": "wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.min.css.map",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAACNuAEAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-10-14T22:55:46.89Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "bootstrap-grid.min.css.map",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.min.css.map",
+              "RelativeDocumentMoniker": "wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.min.css.map",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.min.css.map",
+              "RelativeToolTip": "wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.min.css.map",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAADrvQEAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-10-14T22:55:44.361Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "bootstrap-grid.css.map",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.css.map",
+              "RelativeDocumentMoniker": "wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.css.map",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.css.map",
+              "RelativeToolTip": "wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.css.map",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAABYywIAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-10-14T22:55:39.016Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "bootstrap-grid.css.map",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.css.map",
+              "RelativeDocumentMoniker": "wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.css.map",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.css.map",
+              "RelativeToolTip": "wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.css.map",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAACuEgMAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-10-14T22:55:20.238Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Pago.cs",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Models\\Pago.cs",
+              "RelativeDocumentMoniker": "Models\\Pago.cs",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Models\\Pago.cs",
+              "RelativeToolTip": "Models\\Pago.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-04T13:29:12.709Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "appsettings.Development.json",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\appsettings.Development.json",
+              "RelativeToolTip": "appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-10-04T13:27:11.4Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-04T12:39:52.694Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "DbremiseriaContext.cs",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Models\\DbremiseriaContext.cs",
+              "RelativeDocumentMoniker": "Models\\DbremiseriaContext.cs",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\Models\\DbremiseriaContext.cs",
+              "RelativeToolTip": "Models\\DbremiseriaContext.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAIwDcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-04T12:38:53.555Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\eduel\\OneDrive\\Documentos\\GitHub\\proyectoMarAzul\\NeoRemiseria\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-10-04T12:35:51.038Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

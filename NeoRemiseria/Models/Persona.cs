@@ -14,6 +14,8 @@ public partial class Persona
 
     public string? Nombre { get; set; }
 
+    public string NombreCompleto => $"{Nombre} {Apellido}";
+
     public byte? Sexo { get; set; }
 
     public DateOnly? Nacimiento { get; set; }

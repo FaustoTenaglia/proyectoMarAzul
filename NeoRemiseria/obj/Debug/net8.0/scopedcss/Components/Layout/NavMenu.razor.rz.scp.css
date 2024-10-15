@@ -88,6 +88,9 @@
 .navbar-toggler:checked ~ .nav-scrollable[b-gqbi8btcu7] {
     display: block;
 }
+.bi bi-plus-square-fill-nav-menu[b-gqbi8btcu7]{
+    padding: 10px;
+}
 
 @media (min-width: 641px) {
     .navbar-toggler[b-gqbi8btcu7] {

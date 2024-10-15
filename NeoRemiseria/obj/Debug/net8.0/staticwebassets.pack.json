@@ -1,407 +1,407 @@
 {
   "Files": [
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\NeoRemiseria.bundle.scp.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\NeoRemiseria.bundle.scp.css",
       "PackagePath": "staticwebassets\\NeoRemiseria.bundle.scp.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\app.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\app.css",
       "PackagePath": "staticwebassets\\app.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\.nupkg.metadata",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\.nupkg.metadata",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\.nupkg.metadata"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\.signature.p7s",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\.signature.p7s",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\.signature.p7s"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\bootstrap.5.3.3.nupkg",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\bootstrap.5.3.3.nupkg",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\bootstrap.5.3.3.nupkg"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\bootstrap.5.3.3.nupkg.sha512",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\bootstrap.5.3.3.nupkg.sha512",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\bootstrap.5.3.3.nupkg.sha512"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\bootstrap.nuspec",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\bootstrap.nuspec",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\bootstrap.nuspec"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\bootstrap.png",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\bootstrap.png",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\bootstrap.png"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.rtl.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.rtl.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.rtl.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.rtl.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.rtl.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.rtl.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.rtl.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.rtl.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.rtl.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.rtl.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.rtl.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-grid.rtl.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.rtl.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.rtl.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.rtl.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.rtl.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.rtl.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.rtl.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.rtl.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.rtl.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.rtl.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.rtl.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.rtl.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-reboot.rtl.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.rtl.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.rtl.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.rtl.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.rtl.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.rtl.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.rtl.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.rtl.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.rtl.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.rtl.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.rtl.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.rtl.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap-utilities.rtl.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.rtl.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.rtl.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.rtl.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.rtl.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.rtl.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.rtl.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.rtl.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.rtl.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.rtl.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.rtl.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.rtl.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\css\\bootstrap.rtl.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.bundle.js",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.bundle.js",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.bundle.js"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.bundle.js.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.bundle.js.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.bundle.js.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.bundle.min.js",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.bundle.min.js",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.bundle.min.js"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.bundle.min.js.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.bundle.min.js.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.bundle.min.js.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.esm.js",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.esm.js",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.esm.js"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.esm.js.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.esm.js.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.esm.js.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.esm.min.js",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.esm.min.js",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.esm.min.js"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.esm.min.js.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.esm.min.js.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.esm.min.js.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.js",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.js",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.js"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.js.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.js.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.js.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.min.js",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.min.js",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.min.js"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.min.js.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.min.js.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\contentFiles\\any\\any\\wwwroot\\js\\bootstrap.min.js.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.rtl.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.rtl.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.rtl.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.rtl.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.rtl.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.rtl.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.rtl.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.rtl.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.rtl.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.rtl.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.rtl.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-grid.rtl.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.rtl.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.rtl.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.rtl.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.rtl.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.rtl.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.rtl.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.rtl.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.rtl.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.rtl.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.rtl.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.rtl.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-reboot.rtl.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.rtl.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.rtl.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.rtl.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.rtl.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.rtl.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.rtl.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.rtl.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.rtl.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.rtl.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.rtl.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.rtl.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap-utilities.rtl.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.rtl.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.rtl.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap.rtl.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.rtl.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.rtl.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap.rtl.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.rtl.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.rtl.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap.rtl.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.rtl.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Content\\bootstrap.rtl.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Content\\bootstrap.rtl.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.bundle.js",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.bundle.js",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.bundle.js"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.bundle.js.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.bundle.js.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.bundle.js.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.bundle.min.js",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.bundle.min.js",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.bundle.min.js"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.bundle.min.js.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.bundle.min.js.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.bundle.min.js.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.esm.js",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.esm.js",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.esm.js"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.esm.js.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.esm.js.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.esm.js.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.esm.min.js",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.esm.min.js",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.esm.min.js"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.esm.min.js.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.esm.min.js.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.esm.min.js.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.js",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.js",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.js"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.js.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.js.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.js.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.min.js",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.min.js",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.min.js"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.min.js.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.min.js.map",
       "PackagePath": "staticwebassets\\bootstrap\\5.3.3\\content\\Scripts\\bootstrap.min.js.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\bootstrap.min.css",
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\favicon.png",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\favicon.png",
       "PackagePath": "staticwebassets\\favicon.png"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\images\\icons.svg",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\images\\icons.svg",
       "PackagePath": "staticwebassets\\images\\icons.svg"
     },
     {
-      "Id": "C:\\Users\\eduel\\Downloads\\a\\NeoRemiseria\\wwwroot\\js\\site.js",
+      "Id": "C:\\Users\\fabri\\Documents\\GitHub\\proyectoMarAzul\\NeoRemiseria\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },
     {

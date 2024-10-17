@@ -132,5 +132,9 @@ public abstract class TableService<T>: ITable<T> where T: class{
 
         return await query.ToListAsync();
     }
+
+    public virtual async Task<bool> Fetch(string valor, string campo){
+        return await _context.Set<T>().AnyAsync(e => EF.Property<string>(e, campo) == valor);
+    }
 }
 

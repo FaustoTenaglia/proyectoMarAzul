@@ -18,7 +18,7 @@
     <h3 class="mb-3 text-center">Datos Personales</h3>
     <div class="form-group mb-3">
         <label for="dni">DNI:</label>
-        <InputText id="dni" @bind-Value="persona.Dni" class="form-control" style="width: 12em;" required />
+        <InputText id="dni" @bind-Value="persona.Dni" class="form-control" style="width: 12rem;" required />
         <ValidationMessage For="@(() => persona.Dni)" />
     </div>
 
@@ -37,7 +37,7 @@
     <div class="row">
         <div class="form-group mb-3 col-sm-6">
             <label for="sexo">Sexo:</label>
-            <InputSelect id="sexo" @bind-Value="persona.Sexo" class="form-control" style="width: 8em;">
+            <InputSelect id="sexo" @bind-Value="persona.Sexo" class="form-control" style="width: 8rem;">
                 <option value="-1">Seleccione...</option>
                 <option value="1">Masculino</option>
                 <option value="0">Femenino</option>
@@ -46,7 +46,7 @@
 
         <div class="form-group mb-3 col-sm-6">
             <label for="nacimiento">Fecha de Nacimiento:</label>
-            <InputDate id="nacimiento" @bind-Value="persona.Nacimiento" class="form-control" style="width: 10em"/>
+            <InputDate id="nacimiento" @bind-Value="persona.Nacimiento" class="form-control" style="width: 10rem"/>
         </div>
     </div>
 
@@ -80,7 +80,7 @@
         @if (telefonos != null){
             @foreach(var telefono in telefonos){
                 <li class="list-group-item d-flex" style="width: fit-content;">
-                    <InputText class="form-control me-2" @bind-Value=@telefono.Numero style="width: 16em;"/>
+                    <InputText class="form-control me-2" @bind-Value=@telefono.Numero style="width: 16rem;"/>
                     <button class="btn btn-outline-danger" type="button" @onclick="()=>{telefonos.Remove(telefono);}">
                         <i class="bi bi-telephone-minus-fill"></i>
                     </button>

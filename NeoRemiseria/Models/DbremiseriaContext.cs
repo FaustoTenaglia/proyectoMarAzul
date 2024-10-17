@@ -133,9 +133,10 @@ public partial class DbremiseriaContext : DbContext
 
         modelBuilder.Entity<Chofer>(entity =>
         {
-            entity.HasKey(e => new { e.IdPersona, e.NumeroMovil, e.FechaDesde })
-                .HasName("PRIMARY")
-                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
+            // entity.HasKey(e => new { e.IdPersona, e.NumeroMovil, e.FechaDesde })
+            //     .HasName("PRIMARY")
+            //     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.ToTable("chofer");
 

@@ -25,6 +25,7 @@ builder.Services.AddScoped<ITable<Persona>, PersonaService>();
 builder.Services.AddScoped<ITable<Provincia>, ProvinciaService>();
 builder.Services.AddScoped<ITable<Telefono>, TelefonoService>();
 builder.Services.AddScoped<ITable<Chofer>, ChoferService>();
+builder.Services.AddScoped<ITable<Deuda>, DeudaService>();
 builder.Services.AddScoped<IVista<VModelo>, VModeloService>(); // No se usa
 
 var app = builder.Build();

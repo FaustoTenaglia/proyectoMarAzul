@@ -20,6 +20,8 @@ public partial class DbremiseriaContext : DbContext
 
     public virtual DbSet<Caja> Cajas { get; set; }
 
+    public DbSet<CajaMovimiento> CajaMovimientos { get; set; }
+
     public virtual DbSet<Cartel> Carteles { get; set; }
 
     public virtual DbSet<Chofer> Choferes { get; set; }
@@ -77,6 +79,11 @@ public partial class DbremiseriaContext : DbContext
                 .HasPrecision(10, 2)
                 .HasColumnName("importe");
         });
+
+        modelBuilder.Entity<CajaMovimiento>()
+            .HasOne(cm => cm.Caja)
+            .WithMany()
+            .HasForeignKey(cm => new { cm.Turno });
 
         modelBuilder.Entity<Caja>(entity =>
         {

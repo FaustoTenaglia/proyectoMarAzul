@@ -216,7 +216,11 @@ public partial class DbremiseriaContext : DbContext
         modelBuilder.Entity<Deuda>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
-            entity.ToTable("Deuda");
+            entity.ToTable("deuda");
+
+            entity.Property(e => e.IdMovil)
+                .HasColumnType("int(10) unsigned")
+                .HasColumnName("id_movil");
 
             entity.HasOne(d => d.IdMovilNavigation).WithMany(p => p.Deudas)
                 .HasForeignKey(d => d.IdMovil);

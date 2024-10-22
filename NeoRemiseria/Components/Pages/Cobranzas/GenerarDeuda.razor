@@ -1,0 +1,230 @@
+@page "/cobranzas/generar-deuda"
+
+@using Microsoft.EntityFrameworkCore
+@using MySql.Data.MySqlClient
+@using NeoRemiseria
+@using Models
+@using Services
+
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@inject ITable<Movil> MovilService
+@inject ITable<Persona> PersonaService
+@inject ITable<Deuda> DeudaService
+
+@rendermode InteractiveServer
+
+<h3>Generar Deuda</h3>
+<div class="input-group mb-3">
+    <span class="input-group-text">Para</span>
+    <div class="d-flex flex-column align-items-center justify-content-center">
+        <div class="d-block position-static pt-0 mx-0 overflow-hidden">
+            <div class="input-group">
+                <input type="text" class="form-control" autocomplete="false" placeholder="Seleccione los elementos de la lista" disabled>
+                <button class="btn btn-outline-secondary btn-sm" type="button" @onclick="() => {MostrarLista = !MostrarLista; ActualizaMovilesSeleccionado();}">
+                    @if (MostrarLista) { 
+                        <span class="input-group-text-sm">&#x25B2;</span> <!-- Icono de flecha hacia arriba -->
+                    } else {
+                        <span class="input-group-text-sm">&#x25BC;</span> <!-- Icono de flecha hacia abajo -->
+                    }
+                </button>
+            </div>
+            @if (MostrarLista){
+                <ul class="list-unstyled mb-0 list-group">
+                    <li class="list-group-item">
+                            <input type="checkbox" id="checkTodos" class="form-check-input me-1" @bind="@TodosItems"/>
+                            <label class="form-check-label p-1" for="checkTodos">Todos</label>
+                    </li>
+                    @foreach (var item in listaSeleccion){
+                        <li class="list-group-item">
+                            <input type="checkbox" class="form-check-input me-1" @bind="@item.Seleccionado"/>
+                            <label class="form-check-label p-1">@item.Nombre</label>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+    <div class="btn-group-sm form-check form-check-inline" role="group">
+        <input type="radio" value="1" name="seleccion" id="radioMovil" class="btn-check" autocomplete="off" @onchange="@CambiaSeleccion" checked >
+        <label for="radioMovil" class="btn btn-outline-primary">Movil</label>
+        
+        <input type="radio" value="2" name="seleccion" id="radioTitular" class="btn-check" autocomplete="off" @onchange="@CambiaSeleccion">
+        <label for="radioTitular" class="btn btn-outline-primary">Dueño</label>
+    </div>
+</div>
+<div class="input-group mb-3" style="width: 14rem;">
+    <span class="input-group-text">Período</span>
+    <input type="date" class="form-control" @bind="@periodoIngresado" />
+</div>
+<div class="input-group mb-3" style="width: 14rem">
+    <span class="input-group-text">Importe</span>
+    <input type="number" class="form-control" step="0.01" @bind="@importeIngresado">
+</div>
+
+<!-- Moviles seleccionados -->
+<table class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <td>Movil</td>
+            <td>Patente</td>
+            <td>Quitar</td>
+        </tr>
+    </thead>
+    <tbody>
+            @if(movilesSeleccionado != null && movilesSeleccionado.Any()){
+                foreach(var m in movilesSeleccionado){
+                    <tr>
+                        <td>@m.Id</td>
+                        <td>@m.Patente</td>
+                        <td><button type="button" class="btn btn-sm btn-outline-danger" @onclick="() => {movilesSeleccionado.Remove(m);}">
+                            <i class="bi bi-trash"></i>
+                        </button></td>
+                    </tr>
+                }
+            }
+            else{
+            <tr>
+                <td colspan="3">
+                    <p class="text-center"><i>sin móviles seleccionados</i></p>
+                </td>
+            </tr>
+            }
+    </tbody>
+    <tfoot>
+        <tr class="fw-bold">
+            <td colspan="2">Total</td>
+            <td>@movilesSeleccionado?.Count()</td>
+        </tr>
+    </tfoot>
+</table>
+<div class="btn-group mt-3 text-end">
+    <button type="button" class="btn btn-success" @onclick="() => RegistrarDeuda()">Generar</button>
+    <button type="button" class="btn btn-secondary" @onclick="() => Cancelar()">Cancelar</button>
+</div>
+@code{
+    private class Item {
+        public uint Id {get; set;}
+        public string Nombre {get; set;}
+        public bool Seleccionado {get; set;} = false;
+    }
+
+    /*private class Deuda {
+        public uint Id {get; set;}
+        public DateOnly Periodo {get; set;} = new DateOnly(DateTime.Now.Year, DateTime.Now.Month,1);
+        public decimal Importe {get; set;} = 0.00m;
+        public decimal Saldo {get; set;} = 0.00m;
+        public uint IdMovil {get; set;}
+    }*/
+
+    private decimal importeIngresado {get; set;}
+    private DateOnly periodoIngresado {get; set;} = new DateOnly(DateTime.Now.Year, DateTime.Now.Month,1);
+    private string Seleccion {get; set;} = "1"; // Valor por defecto "Movil"
+    private bool MostrarLista {get; set;} = false;
+    private bool TodosItems {
+        get => listaSeleccion.All(i => i.Seleccionado); 
+        set{
+            foreach(var i in listaSeleccion){i.Seleccionado = value;}
+        }
+    }
+
+    private List<Movil> moviles = new List<Movil>();
+    private List<Movil>? movilesSeleccionado;
+    private List<Persona> titulares = new List<Persona>();
+    private List<Item> listaSeleccion = new List<Item>();
+    private List<Deuda> deudasParaRegistrar = new List<Deuda>();
+
+    protected override async Task OnInitializedAsync(){
+        // Cargar datos desde la base de datos
+        moviles = await MovilService.GetAll(m => m.IdTitular != null);
+        // Obtener id de las personas que son dueños de los vehículos
+        var titularesId = moviles.Select(m => m.IdTitular)
+                            .Distinct()
+                            .ToList();
+
+        // Obtener los datos personales de los titulares
+        titulares = await PersonaService.GetAll(p => titularesId.Contains(p.Id));
+
+        // Cargar lista a seleccionar
+        listaSeleccion = moviles.Select(m => new Item {
+            Id = m.Id,
+            Nombre = $"{m.Patente} - {m.IdModeloNavigation?.Nombre}",
+            Seleccionado = false
+            }).ToList();
+    }
+
+    // Manejar la seleccion de las opciones
+    private void CambiaSeleccion(ChangeEventArgs e){
+        Seleccion = e.Value.ToString();
+        if (Seleccion == "1"){
+            listaSeleccion = moviles.Select(m => new Item {
+                Id = m.Id,
+                Nombre = $"Movil {m.Id} {m.Patente} - {m.IdModeloNavigation?.Nombre}",
+                Seleccionado = false
+            }).ToList();
+        }else{
+            listaSeleccion = titulares.Select(p => new Item {
+                Id = p.Id,
+                Nombre = $"{p.Dni} - {p.Apellido} {p.Nombre}",
+                Seleccionado = false
+            }).ToList();
+        }
+    }
+
+    private void ActualizaMovilesSeleccionado(){
+        var listaId = listaSeleccion
+                        .Where(i => i.Seleccionado == true)
+                        .Select(i => i.Id)
+                        .ToList();
+
+        if (Seleccion == "1"){
+            movilesSeleccionado = moviles.Where(m => listaId.Contains(m.Id))
+                                    .Select(m => new Movil {
+                                        Id = m.Id,
+                                        Patente = m.Patente
+                                    })
+                                    .ToList();
+        }
+        else{
+            movilesSeleccionado = moviles.Where(m => listaId.Contains((uint)m.IdTitular))
+                                    .Select(m => new Movil {
+                                        Id = m.Id,
+                                        Patente = m.Patente
+                                    })
+                                    .ToList();
+        }
+    }
+
+    private async Task RegistrarDeuda(){
+        deudasParaRegistrar = movilesSeleccionado
+                                .Select(m => new Deuda {
+                                    IdMovil = m.Id,
+                                    Periodo = periodoIngresado,
+                                    Importe = importeIngresado,
+                                    Saldo = importeIngresado
+                                })
+                                .ToList();
+        if (deudasParaRegistrar != null && deudasParaRegistrar.Any()){
+            foreach(var deuda in deudasParaRegistrar){
+                try{
+                    await DeudaService.AddItem(deuda);
+                }
+                //catch{DbUpdateException ex} when (ex.InnerException is MySqlException mysqlEx && mysqlEx.Number == 1062){
+                catch (MySqlException ex){
+                    if (ex.Number == 1062){
+                        Console.WriteLine("Clave duplicada: no se pudo insertar el registro.");
+                    }
+                }
+                catch (Exception ex){
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
+        }
+
+        Navigation.NavigateTo("/", true);
+    }
+
+    private void Cancelar(){
+        Navigation.NavigateTo("/", true);
+    }
+}

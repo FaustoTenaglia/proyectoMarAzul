@@ -25,6 +25,7 @@ public partial class DbremiseriaContext : DbContext
     public virtual DbSet<Chofer> Choferes { get; set; }
 
     public virtual DbSet<Cobro> Cobros { get; set; }
+    public virtual DbSet<Deuda> Deudas { get; set; }
 
     public virtual DbSet<Gasto> Gastos { get; set; }
 
@@ -210,6 +211,19 @@ public partial class DbremiseriaContext : DbContext
                 .HasForeignKey(d => d.NumeroMovil)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Cobro_fk_Movil");
+        });
+
+        modelBuilder.Entity<Deuda>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+            entity.ToTable("deuda");
+
+            entity.Property(e => e.IdMovil)
+                .HasColumnType("int(10) unsigned")
+                .HasColumnName("id_movil");
+
+            entity.HasOne(d => d.IdMovilNavigation).WithMany(p => p.Deudas)
+                .HasForeignKey(d => d.IdMovil);
         });
 
         modelBuilder.Entity<Gasto>(entity =>

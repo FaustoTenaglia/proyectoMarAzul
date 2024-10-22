@@ -24,6 +24,7 @@ public partial class Movil
     public virtual ICollection<Chofer> Choferes { get; set; } = new List<Chofer>();
 
     public virtual ICollection<Cobro> Cobros { get; set; } = new List<Cobro>();
+    public virtual ICollection<Deuda> Deudas { get; set; } = new List<Deuda>();
 
     public virtual Modelo? IdModeloNavigation { get; set; }
 

@@ -21,7 +21,8 @@
         <div class="d-block position-static pt-0 mx-0 overflow-hidden">
             <div class="input-group">
                 <input type="text" class="form-control" autocomplete="false" placeholder="Seleccione los elementos de la lista" disabled>
-                <button class="btn btn-outline-secondary btn-sm" type="button" @onclick="() => {MostrarLista = !MostrarLista; ActualizaMovilesSeleccionado();}">
+                @* <button class="btn btn-outline-secondary btn-sm" type="button" @onclick="() => {MostrarLista = !MostrarLista; ActualizaMovilesSeleccionado();}"> *@
+                <button class="btn btn-outline-secondary btn-sm" type="button" @onclick="() => ActualizaMovilesSeleccionado()">
                     @if (MostrarLista) { 
                         <span class="input-group-text-sm">&#x25B2;</span> <!-- Icono de flecha hacia arriba -->
                     } else {
@@ -109,14 +110,6 @@
         public bool Seleccionado {get; set;} = false;
     }
 
-    /*private class Deuda {
-        public uint Id {get; set;}
-        public DateOnly Periodo {get; set;} = new DateOnly(DateTime.Now.Year, DateTime.Now.Month,1);
-        public decimal Importe {get; set;} = 0.00m;
-        public decimal Saldo {get; set;} = 0.00m;
-        public uint IdMovil {get; set;}
-    }*/
-
     private decimal importeIngresado {get; set;}
     private DateOnly periodoIngresado {get; set;} = new DateOnly(DateTime.Now.Year, DateTime.Now.Month,1);
     private string Seleccion {get; set;} = "1"; // Valor por defecto "Movil"
@@ -148,14 +141,14 @@
         // Cargar lista a seleccionar
         listaSeleccion = moviles.Select(m => new Item {
             Id = m.Id,
-            Nombre = $"{m.Patente} - {m.IdModeloNavigation?.Nombre}",
+            Nombre = $"Móvil {m.Id} {m.Patente} - {m.IdModeloNavigation?.Nombre}",
             Seleccionado = false
             }).ToList();
     }
 
     // Manejar la seleccion de las opciones
     private void CambiaSeleccion(ChangeEventArgs e){
-        Seleccion = e.Value.ToString();
+        Seleccion = e.Value?.ToString() ?? "1";
         if (Seleccion == "1"){
             listaSeleccion = moviles.Select(m => new Item {
                 Id = m.Id,
@@ -177,6 +170,8 @@
                         .Select(i => i.Id)
                         .ToList();
 
+        MostrarLista = !MostrarLista;
+        if (!MostrarLista){
         if (Seleccion == "1"){
             movilesSeleccionado = moviles.Where(m => listaId.Contains(m.Id))
                                     .Select(m => new Movil {
@@ -192,6 +187,7 @@
                                         Patente = m.Patente
                                     })
                                     .ToList();
+        }
         }
     }
 

@@ -10,5 +10,5 @@ public partial class Deuda{
     public decimal? Saldo {get; set;}
     public uint IdMovil {get; set;}
 
-    public virtual Movil IdMovilNavigation {get; set;}
+    public virtual Movil? IdMovilNavigation {get; set;}
 }

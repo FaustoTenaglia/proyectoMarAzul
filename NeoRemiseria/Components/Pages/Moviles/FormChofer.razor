@@ -1,0 +1,106 @@
+@page "/moviles/chofer-form/{id:int?}"
+
+@using NeoRemiseria.Components
+@using Models
+@using Services
+
+@inject NavigationManager Navigation
+@inject ITable<Persona> PersonaService
+@inject ITable<Movil> MovilService
+@inject ITable<Chofer> ChoferService
+
+@rendermode InteractiveServer
+
+<h3 class="text-center">@(Id.HasValue ? "Modificar" : "Registrar") Chofer</h3>
+
+<EditForm Model="chofer" OnValidSubmit="Enviar" class="container mx-auto">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group input-group mb-3">
+        <label for="movil" class="input-group-text">Movil</label>
+        <InputSelect id="movil" class="form-select form-control" @bind-Value="chofer.NumeroMovil" required>
+            <option value="0">Seleccione un movil de la lista</option>
+            @foreach(var movil in moviles){
+                <option value=@movil.Id>
+                    @($"{movil.Id} - Patente: {movil.Patente}")
+                </option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => chofer.NumeroMovil)" />
+    </div>
+
+    <div class="form-group input-group mb-3">
+        <label for="persona" class="input-group-text">DNI</label>
+        <InputSelect id="persona" class="form-select form-control" @bind-Value="chofer.IdPersona" required>
+            <option value="0">Seleccione una persona de la lista</option>
+                @foreach(var persona in personas){
+                    <option value=@persona.Id>
+                        @($"{persona.Dni} - {persona.Apellido}, {persona.Nombre}")
+                    </option>
+                }
+        </InputSelect>
+        <ValidationMessage For="@(() => chofer.IdPersona)" />
+    </div>
+
+    <div class="row">
+        <div class="form-group mb-3 col-sm-6">
+            <label for="desde">Desde</label>
+            <InputDate id="desde" class="form-control" @bind-Value="chofer.FechaDesde" required style="width: 10rem;"></InputDate>
+            <ValidationMessage For="@(() => chofer.FechaDesde)" />
+        </div>
+
+        @if(Id.HasValue && Id.Value > 0){
+            <div class="form-group mb-3 col-sm-6">
+                <label for="hasta">Hasta</label>
+                <InputDate id="hasta" class="form-control" @bind-Value="chofer.FechaHasta" required style="width: 10rem;"></InputDate>
+            </div>
+        }
+
+        <div class="form-group mb-3">
+            <label for="observacion">Observaciones</label>
+            <TextArea name="observacion" id="observacion" class="form-control" RowCount="5"></TextArea>
+        </div>
+    </div>
+
+    <!-- botones -->
+    <button type="submit" class="btn btn-success">Enviar</button>
+    <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
+</EditForm>
+
+@code{
+    [Parameter] public int? Id {get; set;} // Id de movil pasado
+
+    private List<Movil> moviles = new List<Movil>();
+    private List<Persona> personas = new List<Persona>();
+    private Chofer chofer = new Chofer();
+
+    protected override async Task OnInitializedAsync(){
+        moviles = await MovilService.GetAll();
+        personas = await PersonaService.GetAll();
+
+        // Comprobar si se pasó un Id
+        if (Id.HasValue && Id.Value > 0){
+            chofer = await ChoferService.GetById((uint)Id.Value);
+        }
+
+    }
+
+    private async Task Enviar(){
+        if(!Id.HasValue){
+            // Insertar datos del chofer
+            await ChoferService.AddItem(chofer);
+        }
+        else{
+            // Actualizar en Chofer
+            await ChoferService.UpdateItem(chofer);
+        }
+
+        // Redirigir al Index
+        Navigation.NavigateTo("/moviles/index", true);
+    }
+
+    private void Cancel(){
+        Navigation.NavigateTo("/moviles/index", true);
+    }
+}

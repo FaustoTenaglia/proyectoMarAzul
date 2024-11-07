@@ -1,0 +1,122 @@
+@page "/cobranzas/registrar-pago"
+
+@using NeoRemiseria
+@using NeoRemiseria.Components
+@using Models
+@using Services
+
+@using Microsoft.AspNetCore.Components.Forms
+@using Humanizer
+@using System.ComponentModel
+@using System.Reflection
+
+@inject ITable<Deuda> DeudaService
+@inject ITable<Movil> MovilService
+@inject PagoService PagoService
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+
+@rendermode InteractiveServer
+
+<h3>Registrar Pago</h3>
+
+<EditForm Model="pago" OnValidSubmit="HandleSubmit" class="container">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group mb-3">
+        <label for="IdDeuda">Comprobante N°:</label>
+        <div class="input-group">
+            <button class="btn btn-outline-primary" type="button" @onclick="ShowModalBuscar">
+                <i class="bi bi-search"></i>
+            </button>
+            <input id="IdDeuda" type="search" class="form-control" style="width: 18rem;" @bind="IdDeudaSeleccionada" required>
+            <ModalSearch Items="@deudas?.Select(d => new{Id = d.Id, Periodo = d.Periodo, Movil = d.IdMovil}).ToList()" OnSelected="(uint id) => {IdDeudaSeleccionada = (int)id;}" />
+        </div>
+        @if(IdDeudaSeleccionada > 0){
+            var deuda = deudas?.Find(d => d.Id == IdDeudaSeleccionada);
+            DateOnly hoy = DateOnly.FromDateTime(DateTime.Now);
+            
+            if(deuda != null){
+                var movil = MovilService.GetById(deuda.IdMovil);
+                <div class="card my-3 container">
+                    <div class="card-header">
+                        <h5 class="text-center">Movil N°@deuda?.IdMovil - Patente @deuda?.IdMovilNavigation?.Patente</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Periodo: @deuda?.Periodo.ToString("MMMM-yyyy")</p>
+                        @if(pagos != null){
+                            <h6><small>Pagos Anteriores</small></h6>
+                            <ol class="list-group list-group-numbered mb-3 container mx-auto">
+                                @foreach(var pago in pagos.Where(p => p.IdDeuda == (uint)IdDeudaSeleccionada).OrderBy(p => p.Id)){
+                                    <li class="list-group-item">
+                                        <span>@pago.Fecha</span>
+                                        <span>@pago.Importe?.ToString("C")</span>
+                                    </li>
+                                }
+                            </ol>
+                        }
+                        <p class="text-success">Subtotal:@pagos.Where(p => p.IdDeuda == (uint)IdDeudaSeleccionada).Sum(p => p.Importe).Value.ToString("C")</p>
+                        <p class="fw-bold">Total: @deuda?.Importe.ToString("C")</p>
+                        <p class="text-danger">Saldo: @deuda?.Saldo.Value.ToString("C")</p>
+                    </div>
+                </div>
+            }
+        }
+        @* <InputNumber @bind-Value="IdDeudaSeleccionada" class="form-control" required /> *@
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="Importe">Importe:</label>
+        <InputNumber @bind-Value="pago.Importe" class="form-control" step="0.01" required />
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="Fecha">Fecha de Pago:</label>
+        <InputDate @bind-Value="pago.Fecha" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Registrar Pago</button>
+</EditForm>
+
+@code{
+ private Pago pago = new Pago{Importe = 0.00m, Fecha = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)};
+ private Pago? UltimoPago {get;set;}
+ private List<Pago>? pagos;
+ private List<Deuda>? deudas;
+ private int IdDeudaSeleccionada = 0;
+
+protected override async Task OnInitializedAsync(){
+    deudas = await DeudaService.GetAll(d => d.Saldo > 0);
+    pagos = await PagoService.ObtenerPagos();
+}
+ private async Task HandleSubmit()
+ {
+
+    try
+    {
+        pago.IdDeuda = (uint)IdDeudaSeleccionada;
+        await   PagoService.RegistrarPago(pago);
+        Console.WriteLine("Pago Registrado Correctamente");
+        //Deberia devolverte a la lista de deudas
+        Navigation.NavigateTo($"/cobranzas/generar-deuda");
+    }
+    catch(Exception ex){
+        Console.WriteLine($"Error al registrar el pago: {ex.Message}");
+    }
+
+
+ }
+
+ private async Task ShowModalBuscar(){
+    await JSRuntime.InvokeVoidAsync("showBSModal","modalBusqueda");
+ }
+
+ public string TiempoEntreFechas(DateOnly fecha1, DateOnly fecha2){
+    int diferenciaDias = fecha2.DayNumber - fecha1.DayNumber;
+    // Crear un TimeSpan a partir de la diferencia en dias
+    TimeSpan diferencia = TimeSpan.FromDays(diferenciaDias);
+    return diferencia.Humanize();
+ }
+
+}

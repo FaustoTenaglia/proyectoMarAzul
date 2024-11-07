@@ -19,14 +19,15 @@ public class PagoService
                 throw new ArgumentException("No ingreso importe de pago");
             }
 
-            var cobro= await _context.Cobros.FindAsync(pago.IdCobro);
-            if(cobro != null){
+            // var cobro= await _context.Cobros.FindAsync(pago.IdCobro);
+            var cobro = await _context.Deudas.FindAsync(pago.IdDeuda);
+            if(cobro == null){
                 throw new ArgumentException("No se encontro la deuda asociada");
             }
 
             //Validar que el monto no exceda el importe total
 
-            if(pago.Importe > cobro.Importe){
+            if(pago.Importe > cobro?.Importe){
                 //Revisar de tirar una exception
             }
 
@@ -34,18 +35,40 @@ public class PagoService
         {
             _context.Pagos.Add(pago);
 
-            cobro.Importe -= pago.Importe;
-            cobro.Cuotas -= 1;
-            cobro.Saldo = cobro.Importe;
+            // El campo saldo debería actualizarse automaticamente
+            // con el trigger 'actualizar_saldo' al insertar un pago nuevo.
+
+            // cobro.Saldo -= pago.Importe ?? 0.00m;
+            // cobro.Importe -= pago.Importe;
+            // cobro.Cuotas -= 1;
+            // cobro.Saldo = cobro.Importe;
 
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
                 
         }
     }
+
+    public async Task<List<Pago>> ObtenerPagos(Expression<Func<Pago, bool>>? condicion=null){
+        IQueryable<Pago> query = _context.Pagos;
+        if(condicion != null){
+            query = query.Where(condicion);
+        }
+
+        // Devolver en una lista
+        return await query.ToListAsync();
+    }
+
+    public async Task<Pago?> ObtenerUltimoPago(uint IdDeuda){
+        // Obtener la última fecha de cobro
+        var fecha = await _context.Pagos.Where(p => p.IdDeuda == IdDeuda)
+                            .Select(p => p.Fecha)
+                            .MaxAsync();
+        // Verificar que se obtuvo una fecha
+        if (fecha == default){ return null; }
+
+        // Devolver el último pago
+        return await _context.Pagos.Where(p => p.IdDeuda == IdDeuda && p.Fecha == fecha)
+                            .FirstOrDefaultAsync();
+    }
 }
-
-   
-
-
-

@@ -403,18 +403,25 @@ public partial class DbremiseriaContext : DbContext
 
         modelBuilder.Entity<Pago>(entity =>
         {
-            entity.HasKey(e => new { e.IdCobro, e.Cuota, e.Fecha })
-                .HasName("PRIMARY")
-                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
+            // entity.HasKey(e => new { e.IdCobro, e.Cuota, e.Fecha })
+            //     .HasName("PRIMARY")
+            //     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
+
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.ToTable("pago");
 
-            entity.Property(e => e.IdCobro)
+            // entity.Property(e => e.IdCobro)
+            //     .HasColumnType("int(10) unsigned")
+            //     .HasColumnName("id_cobro");
+            entity.Property(e => e.IdDeuda)
                 .HasColumnType("int(10) unsigned")
-                .HasColumnName("id_cobro");
-            entity.Property(e => e.Cuota)
-                .HasColumnType("int(10) unsigned")
-                .HasColumnName("cuota");
+                .HasColumnName("id_deuda");
+
+            // entity.Property(e => e.Cuota)
+            //     .HasColumnType("int(10) unsigned")
+            //     .HasColumnName("cuota");
+            
             entity.Property(e => e.Fecha)
                 .HasDefaultValueSql("curdate()")
                 .HasColumnName("fecha");
@@ -423,10 +430,14 @@ public partial class DbremiseriaContext : DbContext
                 .HasDefaultValueSql("'0.00'")
                 .HasColumnName("importe");
 
-            entity.HasOne(d => d.IdCobroNavigation).WithMany(p => p.Pagos)
-                .HasForeignKey(d => d.IdCobro)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("Detalle_fk_Cobro");
+            // entity.HasOne(d => d.IdCobroNavigation).WithMany(p => p.Pagos)
+            //     .HasForeignKey(d => d.IdCobro)
+            //     .OnDelete(DeleteBehavior.ClientSetNull)
+            //     .HasConstraintName("Detalle_fk_Cobro");
+            entity.HasOne(d => d.IdDeudaNavigation).WithMany(p => p.Pagos)
+                .HasForeignKey(d => d.IdDeuda);
+                // .OnDelete(DeleteBehavior.ClientSetNull)
+                // .HasConstraintName("Detalle_fk_Cobro");
         });
 
         modelBuilder.Entity<Persona>(entity =>

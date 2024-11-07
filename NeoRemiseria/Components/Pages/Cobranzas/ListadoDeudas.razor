@@ -1,0 +1,67 @@
+@page "/cobranzas/listar-deudas"
+
+@using NeoRemiseria
+@using NeoRemiseria.Models
+@using NeoRemiseria.Services
+
+@using Microsoft.EntityFrameworkCore
+@using MySql.Data.MySqlClient
+
+@inject ITable<Deuda> DeudaService
+@inject ITable<Movil> MovilService
+@inject ITable<Persona> TitularService
+
+<h2>Deudas</h2>
+@if(deudas != null){
+    foreach(var periodo in deudas.Select(d => d.Periodo).Distinct()){
+        // Calcular subtotales por período
+        subtotalImporte = deudas.Where(d => d.Periodo == periodo).Sum(d => d.Importe);
+        subtotalSaldo = deudas.Where(d => d.Periodo == periodo).Sum(d => d.Saldo) ?? 0.00m;
+
+        // Mostrar los datos en una tabla
+        <section class="container w-75">
+        <h4 class="mb-2"><small><strong>Período:</strong> @periodo.ToString("MMMM-yyyy")</small></h4>
+        <table class="table table-sm table-hover mb-5">
+            <thead class="table-danger">
+                <tr>
+                    <td class="text-end">N° Comp</td>
+                    <td class="text-center">Móvil</td>
+                    <td class="text-end">Importe</td>
+                    <td class="text-end">Saldo</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var deuda in deudas.Where(d => d.Periodo == periodo)){
+                    <tr>
+                        <td class="text-end">@deuda.Id</td>
+                        <td>Móvil N°@deuda.IdMovil - @deuda.IdMovilNavigation?.Patente</td>
+                        <td class="text-end">$@deuda.Importe</td>
+                        <td class="text-end">$@deuda.Saldo</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot class="fw-bold">
+                <tr>
+                    <td colspan="2">TOTAL</td>
+                    <td class="text-end">$@subtotalImporte</td>
+                    <td class="text-end">$@subtotalSaldo</td>
+                </tr>
+            </tfoot>
+        </table>
+        </section>
+    }
+}
+else{
+    <p>Cargando...</p>
+}
+
+@code{
+    private List<Deuda>? deudas;
+    private List<Movil>? moviles;
+    private decimal subtotalImporte, subtotalSaldo; // para calcular los subtotales por período
+
+    protected override async Task OnInitializedAsync(){
+        deudas = await DeudaService.GetAll(d => d.Saldo > 0);
+        moviles = await MovilService.GetAll();
+    }
+}

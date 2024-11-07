@@ -1,0 +1,155 @@
+@typeparam T    
+
+@using System.Reflection
+@using System.ComponentModel.DataAnnotations
+
+@inject IJSRuntime JSRuntime
+
+
+<!-- Modal para la búsqueda -->
+<div class="modal fade" tabindex="-1" id="modalBusqueda" role="dialog" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header alert-primary">
+                <h5 class="modal-title">Buscar...</h5>
+                <button class="btn btn-close" type="button" data-bs-dismiss="modal" @onclick="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <div class="input-group mb-2">
+                        <input type="search" class="form-control" @bind-value="@valorFiltro" @onkeydown="CapturarTecla" @oninput="(ChangeEventArgs e)=>{Filtrar();}" />
+                        <button type="button" class="btn btn-outline-primary" @onclick="Filtrar">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text">Por</span>
+                        <select class="form-select" @bind="@propiedadSeleccionada">
+                            <option value="-1">Todos</option>
+                            @foreach(var opcion in opciones){
+                                <option value="@opciones.IndexOf(opcion)">@opcion</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            @foreach (var propiedad in typeof(T).GetProperties()){
+                                <th>@propiedad.Name</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ItemsFiltrados != null){
+                            foreach (var item in ItemsFiltrados){
+                                <tr @onclick="() => FilaSeleccionada(item)">
+                                    @foreach (var propiedad in typeof(T).GetProperties()){
+                                        <td>@propiedad.GetValue(item)</td>
+                                    }
+                                </tr>
+                            }
+                        }
+                        else{
+                            <p>Lista vacia</p>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group-sm">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="Enviar">Aceptar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="Cerrar">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+    [Parameter][Required]
+    public IEnumerable<T> Items {get; set;} = null!; // Lista con los elementos a mostrar
+    [Parameter]
+    public EventCallback<uint> OnSelected {get; set;} // Devuelve el Id seleccionado
+
+    private List<string> opciones = new List<string>();
+    private int propiedadSeleccionada {get; set;} = -1;
+    private string valorFiltro {get; set;} = "";
+    private IEnumerable<T>? ItemsFiltrados;
+
+    protected override void OnInitialized (){
+        // Guardar el nombre de las propiedades en una lista de opciones
+        foreach(var propiedad in typeof(T).GetProperties()){
+            if (propiedad.Name != "Id"){
+                opciones.Add(propiedad.Name);
+            }
+        }
+
+        ItemsFiltrados = Items;
+    }
+
+    private void CapturarTecla (KeyboardEventArgs e){
+        if (e.Key == "Enter"){
+            Filtrar();
+        }
+    }
+    
+    private async Task FilaSeleccionada(T item){
+        var propiedadId = typeof(T).GetProperty("Id");
+        if (propiedadId != null){
+            var Id = (uint?)propiedadId.GetValue(item) ?? 0;
+            await OnSelected.InvokeAsync(Id);
+            Console.WriteLine($"Id seleccionada: {Id}");
+        }
+    }
+
+    private async Task OnFilaDblClick(T item){
+        await FilaSeleccionada(item);
+
+        Cerrar();
+        await JSRuntime.InvokeVoidAsync("closeBSModal","modalBusqueda");
+    }
+
+    private void Filtrar (){
+        // Mostrar todos los elementos si no se ingresó un valor de filtro
+        if (string.IsNullOrWhiteSpace(valorFiltro)){
+            ItemsFiltrados = Items;
+            return;
+        }
+        // Comprobar si seleccionó algún campo para filtrar
+        if (propiedadSeleccionada == -1){
+            // Filtrar por todos los campos
+            ItemsFiltrados = Items.Where(i => opciones.Any(p => 
+            {
+                var propInfo = i?.GetType().GetProperty(p);
+                if (propInfo != null){
+                    var propValue = propInfo.GetValue(i)?.ToString();
+                    return propValue != null && propValue.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase);
+                }
+                return false;
+            })).ToList();
+        }else{
+            // Filtrar por el campo seleccionado
+            ItemsFiltrados = Items.Where(i => opciones.Any(p => 
+            {
+                var propInfo = i?.GetType().GetProperty(opciones[propiedadSeleccionada]); // Obtener la propiedad seleccionada
+                if (propInfo != null){
+                    var propValue = propInfo.GetValue(i)?.ToString();
+                    return propValue != null && propValue.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase);
+                }
+                return false;
+            })).ToList();
+        }
+    }
+
+    private void Enviar(){
+        Cerrar();
+    }
+
+    private void Cerrar() {
+        ItemsFiltrados = Items;
+        propiedadSeleccionada = -1;
+        valorFiltro = "";
+        //JSRuntime.InvokeVoidAsync("closeBSModal","modalBusqueda");
+    }
+}

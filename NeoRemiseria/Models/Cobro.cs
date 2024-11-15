@@ -17,6 +17,8 @@ public partial class Cobro
 
     public uint IdServicio { get; set; }
 
+    public decimal Saldo {get;set;}
+
     public virtual Servicio IdServicioNavigation { get; set; } = null!;
 
     public virtual Movil NumeroMovilNavigation { get; set; } = null!;

@@ -10,7 +10,7 @@ public partial class Pago
 
     public DateOnly Fecha { get; set; }
 
-    public decimal? Importe { get; set; }
+    public decimal Importe { get; set; }
 
     // public uint IdCobro { get; set; }
     public uint IdDeuda { get; set; }

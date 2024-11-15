@@ -29,6 +29,10 @@ public class PagoService
 
             if(pago.Importe > cobro?.Importe){
                 //Revisar de tirar una exception
+                throw new InvalidOperationException("El importe del pago no puede ser mayor al saldo")
+            }
+            if(pago.Importe < 0){
+                throw new ArgumentException("Ingrese un numero positivo")
             }
 
             using (var transaction = await _context.Database.BeginTransactionAsync())

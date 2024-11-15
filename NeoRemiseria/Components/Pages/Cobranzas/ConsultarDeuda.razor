@@ -1,0 +1,268 @@
+@page "/cobranzas/consultar-deuda"
+
+@using Microsoft.EntityFrameworkCore
+@using MySql.Data.MySqlClient
+@using NeoRemiseria
+@using Models
+@using Services
+
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@inject ITable<Movil> MovilService
+@inject ITable<Persona> PersonaService
+@inject ITable<Deuda> DeudaService
+@inject PagoService PagoService
+
+@rendermode InteractiveServer
+
+<!-- Modales para búsqueda y selección -->
+@if (moviles != null && moviles.Any()){
+    <ModalSearch Items="@moviles.Select(m => new {Id = m.Id, Patente = m.Patente, Modelo = m.IdModeloNavigation?.Nombre}).ToList()"
+                 OnSelected="(uint id) => {IdSeleccionado = (int)id;}"
+                 Id="modalBuscarMovil" />
+}
+@if (titulares != null && titulares.Any()){
+    <ModalSearch Items="@titulares.Select(m => new {Id = m.Id, Dni = m.Dni, Apellido = m.Apellido, Nombre = m.Nombre}).OrderBy(m => m.Apellido).ThenBy(m => m.Nombre).ToList()"
+                 OnSelected="(uint id) => {IdSeleccionado = (int)id;}"
+                 Id="modalBuscarTitular" />
+}
+
+<!-- Modales de mensajes de alerta -->
+<ModalDialog Id="alertaPagos"
+             Mensaje="No se registran pagos para éste período."
+             Titulo="Información" 
+             Tipo=" alert-primary"/>
+<ModalDialog Id="alertaFechaInvalida"
+             Mensaje="Los rangos ingresados no son válidos"
+             Titulo="Fecha no valida"
+             Tipo=" alert-danger" />
+
+<!-- Modal para mostrar el detalle de los pagos -->
+<section class="modal fade" id="periodoDetalle" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header alert-primary">
+                <h5 class="modal-title">Periodo @deudaActual.Periodo.ToString("MMMM-yyyy")</h5>
+                <button type="button" class="btn btn-close btn-outline-danger" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-header">
+                        <p class="card-title card-text">Movil N°@deudaActual.IdMovil</p>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">TOTAL: @deudaActual.Importe.ToString("C")</h5>
+                        <h6 class=@(@deudaActual.Saldo > 0 ? "card-subtitle mb-2 text-danger" : "card-subtitle mb-2 text-success")> Saldo: $@deudaActual.Saldo</h6>
+                        <p class="card-text">Detalle</p>
+                        <ul class="list-group list-group-flush">
+                            @foreach(var pago in pagosDetalle){
+                                <li class="list-group-item">@pago.Fecha $@pago.Importe</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<h3>Estado de Cuenta</h3>
+<div class="input-group mb-3">
+    <span class="input-group-text">Para</span>
+    <input type="text"class="form-control" @bind="@query" />
+    <button type="button" class="btn btn-outline-primary" @onclick="Buscar">
+        <i class="bi bi-search"></i>
+    </button>
+
+    <div class="btn-group-sm form-check form-check-inline" role="group">
+        <input type="radio" value="1" name="seleccion" id="radioMovil" class="btn-check" autocomplete="off" @onchange="@CambiaSeleccion" checked />
+        <label for="radioMovil" class="btn btn-outline-primary">Movil</label>
+
+        <input type="radio" value="2" name="seleccion" id="radioTitular" class="btn-check" autocomplete="off" @onchange="CambiaSeleccion" />
+        <label for="radioTitular" class="btn btn-outline-primary">Dueño</label>
+    </div>
+</div>
+<div class="row">
+    <div class="input-group mb-3 col-md-6" style="width: 14rem;">
+        <span class="input-group-text">Desde</span>
+        <input type="date" class="form-control" @bind="fechaDesde" />
+    </div>
+    <div class="input-group mb-3 col-md-6" style="width: 14rem;">
+        <span class="input-group-text">Hasta</span>
+        <input type="date" class="form-control" @bind="fechaHasta" />
+    </div>
+</div>
+
+<!-- Mostrar los moviles si se está buscando por dueño -->
+@if (IdSeleccionado > 0 && Seleccion != "1" && movilesSeleccionados != null){
+<section class="container">
+    <h5><b>Moviles</b></h5>
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <td>N°</td>
+                    <td>Patente</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var movil in movilesSeleccionados){
+                    <tr @ondblclick="() => SeleccionarFila(movil)" class="@GetRowClass(movil)">
+                        <td>@movil.Id</td>
+                        <td>@movil.Patente</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+</section>
+}
+
+@if (Seleccion != "1" && MovilSeleccionado != null){
+    <div class="mb-3">
+            <button type="button" class="btn btn-outline-success" @onclick="async Task() => {await Consultar(MovilSeleccionado.Id);}">Consultar</button>
+    </div>
+}
+
+@if (deudas != null && MovilSeleccionado != null){
+<section class="container mb-3">
+        <h6>Listado para el móvil N°@MovilSeleccionado.Id</h6>
+        <div class="list-group list-group-flush">
+            @foreach(var deuda in deudas.OrderByDescending(d => d.Periodo)){
+                <button type="button" class="list-group-item list-group-item-action" @onclick="async Task() => {await MostrarModalDetalle(deuda);}">
+                    Periodo @deuda.Periodo.ToString("MMMM-yyyy")
+                </button>
+            }
+        </div>
+</section>
+}
+else{
+    <p class="text-center">Sin datos</p>
+}
+
+@code{
+    private string Seleccion {get;set;} = "1"; // Para indicar 1: movil, 2: dueños
+    private string query {get; set;} = ""; // Para el id
+    private int IdSeleccionado {get; set;} 
+    private Movil? MovilSeleccionado; // Movil para el que se va a consultar
+    private List<Movil>? moviles, movilesSeleccionados; // Los moviles de la remiseria y los moviles por dueño
+    private List<Persona>? titulares; // Los dueños de los moviles
+    private List<Deuda>? deudas; 
+    private List<Pago>? pagos;
+    private List<Pago> pagosDetalle = new List<Pago>();
+    private Deuda deudaActual = new Deuda();
+    private DateOnly fechaDesde = new DateOnly(DateTime.Now.Year,1,1),
+                     fechaHasta = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+    protected override async Task OnInitializedAsync(){
+        // Cargar datos desde la base de datos
+        moviles = await MovilService.GetAll(m => m.IdTitular != null);
+        titulares = await PersonaService.GetAll(p => 
+                            moviles.Select(m => m.IdTitular)
+                                   .Distinct()
+                                   .Contains(p.Id));   
+    }
+
+    private void Limpiar(){
+        IdSeleccionado = 0;
+        query = "";
+
+        MovilSeleccionado = null;
+        movilesSeleccionados = null;
+
+        deudas = null;
+        pagos = null;
+    }
+
+    private void CambiaSeleccion(ChangeEventArgs e){
+        Seleccion = e.Value?.ToString() ?? "1";
+
+        Limpiar();
+        StateHasChanged();
+    }
+    
+    private async Task Buscar(){
+        if (!string.IsNullOrEmpty(query) && !string.IsNullOrWhiteSpace(query)){
+            IdSeleccionado = Convert.ToInt16(query);
+        }
+        else{
+            await MostrarModalBusqueda();
+        }
+
+        if (IdSeleccionado == 0){
+            movilesSeleccionados = null;
+            MovilSeleccionado = null;
+            return;
+        }
+
+        // Elegir los moviles dependiendo que se selecciono
+        if (Seleccion == "1"){
+            movilesSeleccionados = await MovilService.GetAll(m => m.Id == IdSeleccionado);
+            MovilSeleccionado = movilesSeleccionados[0] ?? null;
+            if (MovilSeleccionado != null){
+                Console.WriteLine($"Movil seleccionado: {MovilSeleccionado.Id}");
+                await Consultar(MovilSeleccionado.Id);
+            }
+        }else{
+            movilesSeleccionados = await MovilService.GetAll(m => m.IdTitular == IdSeleccionado);
+            MovilSeleccionado = null;
+        }
+    }
+
+    private async Task MostrarModalBusqueda(){
+        // Mostrar el modal de acuerdo a si se busca por movil o por dueño del movil
+        if (Seleccion == "1"){
+            await JSRuntime.InvokeVoidAsync("showBSModal","modalBuscarMovil");
+        }
+        else{
+            await JSRuntime.InvokeVoidAsync("showBSModal","modalBuscarTitular");
+        }
+    }
+
+    private void SeleccionarFila (Movil m){
+        if (MovilSeleccionado != m){
+            MovilSeleccionado = m;
+            deudas = null;
+            pagos = null;
+        }
+        else{
+            MovilSeleccionado = null;
+        }
+    }
+
+    private string GetRowClass(Movil m){
+        return MovilSeleccionado == m ? "table-active table-primary" : "";
+    }
+
+    private async Task Consultar (uint idMovil){
+        if (idMovil > 0 && fechaDesde <= fechaHasta){
+            deudas = await DeudaService.GetAll(d => d.IdMovil == idMovil && d.Periodo >= fechaDesde && d.Periodo <= fechaHasta);
+            if (deudas != null){
+                pagos = await PagoService.ObtenerPagos(p => deudas.Select(d => d.Id).Contains(p.IdDeuda));
+            }
+        }
+        else if(fechaHasta < fechaDesde){
+            await JSRuntime.InvokeVoidAsync("showBSModal","alertaFechaInvalida");
+        }
+    }
+
+    private async Task MostrarModalDetalle (Deuda deuda){
+        // Guardar en una variabla para poder acceder desde el modal a los datos
+        deudaActual = deuda;
+
+        // Proceder sólo si existe la deuda y hay registrados pagos
+        if (deudaActual != null && pagos != null){
+            // Obtener el detalle de los pagos para la deuda seleccionada
+            pagosDetalle = pagos.Where(p => p.IdDeuda == deudaActual.Id).ToList();
+            // Mostrar el modal sólo si se registran pagos para la deuda seleccionada
+            if (pagosDetalle != null && pagosDetalle.Any()){
+                await JSRuntime.InvokeVoidAsync("showBSModal","periodoDetalle");
+            }else{
+                await JSRuntime.InvokeVoidAsync("showBSModal","alertaPagos");
+            }
+        }
+    }
+}

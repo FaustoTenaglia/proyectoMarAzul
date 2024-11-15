@@ -7,7 +7,7 @@
 
 
 <!-- Modal para la búsqueda -->
-<div class="modal fade" tabindex="-1" id="modalBusqueda" role="dialog" data-bs-backdrop="static" aria-hidden="true">
+<div class="modal fade" tabindex="-1" id="@Id" role="dialog" data-bs-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header alert-primary">
@@ -43,7 +43,7 @@
                     <tbody>
                         @if (ItemsFiltrados != null){
                             foreach (var item in ItemsFiltrados){
-                                <tr @onclick="() => FilaSeleccionada(item)">
+                                <tr @onclick="() => FilaSeleccionada(item)" class="@PintarFila(item)">
                                     @foreach (var propiedad in typeof(T).GetProperties()){
                                         <td>@propiedad.GetValue(item)</td>
                                     }
@@ -71,11 +71,14 @@
     public IEnumerable<T> Items {get; set;} = null!; // Lista con los elementos a mostrar
     [Parameter]
     public EventCallback<uint> OnSelected {get; set;} // Devuelve el Id seleccionado
+    [Parameter]
+    public string Id {get; set;} = "modalBusqueda";
 
     private List<string> opciones = new List<string>();
     private int propiedadSeleccionada {get; set;} = -1;
     private string valorFiltro {get; set;} = "";
     private IEnumerable<T>? ItemsFiltrados;
+    private T? itemSeleccionado {get;set;} = default(T);
 
     protected override void OnInitialized (){
         // Guardar el nombre de las propiedades en una lista de opciones
@@ -95,11 +98,29 @@
     }
     
     private async Task FilaSeleccionada(T item){
+        // marcar fila seleccionada
+        if (itemSeleccionado != null && !itemSeleccionado.Equals(item)){
+            itemSeleccionado = item;
+        }
+        else{
+            itemSeleccionado = default(T);
+        }
+
+        // Guardar el id de la fila seleccionada
         var propiedadId = typeof(T).GetProperty("Id");
         if (propiedadId != null){
             var Id = (uint?)propiedadId.GetValue(item) ?? 0;
             await OnSelected.InvokeAsync(Id);
-            Console.WriteLine($"Id seleccionada: {Id}");
+        }
+    }
+
+    private string PintarFila(T item){
+        if (itemSeleccionado != null){
+            //return itemSeleccionado.Equals(item) ? $"table-active table-primary" : "";
+            return item.Equals(itemSeleccionado) ? "table-active table-primary" : "";
+        }
+        else{
+            return "";
         }
     }
 
@@ -134,8 +155,16 @@
             {
                 var propInfo = i?.GetType().GetProperty(opciones[propiedadSeleccionada]); // Obtener la propiedad seleccionada
                 if (propInfo != null){
-                    var propValue = propInfo.GetValue(i)?.ToString();
-                    return propValue != null && propValue.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase);
+                    //var propValue = propInfo.GetValue(i)?.ToString();
+                    var propValue = propInfo.GetValue(i);
+                    if (propValue != null){
+                        if (!(propValue is int)){
+                            return propValue.ToString().Contains(valorFiltro, StringComparison.OrdinalIgnoreCase);
+                        }
+                        else{
+                            return propValue.ToString() == valorFiltro;
+                        }
+                    }
                 }
                 return false;
             })).ToList();

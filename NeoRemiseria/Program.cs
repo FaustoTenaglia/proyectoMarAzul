@@ -3,11 +3,15 @@ using NeoRemiseria.Components;
 using NeoRemiseria.Models;
 using NeoRemiseria.Services;
 
+// Registrar SweetAlert2
+using CurrieTechnologies.Razor.SweetAlert2;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddSweetAlert2(); // Registro del servicio
 
 // Registrar y configurar la conexión a la base de datos
 var connection = builder.Configuration.GetConnectionString("DBRemiseria");

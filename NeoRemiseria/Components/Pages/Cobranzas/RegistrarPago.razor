@@ -8,6 +8,7 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using Humanizer
 @using System.ComponentModel
+@using System.ComponentModel.DataAnnotations
 @using System.Reflection
 
 @inject ITable<Deuda> DeudaService
@@ -18,6 +19,27 @@
 
 @rendermode InteractiveServer
 
+<!-- Modal de busqueda -->
+@if (deudas != null){
+    <ModalSearch Items="@deudas.Select(d => new{Id = d.Id, Periodo = d.Periodo, Movil = d.IdMovil, Saldo = d.Saldo}).ToList()" 
+                 OnSelected="(uint id) => {IdDeudaSeleccionada = (int)id;}" />
+}
+<!-- Modales de alerta -->
+<ModalDialog Id="pagoExitoso" 
+             Titulo="Información" 
+             Tipo=" alert-success"
+             Mensaje="Pago registrado correctamente." />
+
+<ModalDialog Id="pagoError"
+             Titulo="Error"
+             Tipo=" alert-danger"
+             Mensaje="Ocurrió un error al procesar el pago." />
+
+<ModalDialog Id="pagoImporte"
+             Titulo="Información"
+             Tipo=" alert-warning"
+             Mensaje="El Importe debe ser mayor que cero." />
+
 <h3>Registrar Pago</h3>
 
 <EditForm Model="pago" OnValidSubmit="HandleSubmit" class="container">
@@ -25,45 +47,44 @@
     <ValidationSummary />
 
     <div class="form-group mb-3">
-        <label for="IdDeuda">Comprobante N°:</label>
+        <label for="IdDeuda">N°:</label>
         <div class="input-group">
             <button class="btn btn-outline-primary" type="button" @onclick="ShowModalBuscar">
                 <i class="bi bi-search"></i>
             </button>
             <input id="IdDeuda" type="search" class="form-control" style="width: 18rem;" @bind="IdDeudaSeleccionada" required>
-            <ModalSearch Items="@deudas?.Select(d => new{Id = d.Id, Periodo = d.Periodo, Movil = d.IdMovil}).ToList()" OnSelected="(uint id) => {IdDeudaSeleccionada = (int)id;}" />
         </div>
         @if(IdDeudaSeleccionada > 0){
             var deuda = deudas?.Find(d => d.Id == IdDeudaSeleccionada);
             DateOnly hoy = DateOnly.FromDateTime(DateTime.Now);
             
             if(deuda != null){
+                // Obtener el movil correspondiente a la deuda seleccionada y mostrar los datos
                 var movil = MovilService.GetById(deuda.IdMovil);
                 <div class="card my-3 container">
                     <div class="card-header">
-                        <h5 class="text-center">Movil N°@deuda?.IdMovil - Patente @deuda?.IdMovilNavigation?.Patente</h5>
+                        <h5 class="text-center">Movil N°@deuda.IdMovil - Patente @deuda.IdMovilNavigation?.Patente</h5>
                     </div>
                     <div class="card-body">
-                        <p>Periodo: @deuda?.Periodo.ToString("MMMM-yyyy")</p>
+                        <h5 class="text-title fw-bold">Total: @deuda.Importe.ToString("C")</h5>
+                        <h6 class="@ClassSaldo(@deuda.Saldo)">Saldo: @deuda.Saldo?.ToString("C")</h6>
+                        <p>Periodo: @deuda.Periodo.ToString("MMMM-yyyy")</p>
                         @if(pagos != null){
                             <h6><small>Pagos Anteriores</small></h6>
-                            <ol class="list-group list-group-numbered mb-3 container mx-auto">
+                            <ol class="list-group list-group-numbered container mx-auto">
                                 @foreach(var pago in pagos.Where(p => p.IdDeuda == (uint)IdDeudaSeleccionada).OrderBy(p => p.Id)){
                                     <li class="list-group-item">
                                         <span>@pago.Fecha</span>
-                                        <span>@pago.Importe?.ToString("C")</span>
+                                        <span>@pago.Importe.ToString("C")</span>
                                     </li>
                                 }
                             </ol>
+                            <p class="mb-2">Subtotal:@pagos.Where(p => p.IdDeuda == (uint)IdDeudaSeleccionada).Sum(p => p.Importe).ToString("C")</p>                        
                         }
-                        <p class="text-success">Subtotal:@pagos.Where(p => p.IdDeuda == (uint)IdDeudaSeleccionada).Sum(p => p.Importe).Value.ToString("C")</p>
-                        <p class="fw-bold">Total: @deuda?.Importe.ToString("C")</p>
-                        <p class="text-danger">Saldo: @deuda?.Saldo.Value.ToString("C")</p>
                     </div>
                 </div>
             }
         }
-        @* <InputNumber @bind-Value="IdDeudaSeleccionada" class="form-control" required /> *@
     </div>
 
     <div class="form-group mb-3">
@@ -84,33 +105,89 @@
  private Pago? UltimoPago {get;set;}
  private List<Pago>? pagos;
  private List<Deuda>? deudas;
- private int IdDeudaSeleccionada = 0;
+ [Required(ErrorMessage="Debe ingresar un valor para buscar")]
+ private int IdDeudaSeleccionada {get;set;} = 0;
 
 protected override async Task OnInitializedAsync(){
     deudas = await DeudaService.GetAll(d => d.Saldo > 0);
     pagos = await PagoService.ObtenerPagos();
+    StateHasChanged();
 }
+
  private async Task HandleSubmit()
  {
-
     try
     {
+        // Verificar que el Id de deuda ingresado existe o si fue saldada
+        // Buscar la deuda, dado el Id. Si no lo encuentra, lanza una excepcion
+        var deuda = await DeudaService.GetById((uint)IdDeudaSeleccionada) ?? throw new ArgumentException("No existe la deuda ingresada");
+        @* if (deuda == null){
+            throw new ArgumentException("No existe la deuda ingresada");
+        } *@
+        // Verificar si la deuda fue saldada
+        if (deuda.Saldo <= 0){
+            throw new ArgumentException("La deuda ya fue saldada.");
+        }
+
+        // Verificar que el importe que se va a pagar no exceda al saldo
+        if (pago.Importe > deuda.Saldo){
+            throw new InvalidOperationException("El importe del pago no puede ser mayor al saldo.");
+        }
+
+        // Verificar que se ingresó un importe válido
+        if (pago.Importe <= 0){throw new ArgumentOutOfRangeException(nameof(pago.Importe));}
+
         pago.IdDeuda = (uint)IdDeudaSeleccionada;
+
         await   PagoService.RegistrarPago(pago);
-        Console.WriteLine("Pago Registrado Correctamente");
+        await JSRuntime.InvokeVoidAsync("showBSModal","pagoExitoso");
+
+        // Reinicializar el valor de pago por si se quiere registrar un cobro mas
+        // pago = new Pago{Importe = 0.00m, Fecha = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)};
+
         //Deberia devolverte a la lista de deudas
         Navigation.NavigateTo($"/cobranzas/generar-deuda");
     }
-    catch(Exception ex){
-        Console.WriteLine($"Error al registrar el pago: {ex.Message}");
+    catch (ArgumentOutOfRangeException e){// Importe menor o igual que 0
+        Console.WriteLine($"Excepcion: argumento fuera de rango. Error: {e.Message}");
+        await JSRuntime.InvokeVoidAsync("showBSModal","pagoImporte");
     }
-
-
+    catch (InvalidOperationException e){// EL monto ingresado es mayor al saldo
+        //await JSRuntime.InvokeVoidAsync("alert",e.Message);
+        await Swal.FireAsync("Información",e.Message, SweetAlertIcon.Error);
+    }
+    catch (ArgumentException e){// Deuda saldada
+        // await JSRuntime.InvokeVoidAsync("alert",e.Message);
+        await Swal.FireAsync(new SweetAlertOptions{
+                             Title = "Información",
+                             Text= e.Message, 
+                             Icon = SweetAlertIcon.Info,
+                             ConfirmButtonText = "Aceptar",
+                             AllowOutsideClick = false,
+                             ShowCloseButton = true});
+    }
+    catch(Exception ex){// Otra excepcion
+        //Console.WriteLine($"Error al registrar el pago: {ex.Message}");
+        //await JSRuntime.InvokeVoidAsync("showBSModal","pagoError");
+        await Swal.FireAsync(new SweetAlertOptions{
+                             Title = "Error", 
+                             Text = ex.Message, 
+                             Icon = SweetAlertIcon.Error,
+                             ConfirmButtonText = "Aceptar",
+                             AllowOutsideClick = false,
+                             ShowCloseButton = true});
+    }
  }
 
  private async Task ShowModalBuscar(){
     await JSRuntime.InvokeVoidAsync("showBSModal","modalBusqueda");
  }
+
+private string ClassSaldo(decimal? saldo){
+    string clase = "text-subtitle mb-2";
+    clase += saldo > 0m ? " text-danger" : "";
+    return clase;
+}
 
  public string TiempoEntreFechas(DateOnly fecha1, DateOnly fecha2){
     int diferenciaDias = fecha2.DayNumber - fecha1.DayNumber;

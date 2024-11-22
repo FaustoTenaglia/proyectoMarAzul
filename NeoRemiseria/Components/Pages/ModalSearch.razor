@@ -115,7 +115,7 @@
     }
 
     private string PintarFila(T item){
-        if (itemSeleccionado != null){
+        if (itemSeleccionado != null && item != null){
             //return itemSeleccionado.Equals(item) ? $"table-active table-primary" : "";
             return item.Equals(itemSeleccionado) ? "table-active table-primary" : "";
         }
@@ -128,7 +128,8 @@
         await FilaSeleccionada(item);
 
         Cerrar();
-        await JSRuntime.InvokeVoidAsync("closeBSModal","modalBusqueda");
+        // await JSRuntime.InvokeVoidAsync("closeBSModal","modalBusqueda");
+        await JSRuntime.InvokeVoidAsync("$('#Id').modal","hide");
     }
 
     private void Filtrar (){

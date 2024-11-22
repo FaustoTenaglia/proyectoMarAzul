@@ -15,25 +15,23 @@ public class PagoService
 
     public async Task RegistrarPago(Pago pago){
 
-            if(pago.Importe <= 0){
-                throw new ArgumentException("No ingreso importe de pago");
-            }
+            // if(pago.Importe <= 0){
+            //     throw new ArgumentException("No ingreso importe de pago");
+            // }
 
             // var cobro= await _context.Cobros.FindAsync(pago.IdCobro);
-            var cobro = await _context.Deudas.FindAsync(pago.IdDeuda);
-            if(cobro == null){
-                throw new ArgumentException("No se encontro la deuda asociada");
-            }
+            // var cobro = await _context.Deudas.FindAsync(pago.IdDeuda) ?? throw new ArgumentException("No se encontro la deuda asociada");
 
-            //Validar que el monto no exceda el importe total
+        //Validar que el monto no exceda el importe total
 
-            if(pago.Importe > cobro?.Importe){
-                //Revisar de tirar una exception
-                throw new InvalidOperationException("El importe del pago no puede ser mayor al saldo")
-            }
-            if(pago.Importe < 0){
-                throw new ArgumentException("Ingrese un numero positivo")
-            }
+        // if (pago.Importe > cobro.Importe){
+        //         //Revisar de tirar una exception
+        //         throw new InvalidOperationException("El importe del pago no puede ser mayor al saldo");
+        //     }
+            
+            // if(pago.Importe < 0){
+            //     throw new ArgumentException("Ingrese un numero positivo");
+            // }
 
             using (var transaction = await _context.Database.BeginTransactionAsync())
         {

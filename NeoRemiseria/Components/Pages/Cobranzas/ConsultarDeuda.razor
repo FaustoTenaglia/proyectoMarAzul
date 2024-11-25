@@ -35,7 +35,7 @@
 <ModalDialog Id="alertaFechaInvalida"
              Mensaje="Los rangos ingresados no son válidos"
              Titulo="Fecha no valida"
-             Tipo=" alert-danger" />
+             Tipo=" alert-primary" />
 
 <!-- Modal para mostrar el detalle de los pagos -->
 <section class="modal fade" id="periodoDetalle" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-hidden="true">
@@ -186,7 +186,18 @@ else{
     
     private async Task Buscar(){
         if (!string.IsNullOrEmpty(query) && !string.IsNullOrWhiteSpace(query)){
-            IdSeleccionado = Convert.ToInt16(query);
+            try{
+                IdSeleccionado = Convert.ToInt16(query);
+            }
+            catch (Exception e){
+                await Swal.FireAsync(new SweetAlertOptions {
+                    TitleText = "Error",
+                    Text = e.Message, //"Valor ingresado no es válido",
+                    Icon = SweetAlertIcon.Error,
+                    AllowOutsideClick = false
+                });
+                IdSeleccionado = 0;
+            }
         }
         else{
             await MostrarModalBusqueda();
@@ -195,6 +206,7 @@ else{
         if (IdSeleccionado == 0){
             movilesSeleccionados = null;
             MovilSeleccionado = null;
+            await Swal.FireAsync("Información","Número ingresado no es válido.",SweetAlertIcon.Info);
             return;
         }
 
@@ -203,7 +215,6 @@ else{
             movilesSeleccionados = await MovilService.GetAll(m => m.Id == IdSeleccionado);
             MovilSeleccionado = movilesSeleccionados[0] ?? null;
             if (MovilSeleccionado != null){
-                Console.WriteLine($"Movil seleccionado: {MovilSeleccionado.Id}");
                 await Consultar(MovilSeleccionado.Id);
             }
         }else{
@@ -242,6 +253,8 @@ else{
             deudas = await DeudaService.GetAll(d => d.IdMovil == idMovil && d.Periodo >= fechaDesde && d.Periodo <= fechaHasta);
             if (deudas != null){
                 pagos = await PagoService.ObtenerPagos(p => deudas.Select(d => d.Id).Contains(p.IdDeuda));
+            }else{
+                await Swal.FireAsync("Información","No se registran deudas.",SweetAlertIcon.Info);
             }
         }
         else if(fechaHasta < fechaDesde){

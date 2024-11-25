@@ -11,7 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-builder.Services.AddSweetAlert2(); // Registro del servicio
+// Registro del servicio y configuracion para los modales. 
+builder.Services.AddSweetAlert2(options => {
+    options.DefaultOptions = new SweetAlertOptions { // Configuracion por defecto
+        HeightAuto = false,
+        AllowOutsideClick = false, // No cierra el modal al clickear fuera de él
+        ShowCloseButton = true // Muestra el boton de cerrar en el titulo del modal
+    };
+}); 
 
 // Registrar y configurar la conexión a la base de datos
 var connection = builder.Configuration.GetConnectionString("DBRemiseria");

@@ -1,10 +1,11 @@
 @page "/cobranzas/generar-deuda"
 
 @using Microsoft.EntityFrameworkCore
+@using Models
 @using MySql.Data.MySqlClient
 @using NeoRemiseria
-@using Models
 @using Services
+@using System.ComponentModel.DataAnnotations
 
 @inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
@@ -21,7 +22,6 @@
         <div class="d-block position-static pt-0 mx-0 overflow-hidden">
             <div class="input-group">
                 <input type="text" class="form-control" autocomplete="false" placeholder="Seleccione los elementos de la lista" disabled>
-                @* <button class="btn btn-outline-secondary btn-sm" type="button" @onclick="() => {MostrarLista = !MostrarLista; ActualizaMovilesSeleccionado();}"> *@
                 <button class="btn btn-outline-secondary btn-sm" type="button" @onclick="() => ActualizaMovilesSeleccionado()">
                     @if (MostrarLista) { 
                         <span class="input-group-text-sm">&#x25B2;</span> <!-- Icono de flecha hacia arriba -->
@@ -60,7 +60,7 @@
 </div>
 <div class="input-group mb-3" style="width: 14rem">
     <span class="input-group-text">Importe</span>
-    <input type="number" class="form-control" step="0.01" @bind="@importeIngresado">
+    <input type="number" class="form-control" step="0.01" @bind="@importeIngresado" />
 </div>
 
 <!-- Moviles seleccionados -->
@@ -106,11 +106,13 @@
 @code{
     private class Item {
         public uint Id {get; set;}
-        public string Nombre {get; set;}
+        public string Nombre {get; set;} = null!;
         public bool Seleccionado {get; set;} = false;
     }
 
+    [Required(ErrorMessage="El importe ingresado debe ser mayor que cero.")]
     private decimal importeIngresado {get; set;}
+    [Required(ErrorMessage="Fecha ingresada no es válida.")]
     private DateOnly periodoIngresado {get; set;} = new DateOnly(DateTime.Now.Year, DateTime.Now.Month,1);
     private string Seleccion {get; set;} = "1"; // Valor por defecto "Movil"
     private bool MostrarLista {get; set;} = false;
@@ -125,7 +127,7 @@
     private List<Movil>? movilesSeleccionado;
     private List<Persona> titulares = new List<Persona>();
     private List<Item> listaSeleccion = new List<Item>();
-    private List<Deuda> deudasParaRegistrar = new List<Deuda>();
+    private List<Deuda>? deudas, deudasRegistradas, deudasParaRegistrar = new List<Deuda>();
 
     protected override async Task OnInitializedAsync(){
         // Cargar datos desde la base de datos
@@ -144,6 +146,15 @@
             Nombre = $"Móvil {m.Id} {m.Patente} - {m.IdModeloNavigation?.Nombre}",
             Seleccionado = false
             }).ToList();
+
+        // Cargar las deudas ya registradas
+        await ActualizarDatos();
+    }
+
+    private async Task ActualizarDatos(){
+        // Cargar las deudas registradas en la base de datos
+        deudas = await DeudaService.GetAll();
+        StateHasChanged();
     }
 
     // Manejar la seleccion de las opciones
@@ -192,7 +203,19 @@
     }
 
     private async Task RegistrarDeuda(){
-        deudasParaRegistrar = movilesSeleccionado
+        // TODO: realizar las validaciones
+        // Verificar que el importe sea mayor a cero
+        if (importeIngresado <= 0){
+            await Swal.FireAsync("Error","El importe debe ser mayor a cero.", SweetAlertIcon.Info);
+            return;
+        }
+        // Verificar si ya existe deuda para el periodo ingresado para los moviles seleccionados
+        if (movilesSeleccionado != null && movilesSeleccionado.Any()){
+            // Obtener las deudas registradas para el periodo ingresado
+            deudasRegistradas = deudas?.Where(d => d.Periodo == periodoIngresado).ToList() ?? null;
+            
+            deudasParaRegistrar = movilesSeleccionado
+                                .Where(m => !deudasRegistradas.Any(d => d.IdMovil == m.Id))
                                 .Select(m => new Deuda {
                                     IdMovil = m.Id,
                                     Periodo = periodoIngresado,
@@ -200,6 +223,7 @@
                                     Saldo = importeIngresado
                                 })
                                 .ToList();
+        }
         if (deudasParaRegistrar != null && deudasParaRegistrar.Any()){
             foreach(var deuda in deudasParaRegistrar){
                 try{
@@ -208,15 +232,21 @@
                 //catch{DbUpdateException ex} when (ex.InnerException is MySqlException mysqlEx && mysqlEx.Number == 1062){
                 catch (MySqlException ex){
                     if (ex.Number == 1062){
-                        Console.WriteLine("Clave duplicada: no se pudo insertar el registro.");
+                        // Console.WriteLine("Clave duplicada: no se pudo insertar el registro.");
+                        await Swal.FireAsync("Error", "Clave dupilcada: no se pudo insertar el registro.", SweetAlertIcon.Error);
                     }
                 }
                 catch (Exception ex){
-                    Console.WriteLine($"Error: {ex.Message}");
+                    //Console.WriteLine($"Error: {ex.Message}");
+                    await Swal.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
                 }
             }
         }
-
+        else {
+            await Swal.FireAsync("Info","Ya existen deudas registradas para este periodo para los móviles seleccionados",SweetAlertIcon.Info);
+        }
+        
+        // Redirigir al inicio
         Navigation.NavigateTo("/", true);
     }
 

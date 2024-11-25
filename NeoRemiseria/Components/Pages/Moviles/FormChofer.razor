@@ -73,7 +73,7 @@
 
     private List<Movil> moviles = new List<Movil>();
     private List<Persona> personas = new List<Persona>();
-    private Chofer chofer = new Chofer();
+    private Chofer? chofer {get; set;} = new Chofer();
 
     protected override async Task OnInitializedAsync(){
         moviles = await MovilService.GetAll();
@@ -81,19 +81,28 @@
 
         // Comprobar si se pasó un Id
         if (Id.HasValue && Id.Value > 0){
-            chofer = await ChoferService.GetById((uint)Id.Value);
+            chofer = await ChoferService.GetById((uint)Id.Value) ?? null;
         }
-
+        else{
+            chofer = new Chofer {
+                FechaDesde = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)
+            };
+        }
     }
 
     private async Task Enviar(){
-        if(!Id.HasValue){
-            // Insertar datos del chofer
-            await ChoferService.AddItem(chofer);
+        if (chofer != null){
+            if(!Id.HasValue){
+                // Insertar datos del chofer
+                await ChoferService.AddItem(chofer);
+            }
+            else{
+                // Actualizar en Chofer
+                await ChoferService.UpdateItem(chofer);
+            }
         }
         else{
-            // Actualizar en Chofer
-            await ChoferService.UpdateItem(chofer);
+            await Swal.FireAsync("Error","Ocurrió un error al enviar los datos.", SweetAlertIcon.Error);
         }
 
         // Redirigir al Index

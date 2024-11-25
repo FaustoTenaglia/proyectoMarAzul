@@ -129,7 +129,7 @@
 
         Cerrar();
         // await JSRuntime.InvokeVoidAsync("closeBSModal","modalBusqueda");
-        await JSRuntime.InvokeVoidAsync("$('#Id').modal","hide");
+        // await JSRuntime.InvokeVoidAsync("$('#Id').modal","hide");
     }
 
     private void Filtrar (){
@@ -180,6 +180,6 @@
         ItemsFiltrados = Items;
         propiedadSeleccionada = -1;
         valorFiltro = "";
-        //JSRuntime.InvokeVoidAsync("closeBSModal","modalBusqueda");
+        JSRuntime.InvokeVoidAsync("closeBSModal",Id);
     }
 }

@@ -1,0 +1,78 @@
+﻿@page "/moviles"
+
+@using NeoRemiseria.Models
+@using NeoRemiseria.Services
+
+@inject NavigationManager NavigationManager
+@inject ITable<Movil> MovilService
+
+<h3 class="mb-3 text-center">Lista de Móviles</h3>
+
+<div class="text-end mb-3">
+    <button class="btn btn-primary" @onclick="CreateNewMovil">Agregar Nuevo Móvil</button>
+</div>
+
+@if (moviles == null || !moviles.Any())
+{
+    <p>Cargando móviles...</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Patente</th>
+                <th>Año</th>
+                <th>Modelo</th>
+                <th>Titular</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movil in moviles)
+            {
+                <tr>
+                    <td>@movil.Patente</td>
+                    <td>@movil.Año</td>
+                    <td>@movil.IdModeloNavigation?.Nombre</td>
+                    <td>@movil.IdTitularNavigation?.NombreCompleto</td>
+                    <td>
+                        <button class="btn btn-warning" @onclick="() => EditMovil(movil.Id)">Editar</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteMovil(movil.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Movil> moviles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        moviles = await MovilService.GetAll();
+    }
+
+    private void CreateNewMovil()
+    {
+        NavigationManager.NavigateTo("/movil-form");
+    }
+
+    private void EditMovil(uint id)
+    {
+        NavigationManager.NavigateTo($"/movil-form/{id}");
+    }
+
+    private async Task DeleteMovil(uint id)
+    {
+        if (await MovilService.DeleteItem(id))
+        {
+            moviles = await MovilService.GetAll(); // Refresca la lista después de eliminar
+        }
+        else
+        {
+            // Manejar error de eliminación si es necesario
+        }
+    }
+}

@@ -1,0 +1,89 @@
+﻿@page "/editar-movil/{id:int}"
+
+@using NeoRemiseria.Models
+@using NeoRemiseria.Services
+
+@inject NavigationManager NavigationManager
+@inject ITable<Movil> MovilService
+@inject ITable<Modelo> ModeloService
+@inject ITable<Persona> PersonaService
+
+@rendermode InteractiveServer
+
+<EditForm Model="movil" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <h3 class="mb-3 text-center">Editar Móvil</h3>
+
+    <div class="form-group mb-3">
+        <label for="patente">Patente:</label>
+        <InputText id="patente" @bind-Value="movil.Patente" class="form-control" required />
+        <ValidationMessage For="@(() => movil.Patente)" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="año">Año:</label>
+        <InputNumber id="año" @bind-Value="movil.Año" class="form-control" required />
+        <ValidationMessage For="@(() => movil.Año)" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="modelo">Modelo:</label>
+        <InputSelect id="modelo" @bind-Value="movil.IdModelo" class="form-select">
+            <option value="0">Seleccione un modelo</option>
+            @foreach (var modelo in modelos)
+            {
+                <option value="@modelo.Id">@modelo.Nombre</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => movil.IdModelo)" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="Persona">Persona:</label>
+        <InputSelect id="Persona" @bind-Value="movil.IdTitular" class="form-select">
+            <option value="0">Seleccione una Persona</option>
+            @foreach (var Persona in Personaes)
+            {
+                <option value="@Persona.Id">@Persona.NombreCompleto</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => movil.IdTitular)" />
+    </div>
+
+    <!-- Botones -->
+    <div class="btn-group" role="group">
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private Movil movil = new Movil();
+    private List<Modelo> modelos = new List<Modelo>();
+    private List<Persona> Personaes = new List<Persona>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        modelos = await ModeloService.GetAll();
+        Personaes = await PersonaService.GetAll();
+
+        // Cargar el móvil existente a partir del ID proporcionado
+        movil = await MovilService.GetById((uint)Id);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        // Actualizar el móvil existente
+        await MovilService.UpdateItem(movil);
+        NavigationManager.NavigateTo("/moviles", true);
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/moviles", true);
+    }
+}

@@ -44,19 +44,27 @@
                     </div>
                 </li>
                 <li class="mb-1">
-                    <button class="btn btn-toggle nav-link collapsed d-inline-flex align-items-center" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#moviles-collapse"
-                        aria-expanded="true">
+                    <button id="moviles-btn" class="btn btn-toggle nav-link collapsed d-inline-flex align-items-center" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#moviles-collapse" aria-expanded="false" onclick="toggleMenu('moviles')">
                         <i class="bi bi-plus-square-fill-nav-menu"></i>Móviles
                     </button>
-                    <div class="collapse show" id="moviles-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-nomrmal pb-1 px-2">
-                            <li><NavLink class="nav-link" href="modelo">
-                                <span class="bi"></span>Modelos
-                            </NavLink></li>
-                            <li><NavLink class="nav-link" href="marcas">
-                                <span class="bi"></span>Marcas
-                            </NavLink></li>
+                    <div class="collapse" id="moviles-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 px-2">
+                            <li>
+                                <NavLink class="nav-link" href="movil-form">
+                                    <span class="bi"></span>Moviles
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink class="nav-link" href="modelo">
+                                    <span class="bi"></span>Modelos
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink class="nav-link" href="marcas">
+                                    <span class="bi"></span>Marcas
+                                </NavLink>
+                            </li>
                         </ul>
                     </div>
                 </li>

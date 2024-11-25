@@ -33,4 +33,13 @@ public partial class Persona
     public virtual ICollection<Movil> Moviles { get; set; } = new List<Movil>();
 
     public virtual ICollection<Telefono> Telefonos {get; set;} = new List<Telefono>();
+
+    [NotMapped] // No se mapea en la base de datos
+    public string NombreCompleto
+    {
+        get
+        {
+            return $"{Apellido} {Nombre}".Trim(); // Combina apellido y nombre, removiendo espacios extra
+        }
+    }
 }

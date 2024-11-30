@@ -1,0 +1,93 @@
+@page  "/moviles/chofer-por-movil"
+
+@using NeoRemiseria.Models
+@using NeoRemiseria.Services
+
+@inject ITable<Movil> MovilService
+@inject ITable<Modelo> ModeloService
+@inject ITable<Persona> PersonaService
+@inject ITable<Localidad> LocalidadService
+@inject ITable<Provincia> ProvinciaService
+@inject ITable<Chofer> ChoferService
+@inject NavigationManager Navigation
+
+@rendermode InteractiveServer
+
+<h3>Moviles</h3>
+@if(moviles != null && moviles.Any()){
+    foreach(var movil in moviles){
+        <section class="card mb-2">
+            <h5 class="card-header">@($"N°{movil.Id} Patente: {movil.Patente}")</h5>
+            <div class="card-body">
+                <h5 class="card-title">@($"{movil.IdModeloNavigation?.IdMarcaNavigation?.Nombre} {movil.IdModeloNavigation?.Nombre}")</h5>
+            @* </div> *@
+            @if(choferes != null){
+                choferesPorMovil = choferes.Where(ch => ch.NumeroMovil == movil.Id && ch.FechaHasta == null).ToList();
+                @if(choferesPorMovil != null && choferesPorMovil.Any()){
+                    <!-- tiene choferes registrados -->
+                    <h6 class="card-subtitle">Choferes: @choferesPorMovil.Count()</h6>
+                    <ul class="list-group list-group-flush"></ul>
+                    @foreach(var chofer in choferesPorMovil){
+                        <li class="list-group-item">
+                            <div class="card card-body">
+                                <h5 class="card-title">
+                                    @($"{chofer.IdPersonaNavigation?.Apellido} {chofer.IdPersonaNavigation?.Nombre}")
+                                    <a class="stretched-link" href=@($"#id{chofer.IdPersona}") data-bs-toggle="collapse"></a>
+                                </h5>
+                                <div class="collapse card-text" id=@($"id{chofer.IdPersona}")>
+                                    <div class="d-flex justify-content-between align-items-center" style="width: 9em">
+                                        <h6 class="card-subtitle text-secondary mb-2"><small><i>DNI: @chofer.IdPersonaNavigation?.Dni</i></small></h6>
+                                        <a class="btn btn-sm btn-outline-primary stretched-link icon-link" style="position: relative;" @onclick="() => Modificar(chofer.Id)">
+                                            @* &#xF4C8; *@
+                                            <i class="bi bi-pen-fill"></i>
+                                        </a>
+                                    </div>
+                                    <p class="card-text mb-0">@($"{chofer.IdPersonaNavigation?.Calle} N°{chofer.IdPersonaNavigation?.Numero}")</p>
+                                    <p class="card-text mt-0">
+                                        @($"{chofer.IdPersonaNavigation?.IdLocalidadNavigation?.Nombre} - {chofer.IdPersonaNavigation?.IdLocalidadNavigation?.IdProvinciaNavigation?.Nombre}")
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                }
+                else{
+                    <!-- No tiene choferes registrados -->
+                }
+            }
+            </div>
+            <div class="card-footer">
+                @* <a href=@($"moviles/chofer-form") class="btn btn-outline-success">Agregar chofer</a> *@
+                <a href=@($"moviles/chofer-form/idMovil={(int)movil.Id}") class="btn btn-outline-success">Agregar chofer</a>
+            </div>
+        </section>
+    }
+}
+else{
+    <p>Cargando datos...</p>
+}
+
+@code{
+    private List<Movil>? moviles;
+    private List<Modelo>? modelos;
+    private List<Chofer>? choferes, choferesPorMovil;
+    private List<Localidad>? localidades;
+    private List<Provincia>? provincias;
+
+    protected override async Task OnInitializedAsync(){
+        await CargarDatos();
+    }
+
+    private async Task CargarDatos(){
+        moviles = await MovilService.GetAll();
+        modelos = await ModeloService.GetAll();
+        choferes = await ChoferService.GetAll();
+        localidades = await LocalidadService.GetAll();
+        provincias = await ProvinciaService.GetAll();
+    }
+
+    private void Modificar(uint idChofer){
+        //Navigation.NavigateTo($"/moviles/chofer-form/{idChofer}", true);
+        Navigation.NavigateTo($"/moviles/chofer-form/id={idChofer}", true);
+    }
+}

@@ -28,7 +28,7 @@
                             <li><NavLink href="personas/dueños" class="nav-link">    
                                 <span class="bi bi-person-vcard"></span>Dueños
                             </NavLink></li>
-                            <li><NavLink class="nav-link">
+                            <li><NavLink class="nav-link" href="/moviles/chofer-form">
                                 <span class="bi"></span>Chofer
                             </NavLink></li>
                             <li><NavLink class="nav-link" href="personas/listado">
@@ -48,21 +48,45 @@
                             data-bs-toggle="collapse" data-bs-target="#moviles-collapse" aria-expanded="false" onclick="toggleMenu('moviles')">
                         <i class="bi bi-plus-square-fill-nav-menu"></i>Móviles
                     </button>
-                    <div class="collapse" id="moviles-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 px-2">
+                    <div class="collapse show" id="moviles-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-nomrmal pb-1 px-2">
+                            <li><NavLink class="nav-link" href="/moviles/chofer-por-movil">
+                                <span class="bi"></span>Choferes
+                            </NavLink></li>
+                            <li><NavLink class="nav-link" href="modelo">
+                                <span class="bi"></span>Modelos
+                            </NavLink></li>
+                            <li><NavLink class="nav-link" href="marcas">
+                                <span class="bi"></span>Marcas
+                            </NavLink></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <button class="btn btn-toggle nav-link d-iniline-flex align-items-center" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#cobranzas-collapse"
+                        aria-expanded="false">Cobranzas
+                    </button>
+                    <div class="collapse show" id="cobranzas-collapse">
+                        <ul class="btn-toggle-nav list-unstyled pb-1 px-2">
                             <li>
-                                <NavLink class="nav-link" href="movil-form">
-                                    <span class="bi"></span>Moviles
+                                <NavLink class="nav-link" href="/cobranzas/generar-deuda">
+                                    <span class="bi"></span>Generar deuda
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink class="nav-link" href="modelo">
-                                    <span class="bi"></span>Modelos
+                                <NavLink class="nav-link" href="/cobranzas/registrar-pago">
+                                    <span class="bi"></span>Cobrar
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink class="nav-link" href="marcas">
-                                    <span class="bi"></span>Marcas
+                                <NavLink class="nav-link" href="/cobranzas/consultar-deuda">
+                                    <span class="bi"></span>Estado de cuenta
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink class="nav-link" href="/cobranzas/listar-deudas">
+                                    <span class="bi"></span>Listar deudas
                                 </NavLink>
                             </li>
                         </ul>
@@ -70,11 +94,5 @@
                 </li>
             </ul>
         </div>
-
-        @* <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div> *@
     </nav>
 </div>

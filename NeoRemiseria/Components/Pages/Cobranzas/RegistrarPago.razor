@@ -21,7 +21,7 @@
 
 <!-- Modal de busqueda -->
 @if (deudas != null){
-    <ModalSearch Items="@deudas.Select(d => new{Id = d.Id, Periodo = d.Periodo, Movil = d.IdMovil, Saldo = d.Saldo}).ToList()" 
+    <ModalSearch Items="@deudas.Select(d => new{Id = d.Id, Periodo = d.Periodo, Movil = d.IdMovil, Saldo = d.Saldo}).OrderBy(d => d.Movil).ThenBy(d => d.Periodo).ToList()" 
                  OnSelected="(uint id) => {IdDeudaSeleccionada = (int)id;}" />
 }
 <!-- Modales de alerta -->
@@ -47,7 +47,7 @@
     <ValidationSummary />
 
     <div class="form-group mb-3">
-        <label for="IdDeuda">N°:</label>
+        <label for="IdDeuda"></label>
         <div class="input-group">
             <button class="btn btn-outline-primary" type="button" @onclick="ShowModalBuscar">
                 <i class="bi bi-search"></i>
@@ -101,16 +101,20 @@
 </EditForm>
 
 @code{
- private Pago pago = new Pago{Importe = 0.00m, Fecha = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)};
- private Pago? UltimoPago {get;set;}
- private List<Pago>? pagos;
- private List<Deuda>? deudas;
- [Required(ErrorMessage="Debe ingresar un valor para buscar")]
- private int IdDeudaSeleccionada {get;set;} = 0;
+private Pago pago = new Pago{Importe = 0.00m, Fecha = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)};
+private Pago? UltimoPago {get;set;}
+private List<Pago>? pagos;
+private List<Deuda>? deudas;
+private List<Movil>? moviles;
+
+[Required(ErrorMessage="Debe ingresar un valor para buscar")]
+private int IdDeudaSeleccionada {get;set;} = 0;
 
 protected override async Task OnInitializedAsync(){
+    moviles = await MovilService.GetAll();
     deudas = await DeudaService.GetAll(d => d.Saldo > 0);
     pagos = await PagoService.ObtenerPagos();
+
     StateHasChanged();
 }
 
@@ -146,7 +150,7 @@ protected override async Task OnInitializedAsync(){
         // pago = new Pago{Importe = 0.00m, Fecha = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)};
 
         //Deberia devolverte a la lista de deudas
-        Navigation.NavigateTo($"/cobranzas/generar-deuda");
+        Navigation.NavigateTo($"/cobranzas/registrar-pago", true);
     }
     catch (ArgumentOutOfRangeException e){// Importe menor o igual que 0
         Console.WriteLine($"Excepcion: argumento fuera de rango. Error: {e.Message}");

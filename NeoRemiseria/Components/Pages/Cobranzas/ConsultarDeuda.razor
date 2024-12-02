@@ -74,7 +74,8 @@
 <h3>Estado de Cuenta</h3>
 <div class="input-group mb-3">
     <span class="input-group-text">Para</span>
-    <input type="text"class="form-control" @bind="@query" />
+    <!-- <input type="text"class="form-control" @bind="@query" /> -->
+    <input type="number"class="form-control" @bind="@IdSeleccionado" />
     <button type="button" class="btn btn-outline-primary" @onclick="Buscar">
         <i class="bi bi-search"></i>
     </button>
@@ -185,7 +186,7 @@ else{
     }
     
     private async Task Buscar(){
-        if (!string.IsNullOrEmpty(query) && !string.IsNullOrWhiteSpace(query)){
+        @* if (!string.IsNullOrEmpty(query) && !string.IsNullOrWhiteSpace(query)){
             try{
                 IdSeleccionado = Convert.ToInt16(query);
             }
@@ -201,13 +202,29 @@ else{
         }
         else{
             await MostrarModalBusqueda();
-        }
+        } *@
 
-        if (IdSeleccionado == 0){
-            movilesSeleccionados = null;
+        if (IdSeleccionado <= 0){
+            @* movilesSeleccionados = null;
             MovilSeleccionado = null;
             await Swal.FireAsync("Información","Número ingresado no es válido.",SweetAlertIcon.Info);
             return;
+        }
+        else{ *@
+            try{
+                await MostrarModalBusqueda();
+                StateHasChanged();
+            }
+            catch (Exception e){
+                await Swal.FireAsync(new SweetAlertOptions {
+                    TitleText = "Error",
+                    Text = e.Message, //"Valor ingresado no es válido",
+                    Icon = SweetAlertIcon.Error,
+                    AllowOutsideClick = false
+                });
+                // IdSeleccionado = 0;
+            }
+            if (IdSeleccionado <= 0){return;}
         }
 
         // Elegir los moviles dependiendo que se selecciono

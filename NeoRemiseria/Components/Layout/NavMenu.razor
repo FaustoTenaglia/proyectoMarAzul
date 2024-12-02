@@ -1,92 +1,121 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">NeoRemiseria</a>
+        <a class="navbar-brand" href="/home">
+            <img src="images/remiseria-mar-azul-logo.svg" alt="logo de la remiseria" width="32" height="32">
+            Remiseria Mar Azul
+        </a>
     </div>
 </div>
 
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+<div class="nav-scrollable">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
+            <button type="button" class="nav-link" href="home" Match="NavLinkMatch.All">
+                <i class="bi bi-house-door-fill me-2" aria-hidden="true"></i> Home
+            </button>
         </div>
 
         <div class="nav-item px-3 flex-shrink-0 p-3">
             <ul class="list-unstyled ps-0">
+                <!-- Personas Section -->
                 <li class="mb-1">
-                    <button href="personas"class="btn btn-toggle nav-link collapsed d-inline-flex align-items-center" data-bs-toggle="collapse" data-bs-target="#personas-collapse" aria-expanded="true">
-                        <i class="bi bi-plus-square-fill-nav-menu"></i>Personas
+                    <button class="btn btn-toggle nav-link collapsed d-inline-flex align-items-center" data-bs-toggle="collapse" data-bs-target="#personas-collapse" aria-expanded="false">
+                        <i class="bi bi-person-fill me-2"></i> Personas
                     </button>
-                    <div class="collapse show" id="personas-collapse">
+                    <div class="collapse" id="personas-collapse">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 px-2">
-                            <li><NavLink href="persona-form" class="nav-link">
-                                <span class="bi bi-person-plus-fill"></span>Agregar
-                            </NavLink></li>
-                            <li><NavLink href="personas/dueños" class="nav-link">    
-                                <span class="bi bi-person-vcard"></span>Dueños
-                            </NavLink></li>
-                            <li><NavLink class="nav-link" href="/moviles/chofer-form">
-                                <span class="bi"></span>Chofer
-                            </NavLink></li>
-                            <li><NavLink class="nav-link" href="personas/listado">
-                                <span class="bi"></span>Listado
-                            </NavLink></li>
-                            <li><NavLink class="nav-link" href="localidades">
-                                <span class="bi"></span>Localidades
-                            </NavLink></li>
-                            <li><NavLink class="nav-link" href="provincias">
-                                <span class="bi"></span>Provincias
-                            </NavLink></li>
+                            <li>
+                                <NavLink href="persona-form" class="nav-link">
+                                    <i class="bi bi-person-plus-fill me-2"></i>Agregar
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink href="personas/dueños" class="nav-link">
+                                    <i class="bi bi-person-vcard me-2"></i>Dueños
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink class="nav-link" href="personas/listado">
+                                    <i class="bi bi-list-ul me-2"></i>Listado
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink class="nav-link" href="localidades">
+                                    <i class="bi bi-geo-alt-fill me-2"></i>Localidades
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink class="nav-link" href="provincias">
+                                    <i class="bi bi-geo-fill me-2"></i>Provincias
+                                </NavLink>
+                            </li>
                         </ul>
                     </div>
                 </li>
+
+                <!-- Móviles Section -->
                 <li class="mb-1">
-                    <button id="moviles-btn" class="btn btn-toggle nav-link collapsed d-inline-flex align-items-center" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#moviles-collapse" aria-expanded="false" onclick="toggleMenu('moviles')">
-                        <i class="bi bi-plus-square-fill-nav-menu"></i>Móviles
+                    <button class="btn btn-toggle nav-link collapsed d-inline-flex align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#moviles-collapse" aria-expanded="false">
+                        <i class="bi bi-car-front me-2"></i>Móviles
                     </button>
-                    <div class="collapse show" id="moviles-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-nomrmal pb-1 px-2">
-                            <li><NavLink class="nav-link" href="/moviles/chofer-por-movil">
-                                <span class="bi"></span>Choferes
-                            </NavLink></li>
-                            <li><NavLink class="nav-link" href="modelo">
-                                <span class="bi"></span>Modelos
-                            </NavLink></li>
-                            <li><NavLink class="nav-link" href="marcas">
-                                <span class="bi"></span>Marcas
-                            </NavLink></li>
+                    <div class="collapse" id="moviles-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 px-2">
+                        <li>
+                                <NavLink class="nav-link" href="/movil-form">
+                                    <i class="bi bi-plus me-2"></i>Agregar Movil
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink class="nav-link" href="/moviles">
+                                    <i class="bi bi-car me-2"></i>Listado de Moviles
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink class="nav-link" href="/moviles/chofer-por-movil">
+                                    <i class="bi bi-person-circle me-2"></i>Choferes
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink class="nav-link" href="modelo">
+                                    <i class="bi bi-car-front me-2"></i>Modelos
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink class="nav-link" href="marcas">
+                                    <i class="bi bi-tag-fill me-2"></i>Marcas
+                                </NavLink>
+                            </li>
                         </ul>
                     </div>
                 </li>
+
+                <!-- Cobranzas Section -->
                 <li class="mb-1">
-                    <button class="btn btn-toggle nav-link d-iniline-flex align-items-center" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#cobranzas-collapse"
-                        aria-expanded="false">Cobranzas
+                    <button class="btn btn-toggle nav-link collapsed d-inline-flex align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#cobranzas-collapse" aria-expanded="false">
+                        <i class="bi bi-credit-card-fill me-2"></i>Cobranzas
                     </button>
-                    <div class="collapse show" id="cobranzas-collapse">
+                    <div class="collapse" id="cobranzas-collapse">
                         <ul class="btn-toggle-nav list-unstyled pb-1 px-2">
                             <li>
                                 <NavLink class="nav-link" href="/cobranzas/generar-deuda">
-                                    <span class="bi"></span>Generar deuda
+                                    <i class="bi bi-file-earmark-plus me-2"></i>Generar deuda
                                 </NavLink>
                             </li>
                             <li>
                                 <NavLink class="nav-link" href="/cobranzas/registrar-pago">
-                                    <span class="bi"></span>Cobrar
+                                    <i class="bi bi-wallet2 me-2"></i>Cobrar
                                 </NavLink>
                             </li>
                             <li>
                                 <NavLink class="nav-link" href="/cobranzas/consultar-deuda">
-                                    <span class="bi"></span>Estado de cuenta
+                                    <i class="bi bi-file-earmark-text me-2"></i>Estado de cuenta
                                 </NavLink>
                             </li>
                             <li>
                                 <NavLink class="nav-link" href="/cobranzas/listar-deudas">
-                                    <span class="bi"></span>Listar deudas
+                                    <i class="bi bi-list-check me-2"></i>Listar deudas
                                 </NavLink>
                             </li>
                         </ul>

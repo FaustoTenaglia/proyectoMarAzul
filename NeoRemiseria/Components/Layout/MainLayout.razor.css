@@ -3,6 +3,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    font-family: 'Roboto', sans-serif; /* Fuente más moderna */
+    transition: background-color 0.3s ease; /* Transición para el fondo */
 }
 
 main {
@@ -11,8 +13,31 @@ main {
 
 /* Sector lateral (Zona Sidebar) */
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    background-image: linear-gradient(180deg, #006F8E 0%, #001A33 100%); /* Degradado de celeste oscuro a azul muy oscuro */
+    color: white; /* Aseguramos que el texto sea blanco en el sidebar */
+    padding-top: 1rem;
+    transition: all 0.3s ease; /* Transición suave para cambios */
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2); /* Sombra al lado */
 }
+
+    .sidebar:hover {
+        background-image: linear-gradient(180deg, #005b75 0%, #003547 100%); /* Cambio de color al hacer hover */
+    }
+
+    .sidebar .nav-link {
+        color: white;
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1.2rem;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.3s ease, padding-left 0.3s ease;
+    }
+
+        .sidebar .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(10px); /* Desplazar ligeramente hacia la derecha */
+            padding-left: 1.5rem; /* Ampliar espacio hacia la izquierda */
+        }
 
 /* Sector arriba (Zona About) */
 .top-row {
@@ -22,33 +47,51 @@ main {
     height: 3.5rem;
     display: flex;
     align-items: center;
+    padding: 0 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Agregar sombra sutil para destacar */
+    animation: slideDown 0.5s ease-out; /* Animación al entrar */
 }
 
-    .top-row ::deep a, .top-row ::deep .btn-link {
-        white-space: nowrap;
-        margin-left: 1.5rem;
-        text-decoration: none;
+@keyframes slideDown {
+    0% {
+        transform: translateY(-20px);
+        opacity: 0;
     }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Ajustar color de enlaces en la parte superior */
+.top-row ::deep a, .top-row ::deep .btn-link {
+    white-space: nowrap;
+    margin-left: 1.5rem;
+    text-decoration: none;
+    color: #007bff; /* Azul para los enlaces */
+    font-weight: 500; /* Un poco más de peso para los enlaces */
+    transition: color 0.3s ease, transform 0.3s ease;
+}
 
     .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
         text-decoration: underline;
+        color: #0056b3; /* Azul más oscuro al hacer hover */
+        transform: translateY(-3px); /* Efecto de elevación al hacer hover */
     }
 
-    .top-row ::deep a:first-child {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
+/* Estilos adicionales para el móvil */
 @media (max-width: 640.98px) {
     .top-row {
         justify-content: space-between;
     }
 
-    .top-row ::deep a, .top-row ::deep .btn-link {
-        margin-left: 0;
-    }
+        .top-row ::deep a, .top-row ::deep .btn-link {
+            margin-left: 0;
+        }
 }
 
+/* Para pantallas grandes */
 @media (min-width: 641px) {
     .page {
         flex-direction: row;
@@ -59,19 +102,27 @@ main {
         height: 100vh;
         position: sticky;
         top: 0;
+        box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1); /* Sombra a la derecha de la sidebar */
+        transition: width 0.3s ease; /* Animación de cambio de tamaño */
     }
+
+        .sidebar:hover {
+            width: 270px; /* Aumenta el tamaño de la sidebar al pasar el mouse */
+        }
 
     .top-row {
         position: sticky;
         top: 0;
         z-index: 1;
+        background-color: #fff; /* Aseguramos que la parte superior sea blanca */
+        border-bottom: 1px solid #ccc; /* Borde más fino */
     }
 
-    .top-row.auth ::deep a:first-child {
-        flex: 1;
-        text-align: right;
-        width: 0;
-    }
+        .top-row.auth ::deep a:first-child {
+            flex: 1;
+            text-align: right;
+            width: 0;
+        }
 
     .top-row, article {
         padding-left: 2rem !important;
@@ -79,6 +130,19 @@ main {
     }
 }
 
+/* Efecto hover para los iconos */
+.sidebar .bi {
+    font-size: 1.3rem;
+    transition: transform 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+}
+
+.sidebar .nav-link:hover .bi {
+    transform: translateX(8px); /* Mover ligeramente los iconos al hacer hover */
+    color: #ffffff; /* Asegurar que los iconos también se vean bien con el cambio de color */
+    opacity: 1; /* Asegurar que los iconos no desaparezcan */
+}
+
+/* Estilo de error */
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
@@ -89,11 +153,64 @@ main {
     position: fixed;
     width: 100%;
     z-index: 1000;
+    border-top: 3px solid red; /* Agregar una línea roja en la parte superior del error */
+    border-radius: 5px 5px 0 0;
+    animation: slideUp 0.5s ease-out; /* Animación para el error */
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
+@keyframes slideUp {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+    font-size: 1.5rem; /* Hacer el ícono de cerrar más grande */
+    color: #dc3545; /* Rojo para el botón de cerrar */
+    transition: color 0.3s ease;
+}
+
+    #blazor-error-ui .dismiss:hover {
+        color: #bd2130; /* Rojo más oscuro al pasar el mouse */
+    }
+
+/* Efectos adicionales: */
+body {
+    transition: background-color 0.5s ease; /* Transición para el fondo de toda la página */
+}
+
+    body:hover {
+        background-color: #f1f1f1; /* Fondo más claro al pasar el ratón */
+    }
+
+/* Sombra en los botones */
+button {
+    border: none;
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+    button:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px); /* Elevar el botón al hacer hover */
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    button:active {
+        transform: translateY(0); /* Devuelve el botón a su posición original al hacer clic */
     }

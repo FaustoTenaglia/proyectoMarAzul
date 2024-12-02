@@ -11,7 +11,8 @@ public partial class Movil
 
     public int Habilitacion {get; set;} = 0;
 
-    public ushort? Año { get; set; }
+    public int? Año { get; set; }
+    // public ushort? Año { get; set; }
 
     public uint? IdModelo { get; set; }
 

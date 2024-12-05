@@ -5,7 +5,6 @@
 
 @inject IJSRuntime JSRuntime
 
-
 <!-- Modal para la búsqueda -->
 <div class="modal fade" tabindex="-1" id="@Id" role="dialog" data-bs-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
@@ -43,7 +42,9 @@
                     <tbody>
                         @if (ItemsFiltrados != null){
                             foreach (var item in ItemsFiltrados){
-                                <tr @onclick="() => FilaSeleccionada(item)" class="@PintarFila(item)">
+                                <tr @onclick="() => FilaSeleccionada(item)" class="@PintarFila(item)" 
+                                    @ondblclick="() => OnFilaDblClick(item)" 
+                                    data-bs-dismiss="@CerrarModalDesdeFila(item)">
                                     @foreach (var propiedad in typeof(T).GetProperties()){
                                         <td>@propiedad.GetValue(item)</td>
                                     }
@@ -58,7 +59,7 @@
             </div>
             <div class="modal-footer">
                 <div class="btn-group-sm">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="Enviar">Aceptar</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="Cerrar">Aceptar</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="Cerrar">Cancelar</button>
                 </div>
             </div>
@@ -99,37 +100,29 @@
     
     private async Task FilaSeleccionada(T item){
         // marcar fila seleccionada
-        if (itemSeleccionado != null && !itemSeleccionado.Equals(item)){
-            itemSeleccionado = item;
-        }
-        else{
-            itemSeleccionado = default(T);
-        }
+        itemSeleccionado = (itemSeleccionado == null || !itemSeleccionado.Equals(item)) ? item : default(T);
 
         // Guardar el id de la fila seleccionada
-        var propiedadId = typeof(T).GetProperty("Id");
+        var propiedadId = typeof(T).GetProperty("Id"); // Siempre debe estar el Id
         if (propiedadId != null){
-            var Id = (uint?)propiedadId.GetValue(item) ?? 0;
-            await OnSelected.InvokeAsync(Id);
+            var id = (uint?)propiedadId.GetValue(item) ?? 0;
+            await OnSelected.InvokeAsync(id);
         }
     }
 
     private string PintarFila(T item){
-        if (itemSeleccionado != null && item != null){
-            //return itemSeleccionado.Equals(item) ? $"table-active table-primary" : "";
-            return item.Equals(itemSeleccionado) ? "table-active table-primary" : "";
-        }
-        else{
-            return "";
-        }
+        // Pintar la fila seleccionada
+        return (itemSeleccionado != null && item != null && item.Equals(itemSeleccionado)) ? "table-active table-primary" : "";
+    }
+
+    private string CerrarModalDesdeFila (T item){
+        return (itemSeleccionado != null && item != null && item.Equals(itemSeleccionado)) ? "modal" : "";
     }
 
     private async Task OnFilaDblClick(T item){
         await FilaSeleccionada(item);
 
         Cerrar();
-        // await JSRuntime.InvokeVoidAsync("closeBSModal","modalBusqueda");
-        // await JSRuntime.InvokeVoidAsync("$('#Id').modal","hide");
     }
 
     private void Filtrar (){
@@ -172,14 +165,10 @@
         }
     }
 
-    private void Enviar(){
-        Cerrar();
-    }
-
     private void Cerrar() {
         ItemsFiltrados = Items;
         propiedadSeleccionada = -1;
         valorFiltro = "";
-        JSRuntime.InvokeVoidAsync("closeBSModal",Id);
+        JSRuntime.InvokeVoidAsync("closeBSModal",$"{Id}");
     }
 }

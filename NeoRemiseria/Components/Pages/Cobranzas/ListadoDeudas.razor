@@ -19,12 +19,26 @@
         subtotalSaldo = deudas.Where(d => d.Periodo == periodo).Sum(d => d.Saldo) ?? 0.00m;
 
         // Mostrar los datos en una tabla
-        <section class="container w-75">
-        <h4 class="mb-2"><small><strong>Período:</strong> @periodo.ToString("MMMM-yyyy")</small></h4>
+        <section class="container">
+        <h4 class="mb-1"><small><strong>Período:</strong> @periodo.ToString("MMMM yyyy")</small></h4>
+        <div class="hstack gap-2">
+            <span class="ms-auto"><strong>TOTAL:</strong></span>
+            <div class="text-end">@subtotalImporte.ToString("C")</div>
+        </div>
+        @if (subtotalImporte != subtotalSaldo){
+            <div class="hstack gap-2 text-success">
+                <span class="ms-auto"><strong>COBRADO:</strong></span>
+                <div class="text-end">@((subtotalImporte - subtotalSaldo).ToString("C"))</div>
+            </div>
+        }
+        <div class="hstack gap-2 text-danger mb-2">
+            <span class="ms-auto"><strong>SALDO:</strong></span>
+            <div class="text-end">@subtotalSaldo.ToString("C")</div>
+        </div>
         <table class="table table-sm table-hover mb-5">
-            <thead class="table-danger">
+            <thead class="table-primary">
                 <tr>
-                    <td class="text-end">N° Comp</td>
+                    <td class="text-end">#</td>
                     <td class="text-center">Móvil</td>
                     <td class="text-end">Importe</td>
                     <td class="text-end">Saldo</td>
@@ -35,20 +49,21 @@
                     <tr>
                         <td class="text-end">@deuda.Id</td>
                         <td>Móvil N°@deuda.IdMovil - @deuda.IdMovilNavigation?.Patente</td>
-                        <td class="text-end">$@deuda.Importe</td>
-                        <td class="text-end">$@deuda.Saldo</td>
+                        <td class="text-end">@deuda.Importe.ToString("C")</td>
+                        <td class="text-end text-danger">@deuda.Saldo?.ToString("C")</td>
                     </tr>
                 }
             </tbody>
             <tfoot class="fw-bold">
                 <tr>
                     <td colspan="2">TOTAL</td>
-                    <td class="text-end">$@subtotalImporte</td>
-                    <td class="text-end">$@subtotalSaldo</td>
+                    <td class="text-end">@subtotalImporte.ToString("C")</td>
+                    <td class="text-end">@subtotalSaldo.ToString("C")</td>
                 </tr>
             </tfoot>
         </table>
         </section>
+        <hr class="text-primary mb-5" />
     }
 }
 else{
@@ -64,4 +79,4 @@ else{
         deudas = await DeudaService.GetAll(d => d.Saldo > 0);
         moviles = await MovilService.GetAll();
     }
-}
+} 

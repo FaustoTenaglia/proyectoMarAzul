@@ -11,126 +11,267 @@
 
 @rendermode InteractiveServer
 
-<ModalDialog 
-    Mensaje=@($"¿Desea eliminar a la persona {personaSeleccionada?.Apellido}, {personaSeleccionada?.Nombre}?") 
-    Id="modalEliminar" 
-    Titulo = "Confirmación"
-    OnResult=" async Task (int res) => {if(res == 1){await PersonaService.DeleteItem(personaSeleccionada.Id); await CargarDatos();}}" />
+<ModalDialog Mensaje=@($"¿Desea eliminar a la persona {personaSeleccionada?.Apellido}, {personaSeleccionada?.Nombre}?")
+             Id="modalEliminar"
+             Titulo="Confirmación"
+             OnResult=" async Task (int res) => {if(res == 1){await PersonaService.DeleteItem(personaSeleccionada.Id); await CargarDatos();}}" />
 
-<div class="hstack gap-3 mb-3">
-    <span class="fs-3">Personas</span>
-    <div class="input-group" style="width: 320px;">
-        <input type="text" class="form-control" @bind="query" @oninput="OnInputChanged">
-        <button type="button" class="btn btn-outline-primary">buscar</button>
+<div class="container mt-5">
+    <div class="row mb-3">
+        <div class="col">
+            <h1 class="text-center text-primary">Listado de Personas</h1>
+        </div>
     </div>
-</div>
-@if (personas != null){
-    <table class="table table-sm table-hover">
-        <thead class="sticky-top">
-            <tr>
-                @* @foreach(var propiedad in typeof(Persona).GetProperties().Where(p => p.Name != "Id")){ *@
-                @foreach (var campo in campos){<th>@campo</th>}
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var persona in personas.OrderBy(p => p.Apellido).ThenBy(p => p.Nombre).ThenBy(p => p.Dni)){
-                <tr>
-                    <td>@persona.Dni</td>
-                    <td>@persona.Apellido</td>
-                    <td>@persona.Nombre</td>
-                    <td>@(persona.Sexo == 1 ? "Masc." : "Fem.")</td>
-                    <td class="text-end">
-                        @(DateTime.Now.Year - persona.Nacimiento?.Year - 
-                        (DateTime.Now < persona.Nacimiento?.ToDateTime(TimeOnly.MinValue) ? 1 : 0))
-                    </td>
-                    <td>@persona.Calle</td>
-                    <td class="text-end">@persona.Numero</td>
-                    <td>@(persona.IdLocalidadNavigation != null ? persona.IdLocalidadNavigation.Nombre : "")</td>
-                    <td>
-                        @(persona.IdLocalidadNavigation?.IdProvinciaNavigation?.Nombre)
-                    </td>
-                    <td>
-                        @foreach(var telefono in persona.Telefonos.Where(t => t.Estado == 'A')){
-                            <div class="container form-text mx-1">@telefono.Numero</div>
-                        }
-                    </td>
-                    <td class="btn-group-sm">
-                        <button type="button" class="btn btn-outline-primary" @onclick="() => Editar(persona.Id)">
-                            <i class="bi bi-pen-fill"></i>
-                        </button>
-                        <button type="button" class="btn btn-outline-danger" @onclick="() => Eliminar(persona.Id)">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </td>
-                </tr>
+
+    <!-- Botón para agregar nuevo empleado -->
+    <div class="row mb-3">
+        <div class="col text-center">
+            <button type="button" class="btn btn-success" @onclick="AgregarNuevoEmpleado">
+                Agregar Nuevo Empleado
+            </button>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6 offset-md-3">
+            <div class="input-group">
+                <input type="text" class="form-control" @bind="query" @oninput="OnInputChanged" placeholder="Buscar..." @onfocus="ShowSuggestions" @onblur="HideSuggestions">
+                <button type="button" class="btn btn-outline-primary">Buscar</button>
+            </div>
+            @if (suggestions.Any())
+            {
+                <ul class="list-group position-absolute" style="z-index: 1000; width: 100%;">
+                    @foreach (var suggestion in suggestions)
+                    {
+                        <li class="list-group-item list-group-item-action" @onclick="@(() => SelectSuggestion(suggestion))">
+                            @suggestion.NombreCompleto
+                        </li>
+                    }
+                </ul>
             }
-        </tbody>
-        <tfoot>
-            <tr class="fw-bold">
-                <td class="sticky-bottom" colspan=@campos.Count()>Total</td>
-                <td class="text-start">@personas.Count()</td>
-            </tr>
-        </tfoot>
-    </table>
-}
-else{
-    <div class="container text-center mx-auto my-auto">
-        <p>Cargando datos...</p>
+        </div>
     </div>
-}
 
-@code{
-    private static List<string> campos = new List<string>(){"DNI","Apellido","Nombre","Sexo"," Edad", "Calle", "N°","Localidad","Provincia","Telefonos"};
-    private static List<string> propiedades = new List<string>{"Dni","Apellido","Nombre","Sexo","Nacimiento","Calle","Numero","IdLocalidadNavigation.Nombre","IdLocalidadNavigation.IdProvinciaNavigation.Nombre"};
+    <div class="position-fixed" style="top: 20px; right: 20px; z-index: 1000;">
+        <div class="alert alert-info" style="border-radius: 10px;">
+            Total de empleados ingresados: <strong>@personas.Count()</strong>
+        </div>
+    </div>
+
+    @if (personas != null)
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover shadow-lg rounded" style="border-radius: 15px; overflow: hidden;">
+                <thead style="background: linear-gradient(90deg, #007bff, #00aaff);" class="text-white">
+                    <tr>
+                        <th @onclick="@(() => OnSortChanged("Dni"))" style="cursor: pointer;">
+                            DNI @(currentSortProperty == "Dni" ? (isAscending ? "▲" : "▼") : "")
+                        </th>
+                        <th @onclick="@(() => OnSortChanged("Apellido"))" style="cursor: pointer;">
+                            Apellido @(currentSortProperty == "Apellido" ? (isAscending ? "▲" : "▼") : "")
+                        </th>
+                        <th>Nombre</th>
+                        <th>Sexo</th>
+                        <th>Edad</th>
+                        <th>Calle</th>
+                        <th>N°</th>
+                        <th>Localidad</th>
+                        <th>Provincia</th>
+                        <th>Telefonos</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var persona in personas)
+                    {
+                        <tr>
+                            <td>@persona.Dni</td>
+                            <td>@persona.Apellido</td>
+                            <td>@persona.Nombre</td>
+                            <td>@(persona.Sexo == 1 ? "Masc." : "Fem.")</td>
+                            <td class="text-end">
+                                @(DateTime.Now.Year - persona.Nacimiento?.Year -
+                                    (DateTime.Now < persona.Nacimiento?.ToDateTime(TimeOnly.MinValue) ? 1 : 0))
+                            </td>
+                            <td>@persona.Calle</td>
+                            <td class="text-end">@persona.Numero</td>
+                            <td>@(persona.IdLocalidadNavigation != null ? persona.IdLocalidadNavigation.Nombre : "")</td>
+                            <td>@(persona.IdLocalidadNavigation?.IdProvinciaNavigation?.Nombre)</td>
+                            <td>
+                                @foreach (var telefono in persona.Telefonos.Where(t => t.Estado == 'A'))
+                                {
+                                    <div class="container form-text mx-1">@telefono.Numero</div>
+                                }
+                            </td>
+                            <td class="btn-group-sm">
+                                <button type="button" class="btn btn-outline-primary" @onclick="() => Editar(persona.Id)">
+                                    <i class="bi bi-pen-fill"></i> Editar
+                                </button>
+                                <button type="button" class="btn btn-outline-danger" @onclick="() => Eliminar(persona.Id)">
+                                    <i class="bi bi-trash"></i> Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+                @* Se eliminó el pie de tabla que mostraba el total *@
+            </table>
+
+            @* Mensaje si no hay resultados *@
+            @if (!personas.Any())
+            {
+                <div class="alert alert-warning text-center">No se encontraron resultados.</div>
+            }
+        </div>
+
+    }
+    else
+    {
+        <div class="container text-center mx-auto my-auto">
+            <p>Cargando datos...</p>
+        </div>
+    }
+</div>
+
+@code {
+    private static List<string> campos = new List<string>() { "DNI", "Apellido", "Nombre", "Sexo", "Edad", "Calle", "N°", "Localidad", "Provincia", "Telefonos" };
     private List<Persona> personas = new List<Persona>();
-    private List<Localidad> localidades = new List<Localidad>();
+    private List<Persona> personasOriginales = new List<Persona>(); // Nueva lista para almacenar los datos originales
     private string? query = "";
     private Persona? personaSeleccionada;
 
-    protected override async Task OnInitializedAsync(){
-        localidades = await LocalidadService.GetAll();
+    // Variables para el ordenamiento
+    private string? currentSortProperty;
+    private bool isAscending = true;
+
+    // Sugerencias para autocompletar
+    private List<Persona> suggestions = new List<Persona>();
+
+    protected override async Task OnInitializedAsync()
+    {
         await CargarDatos();
-    }
-    private async Task CargarDatos(){
-        personas = await PersonaService.GetAll();
-    }
-
-    private async Task Editar(uint id){
-        Navigation.NavigateTo($"persona-form/{id}",true);
+        // Ordenar por DNI al cargar los datos
+        OnSortChanged("Dni");
     }
 
-    private async Task Eliminar(uint id){
-        personaSeleccionada = await PersonaService.GetById(id);
-        JSRuntime.InvokeVoidAsync("showBSModal","modalEliminar");
-    }
-
-    private void OnInputChanged(ChangeEventArgs e){
-        CargarDatos();
-        query = e.Value.ToString();
+    private async Task CargarDatos()
+    {
+        personasOriginales = await PersonaService.GetAll(); // Guarda los datos originales
+        personas = new List<Persona>(personasOriginales); // Inicializa la lista a mostrar
         Filtrar(query);
     }
 
-    private void Filtrar(string valor){
-        // Filtrar usando reflection
-        @* var personasFiltradas = personas.Where(p => p.GetType().GetProperties()
-            propiedades.Any(prop => prop.GetValue(p)?
-            .ToString()?
-            .Contains(valor, StringComparison.OrdinalIgnoreCase) == true)).ToList(); *@
-        
-        var personasFiltradas = personas.Where(p => 
-            propiedades.Any(propiedad => 
-            {
-                var propInfo = p.GetType().GetProperty(propiedad);
-                if (propInfo != null)
-                {
-                    var propValue = propInfo.GetValue(p)?.ToString();
-                    return propValue != null && propValue.Contains(valor, StringComparison.OrdinalIgnoreCase);
-                }
-                return false;
-            })).ToList();
-        
-        // Limpiar la lista original y agregar los elementos filtrados
-        personas.Clear();
-        personas.AddRange(personasFiltradas);
+    private async Task Editar(uint id)
+    {
+        Navigation.NavigateTo($"persona-form/{id}", true);
+    }
+
+    private async Task Eliminar(uint id)
+    {
+        personaSeleccionada = await PersonaService.GetById(id);
+        JSRuntime.InvokeVoidAsync("showBSModal", "modalEliminar");
+    }
+
+    private void AgregarNuevoEmpleado()
+    {
+        Navigation.NavigateTo("persona-form", true); // Cambia 'nuevo' si tu ruta es diferente.
+    }
+
+    private void OnInputChanged(ChangeEventArgs e)
+    {
+        query = e.Value.ToString();
+        Filtrar(query);
+        UpdateSuggestions(query); // Actualiza las sugerencias al cambiar la entrada
+    }
+
+    private void ShowSuggestions()
+    {
+        if (!string.IsNullOrWhiteSpace(query))
+        {
+            UpdateSuggestions(query);
+        }
+    }
+
+    private void HideSuggestions()
+    {
+        suggestions.Clear(); // Limpiar sugerencias al perder foco
+    }
+
+    private void UpdateSuggestions(string input)
+    {
+        suggestions = personasOriginales.Where(p =>
+            p.Apellido.StartsWith(input, StringComparison.OrdinalIgnoreCase) ||
+            p.Nombre.StartsWith(input, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        StateHasChanged(); // Actualiza la UI para mostrar las sugerencias
+    }
+
+    private void SelectSuggestion(Persona suggestion)
+    {
+        query = suggestion.Apellido + ", " + suggestion.Nombre; // O cualquier formato que desees mostrar
+        suggestions.Clear(); // Limpiar sugerencias después de seleccionar uno
+        Filtrar(query); // Filtrar los resultados basados en la selección
+    }
+
+    private void OnSortChanged(string sortProperty)
+    {
+        if (currentSortProperty == sortProperty)
+        {
+            // Si ya está ordenado por esta propiedad, cambiar el orden
+            isAscending = !isAscending;
+        }
+        else
+        {
+            // Si se selecciona una nueva propiedad, restablecer a ascendente
+            currentSortProperty = sortProperty;
+            isAscending = true;
+        }
+
+        // Ordenar la lista según la propiedad y el orden
+        personas = isAscending
+            ? personas.OrderBy(p => GetPropertyValue(p, sortProperty)).ToList()
+            : personas.OrderByDescending(p => GetPropertyValue(p, sortProperty)).ToList();
+
+        StateHasChanged(); // Para actualizar la UI después de ordenar.
+    }
+
+    private object GetPropertyValue(Persona persona, string propertyName)
+    {
+        var propInfo = persona.GetType().GetProperty(propertyName);
+        if (propInfo != null)
+        {
+            // Devolver el valor de la propiedad o un valor predeterminado si es null
+            return propInfo.GetValue(persona) ?? string.Empty; // Cambia string.Empty si prefieres otro valor
+        }
+        return null;
+    }
+
+    private void Filtrar(string valor)
+    {
+        if (string.IsNullOrWhiteSpace(valor))
+        {
+            // Si no hay valor de búsqueda, restaurar la lista completa
+            personas = new List<Persona>(personasOriginales);
+        }
+        else
+        {
+            // Filtrar según el valor ingresado, usando StartsWith
+            var personasFiltradas = personasOriginales.Where(p =>
+                p.Dni.StartsWith(valor, StringComparison.OrdinalIgnoreCase) ||
+                p.Apellido.StartsWith(valor, StringComparison.OrdinalIgnoreCase) ||
+                p.Nombre.StartsWith(valor, StringComparison.OrdinalIgnoreCase) ||
+                (p.Sexo == 1 ? "Masc." : "Fem.").StartsWith(valor, StringComparison.OrdinalIgnoreCase) ||
+                p.Calle.StartsWith(valor, StringComparison.OrdinalIgnoreCase) ||
+                p.Numero.ToString().StartsWith(valor, StringComparison.OrdinalIgnoreCase) ||
+                (p.IdLocalidadNavigation != null && p.IdLocalidadNavigation.Nombre.StartsWith(valor, StringComparison.OrdinalIgnoreCase)) ||
+                (p.IdLocalidadNavigation != null && p.IdLocalidadNavigation.IdProvinciaNavigation != null && p.IdLocalidadNavigation.IdProvinciaNavigation.Nombre.StartsWith(valor, StringComparison.OrdinalIgnoreCase))
+            ).ToList();
+
+            // Actualizar la lista mostrada con los resultados filtrados
+            personas = personasFiltradas;
+        }
+
+        StateHasChanged(); // Asegúrate de actualizar la UI
     }
 }

@@ -3,176 +3,240 @@
 @using NeoRemiseria
 @using Models
 @using Services
+@using Microsoft.JSInterop;
 
 @inject NavigationManager NavigationManager
 @inject ITable<Persona> PersonaService
 @inject ITable<Localidad> LocalidadService
 @inject ITable<Telefono> TelefonoService
+@inject IJSRuntime JSRuntime
 
 @rendermode InteractiveServer
 
-<EditForm Model="persona" OnValidSubmit="HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<div class="container mt-5">
+    <h3 class="mb-4 text-center">Datos Personales</h3>
 
-    <h3 class="mb-3 text-center">Datos Personales</h3>
-    <div class="form-group mb-3">
-        <label for="dni">DNI:</label>
-        <InputText id="dni" @bind-Value="persona.Dni" class="form-control" style="width: 12rem;" required />
-        <ValidationMessage For="@(() => persona.Dni)" />
-    </div>
+    <EditForm Model="persona" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
 
-    <div class="form-group mb-3">
-        <label for="apellido">Apellido:</label>
-        <InputText id="apellido" @bind-Value="persona.Apellido" class="form-control" required />
-        <ValidationMessage For="@(() => persona.Apellido)" />
-    </div>
+        <div class="card shadow">
+            <div class="card-body">
+                <!-- DNI -->
+                <div class="form-group mb-3">
+                    <label for="dni">DNI:</label>
+                    <InputText id="dni" @bind-Value="persona.Dni" class="form-control" style="width: 12rem;" required @oninput="ValidateDni" />
+                    <ValidationMessage For="@(() => persona.Dni)" />
+                </div>
 
-    <div class="form-group mb-3">
-        <label for="nombre">Nombre:</label>
-        <InputText id="nombre" @bind-Value="persona.Nombre" class="form-control" required />
-        <ValidationMessage For="@(() => persona.Nombre)" />
-    </div>
+                <!-- Apellido y Nombre en la misma fila -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="apellido">Apellido:</label>
+                        <InputText id="apellido" @bind-Value="persona.Apellido" class="form-control" required disabled="@(!isDniValid)" />
+                        <ValidationMessage For="@(() => persona.Apellido)" />
+                    </div>
 
-    <div class="row">
-        <div class="form-group mb-3 col-sm-6">
-            <label for="sexo">Sexo:</label>
-            <InputSelect id="sexo" @bind-Value="persona.Sexo" class="form-control" style="width: 8rem;">
-                <option value="-1">Seleccione...</option>
-                <option value="1">Masculino</option>
-                <option value="0">Femenino</option>
-            </InputSelect>
-        </div>
+                    <div class="col-md-6">
+                        <label for="nombre">Nombre:</label>
+                        <InputText id="nombre" @bind-Value="persona.Nombre" class="form-control" required disabled="@(!isDniValid)" />
+                        <ValidationMessage For="@(() => persona.Nombre)" />
+                    </div>
+                </div>
 
-        <div class="form-group mb-3 col-sm-6">
-            <label for="nacimiento">Fecha de Nacimiento:</label>
-            <InputDate id="nacimiento" @bind-Value="persona.Nacimiento" class="form-control" style="width: 10rem"/>
-        </div>
-    </div>
+                <!-- Sexo y Fecha de Nacimiento -->
+                <div class="row mb-3">
+                    <div class="form-group col-sm-6">
+                        <label for="sexo">Sexo:</label>
+                        <InputSelect id="sexo" @bind-Value="persona.Sexo" class="form-control" disabled="@(!isDniValid)">
+                            <option value="-1">Seleccione...</option>
+                            <option value="1">Masculino</option>
+                            <option value="0">Femenino</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => persona.Sexo)" />
+                    </div>
 
-    <div class="row row-cols-1 row-cols-lg-2 mb-3">
-        <div class="form-group col-md-6">
-            <label for="calle">Calle:</label>
-            <InputText id="calle" @bind-Value="persona.Calle" class="form-control" />
-        </div>
+                    <div class="form-group col-sm-6">
+                        <label for="nacimiento">Fecha de Nacimiento:</label>
+                        <InputDate id="nacimiento" @bind-Value="persona.Nacimiento" class="form-control" disabled="@(!isDniValid)" />
+                        <ValidationMessage For="@(() => persona.Nacimiento)" />
+                        @if (!IsAgeValid())
+                        {
+                            <div class="text-danger">La edad mínima debe ser 18 años.</div>
+                        }
+                    </div>
+                </div>
 
-        <div class="form-group col-md-2 mb-2">
-            <label for="numero">Número:</label>
-            <InputNumber id="numero" @bind-Value=@persona.Numero class="form-control sin-spinner" style="width: 8em;" />
-            @* <input type="text" id="numero" @bind:format="persona.Numero" class="form-control" style="width: 8em;" /> *@
-        </div>
+                <!-- Calle y Número -->
+                <div class="row row-cols-1 row-cols-lg-2 mb-3">
+                    <div class="form-group col-md-6">
+                        <label for="calle">Calle:</label>
+                        <InputText id="calle" @bind-Value="persona.Calle" class="form-control" disabled="@(!isDniValid)" />
+                    </div>
 
-        <div class="form-group">
-            <label for="localidad">Localidad</label>
-            <InputSelect id="localidad" class="form-select" @bind-Value=@persona.IdLocalidad >
-                <option value="0">Seleccione o ingrese una localidad</option>
-                @foreach(var localidad in localidades.OrderBy(l => l.Nombre)){
-                    <option value=@localidad.Id>@($"{localidad.Nombre} - {localidad.IdProvinciaNavigation.Nombre}")</option>
-                }
-            </InputSelect>
-        </div>
-   </div>
+                    <div class="form-group col-md-2 mb-2">
+                        <label for="numero">Número:</label>
+                        <!-- Asegúrate de que 'Numero' sea un tipo numérico como int o uint -->
+                        <InputNumber id="numero" @bind-Value="@persona.Numero" class="form-control sin-spinner" disabled="@(!isDniValid)" />
+                    </div>
 
-    <button type="button" class="btn btn-link mb-1" @onclick="AgregarTelefono">
-        Agregar <i class="bi bi-telephone-plus-fill"></i>
-    </button>
-    <ul class="list-group mb-3">
-        @if (telefonos != null){
-            @foreach(var telefono in telefonos){
-                <li class="list-group-item d-flex" style="width: fit-content;">
-                    <InputText class="form-control me-2" @bind-Value=@telefono.Numero style="width: 16rem;"/>
-                    <button class="btn btn-outline-danger" type="button" @onclick="()=>{telefonos.Remove(telefono);}">
-                        <i class="bi bi-telephone-minus-fill"></i>
-                    </button>
-                </li>
-            }
-        }
-    </ul>
+                    <!-- Localidad -->
+                    <div class="form-group col-md-4">
+                        <label for="localidad">Localidad</label>
+                        <InputSelect id="localidad" class="form-select" @bind-Value="@persona.IdLocalidad" disabled="@(!isDniValid)">
+                            <option value="-1">Seleccione o ingrese una localidad</option>
+                            @foreach (var localidad in localidades.OrderBy(l => l.Nombre))
+                            {
+                                <option value="@localidad.Id">@($"{localidad.Nombre} - {localidad.IdProvinciaNavigation.Nombre}")</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => persona.IdLocalidad)" />
+                    </div>
+                </div>
 
-<!-- Botones -->
-<div class="btn-group" role="group">
-    <button type="submit" class="btn btn-success">Enviar</button>
-    <button type="button" class="btn btn-primary" @onclick="ClearForm">Limpiar</button>
-    <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
-</div>
-</EditForm>
+                <!-- Agregar Teléfono -->
+                <button type="button" class="btn btn-link mb-1" @onclick="@AgregarTelefono" disabled="@(!isDniValid)">
+                    Agregar <i class="bi bi-telephone-plus-fill"></i>
+                </button>
+                <ul class="list-group mb-3">
+                    @if (telefonos != null)
+                    {
+                        @foreach (var telefono in telefonos)
+                        {
+                            <li class="list-group-item d-flex align-items-center">
+                                <InputText class="form-control me-2" @bind-Value="@telefono.Numero" style="width: 16rem;" disabled="@(!isDniValid)" />
+                                <button class="btn btn-outline-danger" type="button"
+                                        @onclick="@(() => { telefonos.Remove(telefono); })"
+                                        disabled="@(!isDniValid)">
+                                    <i class="bi bi-telephone-minus-fill"></i>
+                                </button>
+                            </li>
+                        }
+                    }
+                </ul>
 
+                <!-- Botones -->
+                <div class="btn-group mt-4" role="group">
+                    <!-- Guardar y redirigir a listado -->
+                    <button type="submit" class="btn btn-success" disabled="@(!isDniValid)">Guardar</button>
+                    <!-- Limpiar el formulario sin redirigir -->
+                    <button type="button" class="btn btn-primary" @onclick="@ClearForm">Limpiar</button>
+                    <!-- Cancelar y redirigir a listado -->
+                    <button type="button" class="btn btn-secondary" @onclick="@Cancel">Cancelar</button>
+                </div>
+            </div> <!-- Fin card-body -->
+        </div> <!-- Fin card -->
+    </EditForm>
+</div> <!-- Fin container -->
 @code {
     // Parámetro de ruta opcional
-    [Parameter] public int? Id {get; set;}
-    
-    private string urlRegreso {get; set;} = "/personas";
+    [Parameter] public int? Id { get; set; }
+
+    private string urlRegreso { get; set; } = "/personas/listado"; // URL de redirección
     private Persona persona = new Persona();
     private List<Telefono> telefonos = new List<Telefono>();
     private List<Localidad> localidades = new List<Localidad>();
 
-    protected override async Task OnInitializedAsync(){
-        @* urlRegreso = NavigationManager.Uri; *@
+    // Propiedades para controlar la validez
+    private bool isDniValid = false;
+    private string lastDni = ""; // Almacena el último DNI ingresado
+
+    protected override async Task OnInitializedAsync()
+    {
         localidades = await LocalidadService.GetAll();
 
         // Comprobar si se pasó un id
-        if (Id.HasValue && Id.Value > 0){
+        if (Id.HasValue && Id.Value > 0)
+        {
             persona = await PersonaService.GetById((uint)Id.Value);
             telefonos = await TelefonoService.GetAll(t => t.IdPersona == Id);
         }
     }
 
+    private void ValidateDni(ChangeEventArgs e)
+    {
+        var dni = e.Value.ToString();
+
+        // Verifica si el DNI tiene exactamente 8 dígitos
+        isDniValid = !string.IsNullOrWhiteSpace(dni) && System.Text.RegularExpressions.Regex.IsMatch(dni, @"^\d{8}$");
+
+        // Si el nuevo DNI es diferente al anterior, actualiza la validez
+        if (dni != lastDni)
+        {
+            lastDni = dni;
+            isDniValid = !string.IsNullOrWhiteSpace(dni) && System.Text.RegularExpressions.Regex.IsMatch(dni, @"^\d{8}$");
+        }
+    }
+
+    private bool IsAgeValid()
+    {
+        if (persona.Nacimiento.HasValue)
+        {
+            var edad = DateTime.Now.Year - persona.Nacimiento.Value.Year;
+            if (DateTime.Now.DayOfYear < persona.Nacimiento.Value.DayOfYear)
+                edad--;
+
+            return edad >= 18;
+        }
+        return false;
+    }
+
     private async Task HandleValidSubmit()
     {
-        // Lógica para manejar el envío del formulario
-        if (!Id.HasValue){// Insertar una persona nueva...
-            // Guardar datos en persona
-            await PersonaService.AddItem(persona);
-
-            // Extraer el id de la persona nueva
-            // var idPersona = persona.Id;
-
-            // Cargar el id nuevo en la lista de telefonos
-            foreach(var telefono in telefonos){
-                // Copiar el id
-                telefono.IdPersona = persona.Id; //idPersona;
-
-                // Insertar en la tabla Telefono
-                await TelefonoService.AddItem(telefono);
-            }
+        if (!IsAgeValid())
+        {
+            return;
         }
-        else{// Actualizar valores...
-            // Eliminar teléfonos que no están en la lista actualizada
-            foreach (var telefono in persona.Telefonos.ToList()){
-                if(!telefonos.Any(t => t.Id == telefono.Id)){
-                    await TelefonoService.DeleteItem(telefono.Id); //Eliminar
-                }
-            }
 
-            // Actualizar o agregar teléfonos nuevos
-            foreach (var telefono in telefonos){
-                var telefonoExistente = persona.Telefonos.FirstOrDefault(t => t.Id == telefono.Id);
-                if (telefonoExistente != null){
-                    // Actualizar el número de telefono existente
-                    // telefonoExistente.Numero = telefono.Numero;
-                    await TelefonoService.UpdateItem(telefono);
-                }
-                else{
-                    // Agregar nuevo teléfono
+        try
+        {
+            if (!Id.HasValue) // Insertar una persona nueva...
+            {
+                await PersonaService.AddItem(persona);
+
+                foreach (var telefono in telefonos)
+                {
+                    telefono.IdPersona = persona.Id; // Asignar el ID de la nueva persona
                     await TelefonoService.AddItem(telefono);
                 }
             }
+            else // Actualizar valores...
+            {
+                foreach (var telefono in persona.Telefonos.ToList())
+                {
+                    if (!telefonos.Any(t => t.Id == telefono.Id))
+                    {
+                        await TelefonoService.DeleteItem(telefono.Id); // Eliminar
+                    }
+                }
 
-            // Actualizar en Persona
-            await PersonaService.UpdateItem(persona);
+                foreach (var telefono in telefonos)
+                {
+                    var telefonoExistente = persona.Telefonos.FirstOrDefault(t => t.Id == telefono.Id);
+                    if (telefonoExistente != null)
+                    {
+                        await TelefonoService.UpdateItem(telefono);
+                    }
+                    else
+                    {
+                        await TelefonoService.AddItem(telefono);
+                    }
+                }
+
+                await PersonaService.UpdateItem(persona);
+            }
+
+            NavigationManager.NavigateTo(urlRegreso, true); // Redirigir a la página de listado después de guardar
         }
-
-        // Redirigir a la vista index
-        NavigationManager.NavigateTo(urlRegreso, true);
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", $"Error al guardar datos: {ex.Message}"); // Mostrar error detallado
+        }
     }
 
     private void Cancel()
     {
-        // Lógica para cerrar el formulario o navegar a otra página
-        // Redirigir a la página index sin guardar
-        // El segundo parametro configurado como 'forceLoad' en true
-        // refresca la página y evita que se guarde la ruta anterior
-        NavigationManager.NavigateTo(urlRegreso, true);
+        NavigationManager.NavigateTo(urlRegreso, true); // Redirigir a la página de listado al cancelar
     }
 
     private void ClearForm()
@@ -180,15 +244,20 @@
         persona = new Persona(); // Reinicia el formulario
         telefonos = new List<Telefono>();
         this.Id = 0;
+
+        // Reiniciar la validez del DNI
+        isDniValid = false;
+        lastDni = ""; // Reiniciar el último DNI
     }
 
-    private void AgregarTelefono(){
-        // Agrega un nuevo elemento a la lista
-        telefonos.Add(new Telefono{
-            Id = 0,
-            Numero = "",
-            Estado = 'A',
-            IdPersona = persona.Id
-        });
+    private void AgregarTelefono()
+    {
+        telefonos.Add(new Telefono
+            {
+                Id = 0,
+                Numero = "",
+                Estado = 'A',
+                IdPersona = persona.Id
+            });
     }
 }

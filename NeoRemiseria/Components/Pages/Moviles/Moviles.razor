@@ -75,6 +75,8 @@ else
     private async Task LoadMoviles()
     {
         moviles = await MovilService.GetAll();
+        // Ordenar por el nombre del titular
+        moviles = moviles.OrderBy(m => m.IdTitularNavigation?.NombreCompleto).ToList();
     }
 
     private void CreateNewMovil()

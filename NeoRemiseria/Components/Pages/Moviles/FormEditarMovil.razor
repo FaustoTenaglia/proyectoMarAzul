@@ -10,54 +10,56 @@
 
 @rendermode InteractiveServer
 
-<EditForm Model="movil" OnValidSubmit="HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<div class="d-flex justify-content-center mt-4">
+    <EditForm Model="movil" OnValidSubmit="HandleValidSubmit" class="p-4 bg-light rounded shadow" style="width: 60%; max-width: 600px;">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-danger" />
 
-    <h3 class="mb-3 text-center">Editar Móvil</h3>
+        <h3 class="mb-3 text-center">Editar Móvil</h3>
 
-    <div class="form-group mb-3">
-        <label for="patente">Patente:</label>
-        <InputText id="patente" @bind-Value="movil.Patente" class="form-control" required />
-        <ValidationMessage For="@(() => movil.Patente)" />
-    </div>
+        <div class="form-group mb-3">
+            <label for="patente">Patente:</label>
+            <InputText id="patente" @bind-Value="movil.Patente" class="form-control" required />
+            <ValidationMessage For="@(() => movil.Patente)" class="text-danger" />
+        </div>
 
-    <div class="form-group mb-3">
-        <label for="año">Año:</label>
-        <InputNumber id="año" @bind-Value="movil.Año" class="form-control" required />
-        <ValidationMessage For="@(() => movil.Año)" />
-    </div>
+        <div class="form-group mb-3">
+            <label for="año">Año:</label>
+            <InputNumber id="año" @bind-Value="movil.Año" class="form-control" required />
+            <ValidationMessage For="@(() => movil.Año)" class="text-danger" />
+        </div>
 
-    <div class="form-group mb-3">
-        <label for="modelo">Modelo:</label>
-        <InputSelect id="modelo" @bind-Value="movil.IdModelo" class="form-select">
-            <option value="0">Seleccione un modelo</option>
-            @foreach (var modelo in modelos)
-            {
-                <option value="@modelo.Id">@modelo.Nombre</option>
-            }
-        </InputSelect>
-        <ValidationMessage For="@(() => movil.IdModelo)" />
-    </div>
+        <div class="form-group mb-3">
+            <label for="modelo">Modelo:</label>
+            <InputSelect id="modelo" @bind-Value="movil.IdModelo" class="form-select">
+                <option value="0">Seleccione un modelo</option>
+                @foreach (var modelo in modelos)
+                {
+                    <option value="@modelo.Id">@modelo.Nombre</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => movil.IdModelo)" class="text-danger" />
+        </div>
 
-    <div class="form-group mb-3">
-        <label for="Persona">Persona:</label>
-        <InputSelect id="Persona" @bind-Value="movil.IdTitular" class="form-select">
-            <option value="0">Seleccione una Persona</option>
-            @foreach (var Persona in Personaes)
-            {
-                <option value="@Persona.Id">@Persona.NombreCompleto</option>
-            }
-        </InputSelect>
-        <ValidationMessage For="@(() => movil.IdTitular)" />
-    </div>
+        <div class="form-group mb-3">
+            <label for="Persona">Persona:</label>
+            <InputSelect id="Persona" @bind-Value="movil.IdTitular" class="form-select">
+                <option value="0">Seleccione una Persona</option>
+                @foreach (var persona in Personaes)
+                {
+                    <option value="@persona.Id">@persona.NombreCompleto</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => movil.IdTitular)" class="text-danger" />
+        </div>
 
-    <!-- Botones -->
-    <div class="btn-group" role="group">
-        <button type="submit" class="btn btn-success">Guardar</button>
-        <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
-    </div>
-</EditForm>
+        <!-- Botones -->
+        <div class="btn-group d-flex justify-content-between mt-4">
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
+        </div>
+    </EditForm>
+</div>
 
 @code {
     [Parameter] public int Id { get; set; }

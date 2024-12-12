@@ -10,54 +10,56 @@
 
 @rendermode InteractiveServer
 
-<EditForm Model="movil" OnValidSubmit="HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<div class="d-flex justify-content-center mt-4">
+    <EditForm Model="movil" OnValidSubmit="HandleValidSubmit" class="p-4 bg-light rounded shadow" style="width: 60%; max-width: 600px;">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-danger" />
 
-    <h3 class="mb-3 text-center">Datos del Móvil</h3>
+        <h3 class="mb-4 text-center text-primary">Datos del Móvil</h3>
 
-    <div class="form-group mb-3">
-        <label for="patente">Patente:</label>
-        <InputText id="patente" @bind-Value="movil.Patente" class="form-control" required />
-        <ValidationMessage For="@(() => movil.Patente)" />
-    </div>
+        <div class="form-group mb-3">
+            <label for="patente" class="form-label">Patente:</label>
+            <InputText id="patente" @bind-Value="movil.Patente" @oninput="ValidatePatente" class="form-control" placeholder="Ej: ABC123 o AB123CD" required />
+            <ValidationMessage For="@(() => movil.Patente)" class="text-danger" />
+        </div>
 
-    <div class="form-group mb-3">
-        <label for="año">Año:</label>
-        <InputNumber id="año" @bind-Value="movil.Año" class="form-control" required />
-        <ValidationMessage For="@(() => movil.Año)" />
-    </div>
+        <div class="form-group mb-3">
+            <label for="año" class="form-label">Año:</label>
+            <InputNumber id="año" @bind-Value="movil.Año" class="form-control" placeholder="Ej: 2020" required disabled="@(!isPatenteValid)" />
+            <ValidationMessage For="@(() => movil.Año)" class="text-danger" />
+        </div>
 
-    <div class="form-group mb-3">
-        <label for="modelo">Modelo:</label>
-        <InputSelect id="modelo" @bind-Value="movil.IdModelo" class="form-select">
-            <option value="0">Seleccione un modelo</option>
-            @foreach (var modelo in modelos)
-            {
-                <option value="@modelo.Id">@modelo.Nombre</option>
-            }
-        </InputSelect>
-        <ValidationMessage For="@(() => movil.IdModelo)" />
-    </div>
+        <div class="form-group mb-3">
+            <label for="modelo" class="form-label">Modelo:</label>
+            <InputSelect id="modelo" @bind-Value="movil.IdModelo" class="form-select" disabled="@(!isPatenteValid)">
+                <option value="0">Seleccione un modelo</option>
+                @foreach (var modelo in modelos)
+                {
+                    <option value="@modelo.Id">@modelo.Nombre</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => movil.IdModelo)" class="text-danger" />
+        </div>
 
-    <div class="form-group mb-3">
-        <label for="Persona">Persona:</label>
-        <InputSelect id="Persona" @bind-Value="movil.IdTitular" class="form-select">
-            <option value="0">Seleccione un Persona</option>
-            @foreach (var Persona in Personaes)
-            {
-                <option value="@Persona.Id">@Persona.NombreCompleto</option>
-            }
-        </InputSelect>
-        <ValidationMessage For="@(() => movil.IdTitular)" />
-    </div>
+        <div class="form-group mb-3">
+            <label for="Persona" class="form-label">Persona:</label>
+            <InputSelect id="Persona" @bind-Value="movil.IdTitular" class="form-select" disabled="@(!isPatenteValid)">
+                <option value="0">Seleccione una Persona</option>
+                @foreach (var persona in Personaes)
+                {
+                    <option value="@persona.Id">@persona.NombreCompleto</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => movil.IdTitular)" class="text-danger" />
+        </div>
 
-    <!-- Botones -->
-    <div class="btn-group" role="group">
-        <button type="submit" class="btn btn-success">Guardar</button>
-        <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
-    </div>
-</EditForm>
+        <!-- Botones -->
+        <div class="d-flex justify-content-between mt-4">
+            <button type="submit" class="btn btn-success btn-lg">Guardar</button>
+            <button type="button" class="btn btn-outline-secondary btn-lg" @onclick="Cancel">Cancelar</button>
+        </div>
+    </EditForm>
+</div>
 
 @code {
     // Parámetro de ruta opcional
@@ -67,6 +69,9 @@
     private List<Modelo> modelos = new List<Modelo>();
     private List<Persona> Personaes = new List<Persona>();
 
+    // Propiedad para validar la patente
+    private bool isPatenteValid = false;
+
     protected override async Task OnInitializedAsync()
     {
         modelos = await ModeloService.GetAll();
@@ -75,7 +80,20 @@
         if (Id.HasValue && Id.Value > 0)
         {
             movil = await MovilService.GetById((uint)Id.Value);
+            isPatenteValid = !string.IsNullOrEmpty(movil.Patente) && ValidatePatenteFormat(movil.Patente);
         }
+    }
+
+    private void ValidatePatente(ChangeEventArgs e)
+    {
+        movil.Patente = e.Value.ToString();
+        isPatenteValid = ValidatePatenteFormat(movil.Patente);
+    }
+
+    private bool ValidatePatenteFormat(string patente)
+    {
+        // Expresión regular para validar formatos de patentes argentinas (nuevo y viejo)
+        return System.Text.RegularExpressions.Regex.IsMatch(patente, @"^([A-Z]{3}[0-9]{3}|[A-Z]{2}[0-9]{3}[A-Z]{2})$");
     }
 
     private async Task HandleValidSubmit()

@@ -9,6 +9,7 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
 @inject ITable<Movil> MovilService
+@inject ITable<Marca> MarcaService
 @inject ITable<Persona> PersonaService
 @inject ITable<Deuda> DeudaService
 @inject PagoService PagoService
@@ -17,13 +18,13 @@
 
 <!-- Modales para búsqueda y selección -->
 @if (moviles != null && moviles.Any()){
-    <ModalSearch Items="@moviles.Select(m => new {Id = m.Id, Patente = m.Patente, Modelo = m.IdModeloNavigation?.Nombre}).ToList()"
-                 OnSelected="(uint id) => {IdSeleccionado = (int)id;}"
+    <ModalSearch Items="@moviles.Select(m => new {Id = m.Id, Patente = m.Patente, Modelo = m.IdModeloNavigation?.Nombre, Marca = m.IdModeloNavigation?.IdMarcaNavigation?.Nombre, Dni = m.IdTitularNavigation?.Dni, Titular = $"{m.IdTitularNavigation?.Apellido} {m.IdTitularNavigation?.Nombre}"}).ToList()"
+                 OnSelected="(uint id) => {IdSeleccionado = (int)id; query = id.ToString();}"
                  Id="modalBuscarMovil" />
 }
 @if (titulares != null && titulares.Any()){
     <ModalSearch Items="@titulares.Select(m => new {Id = m.Id, Dni = m.Dni, Apellido = m.Apellido, Nombre = m.Nombre}).OrderBy(m => m.Apellido).ThenBy(m => m.Nombre).ToList()"
-                 OnSelected="(uint id) => {IdSeleccionado = (int)id;}"
+                 OnSelected="(uint id) => {queryCargarDni(id);}"
                  Id="modalBuscarTitular" />
 }
 
@@ -52,11 +53,11 @@
                     </div>
                     <div class="card-body">
                         <h5 class="card-title fw-bold">TOTAL: @deudaActual.Importe.ToString("C")</h5>
-                        <h6 class=@(@deudaActual.Saldo > 0 ? "card-subtitle mb-2 text-danger" : "card-subtitle mb-2 text-success")> Saldo: $@deudaActual.Saldo</h6>
+                        <h6 class=@(@deudaActual.Saldo > 0 ? "card-subtitle mb-2 text-danger" : "card-subtitle mb-2 text-success")> Saldo: @deudaActual.Saldo?.ToString("C")</h6>
                         <p class="card-text">Detalle</p>
                         <ul class="list-group list-group-flush">
                             @foreach(var pago in pagosDetalle){
-                                <li class="list-group-item">@pago.Fecha $@pago.Importe</li>
+                                <li class="list-group-item">@pago.Fecha @pago.Importe.ToString("C")</li>
                             }
                         </ul>
                     </div>
@@ -73,11 +74,17 @@
 
 <h3>Estado de Cuenta</h3>
 <div class="input-group mb-3">
-    <span class="input-group-text">Para</span>
-    <!-- <input type="text"class="form-control" @bind="@query" /> -->
-    <input type="number"class="form-control" @bind="@IdSeleccionado" />
+    <span class="input-group-text">@((Seleccion == "1") ? "Móvil " : "DNI ")N°</span>
+    <!-- <input type="number"class="form-control" @bind="@IdSeleccionado" @bind:after="Buscar"/> -->
+    <input type="text"class="form-control" @bind="@query" @bind:after="Buscar" />
     <button type="button" class="btn btn-outline-primary" @onclick="Buscar">
-        <i class="bi bi-search"></i>
+        @* @if (IdSeleccionado > 0){ *@
+        @if (!string.IsNullOrEmpty(query) && !string.IsNullOrWhiteSpace(query)){
+            <i class="bi bi-chevron-double-right"></i>
+        }
+        else {
+            <i class="bi bi-search"></i>
+        }
     </button>
 
     <div class="btn-group-sm form-check form-check-inline" role="group">
@@ -88,12 +95,30 @@
         <label for="radioTitular" class="btn btn-outline-primary">Dueño</label>
     </div>
 </div>
+@if(Seleccion == "2"){
+    var titular = titulares?.FirstOrDefault(t => t.Id == (uint)IdSeleccionado);
+    if (titular != null){
+        <div class="row mb-3">
+            <div class="col-md-6 mb-2 hstack gap-2">
+                <span class="input-group-text">Apellido</span>
+                <span>@titular.Apellido</span>
+            </div>
+            <div class="col-md-6 hstack gap-2">
+                <span class="input-group-text">Nombre</span>
+                <span>@titular.Nombre</span>
+            </div>
+        </div>
+    }
+    else{
+        <div class="text-secondary">Sin información</div>
+    }
+}
 <div class="row">
-    <div class="input-group mb-3 col-md-6" style="width: 14rem;">
+    <div class="input-group mb-3 col-md-6" style="width: 16rem;">
         <span class="input-group-text">Desde</span>
         <input type="date" class="form-control" @bind="fechaDesde" />
     </div>
-    <div class="input-group mb-3 col-md-6" style="width: 14rem;">
+    <div class="input-group mb-3 col-md-6" style="width: 16rem;">
         <span class="input-group-text">Hasta</span>
         <input type="date" class="form-control" @bind="fechaHasta" />
     </div>
@@ -124,21 +149,69 @@
 
 @if (Seleccion != "1" && MovilSeleccionado != null){
     <div class="mb-3">
-            <button type="button" class="btn btn-outline-success" @onclick="async Task() => {await Consultar(MovilSeleccionado.Id);}">Consultar</button>
+            <button type="button" class="btn btn-outline-success" @onclick="async Task() => {await Consultar(MovilSeleccionado.Id);}">
+                Consultar
+                <i class="bi bi-chevron-double-right"></i>
+            </button>
     </div>
 }
 
 @if (deudas != null && MovilSeleccionado != null){
-<section class="container mb-3">
-        <h6>Listado para el móvil N°@MovilSeleccionado.Id</h6>
-        <div class="list-group list-group-flush">
-            @foreach(var deuda in deudas.OrderByDescending(d => d.Periodo)){
-                <button type="button" class="list-group-item list-group-item-action" @onclick="async Task() => {await MostrarModalDetalle(deuda);}">
-                    Periodo @deuda.Periodo.ToString("MMMM-yyyy")
-                </button>
+    // Calculo de los totales
+    var totalMovilSeleccionado = deudas.Where(d => d.IdMovil == @MovilSeleccionado.Id).Sum(d => d.Importe);
+    var saldoMovilSeleccionado = deudas.Where(d => d.IdMovil == @MovilSeleccionado.Id).Sum(d => d.Saldo);
+    var cobradoMovilSeleccionado = totalMovilSeleccionado - saldoMovilSeleccionado;
+
+    <!-- Detalle del movil seleccionado -->
+    <section class="container mb-3">
+            @* <h6 class="my-3">Detalle para el móvil N°@MovilSeleccionado.Id</h6> *@
+            <div class="hstack gap-2 mb-3">
+                <span class="input-group-text">Patente</span>
+                <span class="text-normal">@MovilSeleccionado.Patente</span>
+                <span class="input-group-text ms-5">Marca y Modelo</span>
+                <span class="text-normal">@MovilSeleccionado.IdModeloNavigation?.IdMarcaNavigation?.Nombre @MovilSeleccionado.IdModeloNavigation?.Nombre</span>
+            </div>
+            <div class="hstack gap-2 mb-3">
+                <span class="input-group-text bg-secondary text-white">TOTAL:</span>
+                <span class="fw-bold">@totalMovilSeleccionado.ToString("C")</span>
+            </div>
+            @if (cobradoMovilSeleccionado != 0m){
+                <div class="hstack gap-2 mb-3">
+                    <span class="input-group-text text-white bg-success">COBRADO:</span>
+                    <span class="fw-bold text-success">@cobradoMovilSeleccionado?.ToString("C")</span>
+                </div>
             }
-        </div>
-</section>
+            <div class="hstack gap-2 mb-3">
+                <span class="input-group-text text-white bg-danger">SALDO:</span>
+                <span class="fw-bold text-danger">@saldoMovilSeleccionado?.ToString("C")</span>
+            </div>
+            <div class="list-group list-group-flush">
+                <h6 class="mb-3">Períodos</h6>
+                @foreach(var deuda in deudas.OrderByDescending(d => d.Periodo)){
+                    var cantidadPagos = (pagos != null && pagos.Any()) ? pagos.Where(p => p.IdDeuda == deuda.Id).ToList().Count() : 0;
+                    <button type="button" class="list-group-item list-group-item-action btn position-relative" @onclick="async Task() => {await MostrarModalDetalle(deuda);}">
+                        @deuda.Periodo.ToString("MMMM-yyyy")
+                        @if (cantidadPagos > 0){
+                            <span class="badge text-white bg-success position-absolute top-0 translate-middle rounded-pill">
+                                @cantidadPagos
+                            </span>
+                        } 
+                        <span class="mx-2">
+                            @if (deuda.Saldo > 0){
+                                <span class="text-danger">Saldo: @deuda.Saldo?.ToString("C")
+                                    <i class="bi bi-arrow-right"></i>
+                                </span>
+                            }
+                            else{
+                                <span class="text-success">
+                                    <i class="bi bi-check-lg"></i>
+                                </span>
+                            }
+                        </span>
+                    </button>
+                }
+            </div>
+    </section>
 }
 else{
     <p class="text-center">Sin datos</p>
@@ -146,8 +219,9 @@ else{
 
 @code{
     private string Seleccion {get;set;} = "1"; // Para indicar 1: movil, 2: dueños
-    private string query {get; set;} = ""; // Para el id
+    private List<Marca>? marcas; // Para el id
     private int IdSeleccionado {get; set;} 
+    private string? query {get;set;}
     private Movil? MovilSeleccionado; // Movil para el que se va a consultar
     private List<Movil>? moviles, movilesSeleccionados; // Los moviles de la remiseria y los moviles por dueño
     private List<Persona>? titulares; // Los dueños de los moviles
@@ -160,6 +234,7 @@ else{
 
     protected override async Task OnInitializedAsync(){
         // Cargar datos desde la base de datos
+        marcas = await MarcaService.GetAll();
         moviles = await MovilService.GetAll(m => m.IdTitular != null);
         titulares = await PersonaService.GetAll(p => 
                             moviles.Select(m => m.IdTitular)
@@ -186,9 +261,21 @@ else{
     }
     
     private async Task Buscar(){
-        @* if (!string.IsNullOrEmpty(query) && !string.IsNullOrWhiteSpace(query)){
+        @* if (string.IsNullOrEmpty(query) || string.IsNullOrWhiteSpace(query) || query == "0"){
+            await MostrarModalBusqueda();
+        } *@
+        if (!string.IsNullOrEmpty(query) && !string.IsNullOrWhiteSpace(query)){
             try{
-                IdSeleccionado = Convert.ToInt16(query);
+                IdSeleccionado = (Seleccion == "1") ? Convert.ToInt32(query) : (int)titulares.FirstOrDefault(t=>t.Dni == query).Id;
+                @* if (Seleccion == "1"){
+                    IdSeleccionado = Convert.ToInt32(query);
+                }
+                else{
+                    var titular = titulares?.FirstOrDefault(t => t.Dni == query);
+                    if (titular != null){
+                        IdSeleccionado = (int)titular.Id;
+                    }
+                } *@
             }
             catch (Exception e){
                 await Swal.FireAsync(new SweetAlertOptions {
@@ -197,20 +284,13 @@ else{
                     Icon = SweetAlertIcon.Error,
                     AllowOutsideClick = false
                 });
-                IdSeleccionado = 0;
             }
         }
         else{
             await MostrarModalBusqueda();
-        } *@
-
-        if (IdSeleccionado <= 0){
-            @* movilesSeleccionados = null;
-            MovilSeleccionado = null;
-            await Swal.FireAsync("Información","Número ingresado no es válido.",SweetAlertIcon.Info);
-            return;
         }
-        else{ *@
+
+        @* if (IdSeleccionado <= 0){
             try{
                 await MostrarModalBusqueda();
                 StateHasChanged();
@@ -222,21 +302,45 @@ else{
                     Icon = SweetAlertIcon.Error,
                     AllowOutsideClick = false
                 });
-                // IdSeleccionado = 0;
             }
-            if (IdSeleccionado <= 0){return;}
-        }
+            // IdSeleccionado = 0;
+            if (IdSeleccionado <= 0){
+                query = "";
+                return;
+            }
+        } *@
 
         // Elegir los moviles dependiendo que se selecciono
         if (Seleccion == "1"){
             movilesSeleccionados = await MovilService.GetAll(m => m.Id == IdSeleccionado);
-            MovilSeleccionado = movilesSeleccionados[0] ?? null;
-            if (MovilSeleccionado != null){
+            // MovilSeleccionado = movilesSeleccionados[0] ?? null;
+            MovilSeleccionado = movilesSeleccionados.First() ?? null;
+            if (movilesSeleccionados != null && movilesSeleccionados.Any() && MovilSeleccionado != null){
                 await Consultar(MovilSeleccionado.Id);
             }
+            else{
+                await Swal.FireAsync(new SweetAlertOptions {
+                    TitleText = "Información",
+                    Text = $"No se encontró el número de móvil {IdSeleccionado} ingresado.",
+                    Icon = SweetAlertIcon.Info,
+                    AllowOutsideClick = false
+                });
+                return;
+            }
         }else{
-            movilesSeleccionados = await MovilService.GetAll(m => m.IdTitular == IdSeleccionado);
-            MovilSeleccionado = null;
+            // movilesSeleccionados = await MovilService.GetAll(m => m.IdTitularNavigation.Dni == IdSeleccionado.ToString());
+            movilesSeleccionados = await MovilService.GetAll(m => m.IdTitularNavigation.Id == (uint)IdSeleccionado);
+            if (movilesSeleccionados != null && movilesSeleccionados.Any()){
+                MovilSeleccionado = null;
+            }
+            else{
+                await Swal.FireAsync(new SweetAlertOptions {
+                    TitleText = "Información",
+                    Text = $"No se encontró el titular con DNI {IdSeleccionado}.",
+                    Icon = SweetAlertIcon.Info,
+                    AllowOutsideClick = false
+                });
+            }
         }
     }
 
@@ -275,7 +379,8 @@ else{
             }
         }
         else if(fechaHasta < fechaDesde){
-            await JSRuntime.InvokeVoidAsync("showBSModal","alertaFechaInvalida");
+            // await JSRuntime.InvokeVoidAsync("showBSModal","alertaFechaInvalida");
+            await Swal.FireAsync("Información", "Los rangos ingresados no son válidos", SweetAlertIcon.Info);
         }
     }
 
@@ -291,8 +396,17 @@ else{
             if (pagosDetalle != null && pagosDetalle.Any()){
                 await JSRuntime.InvokeVoidAsync("showBSModal","periodoDetalle");
             }else{
-                await JSRuntime.InvokeVoidAsync("showBSModal","alertaPagos");
+                // await JSRuntime.InvokeVoidAsync("showBSModal","alertaPagos");
+                await Swal.FireAsync("Información", "No se registran pagos para éste período.", SweetAlertIcon.Info);
             }
+        }
+    }
+
+    private void queryCargarDni(uint id){
+        IdSeleccionado = (int)id;
+        if (Seleccion == "2"){
+            var titular = titulares?.FirstOrDefault(t => t.Id == id);
+            query = (titular != null) ? titular.Dni : "";
         }
     }
 }

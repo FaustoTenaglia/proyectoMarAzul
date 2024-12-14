@@ -147,6 +147,7 @@
 
     // Sugerencias para autocompletar
     private List<Persona> suggestions = new List<Persona>();
+    private List<Localidad> localidades = new List<Localidad>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -159,6 +160,7 @@
     {
         personasOriginales = await PersonaService.GetAll(); // Guarda los datos originales
         personas = new List<Persona>(personasOriginales); // Inicializa la lista a mostrar
+        localidades = await LocalidadService.GetAll();
         Filtrar(query);
     }
 

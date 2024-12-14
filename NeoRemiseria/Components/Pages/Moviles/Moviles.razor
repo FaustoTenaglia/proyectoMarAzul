@@ -6,6 +6,8 @@
 @inject NavigationManager NavigationManager
 @inject ITable<Movil> MovilService
 
+@rendermode InteractiveServer
+
 <h3 class="mb-3 text-center text-primary">Lista de Móviles</h3>
 
 <div class="text-end mb-3">
@@ -42,10 +44,10 @@ else
                         <td>@movil.IdModeloNavigation?.Nombre</td>
                         <td>@movil.IdTitularNavigation?.NombreCompleto</td>
                         <td class="btn-group-sm">
-                            <button class="btn btn-warning" @onclick="() => EditMovil(movil.Id)">
+                            <button type="button" class="btn btn-warning" @onclick="() => EditMovil(movil.Id)">
                                 Editar
                             </button>
-                            <button class="btn btn-danger" @onclick="() => ConfirmDeleteMovil(movil.Id)">
+                            <button type="button" class="btn btn-danger" @onclick="() => ConfirmDeleteMovil(movil.Id)">
                                 Eliminar
                             </button>
                         </td>

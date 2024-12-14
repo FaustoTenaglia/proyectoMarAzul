@@ -33,7 +33,7 @@
             <label for="modelo" class="form-label">Modelo:</label>
             <InputSelect id="modelo" @bind-Value="movil.IdModelo" class="form-select" disabled="@(!isPatenteValid)">
                 <option value="0">Seleccione un modelo</option>
-                @foreach (var modelo in modelos)
+                @foreach (var modelo in modelos.OrderBy(m => m.Nombre))
                 {
                     <option value="@modelo.Id">@modelo.Nombre</option>
                 }
@@ -45,7 +45,7 @@
             <label for="Persona" class="form-label">Persona:</label>
             <InputSelect id="Persona" @bind-Value="movil.IdTitular" class="form-select" disabled="@(!isPatenteValid)">
                 <option value="0">Seleccione una Persona</option>
-                @foreach (var persona in Personaes)
+                @foreach (var persona in Personaes.OrderBy(p => p.Apellido).ThenBy(p => p.Nombre))
                 {
                     <option value="@persona.Id">@persona.NombreCompleto</option>
                 }

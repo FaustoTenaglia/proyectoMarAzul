@@ -139,7 +139,7 @@
                 @foreach(var movil in movilesSeleccionados){
                     <tr @ondblclick="() => SeleccionarFila(movil)" class="@GetRowClass(movil)">
                         <td>@movil.Id</td>
-                        <td>@movil.Patente</td>
+                        <td>@FormatearPatente(movil.Patente)</td>
                     </tr>
                 }
             </tbody>
@@ -167,7 +167,7 @@
             @* <h6 class="my-3">Detalle para el móvil N°@MovilSeleccionado.Id</h6> *@
             <div class="hstack gap-2 mb-3">
                 <span class="input-group-text">Patente</span>
-                <span class="text-normal">@MovilSeleccionado.Patente</span>
+                <span class="text-normal">@FormatearPatente(MovilSeleccionado.Patente)</span>
                 <span class="input-group-text ms-5">Marca y Modelo</span>
                 <span class="text-normal">@MovilSeleccionado.IdModeloNavigation?.IdMarcaNavigation?.Nombre @MovilSeleccionado.IdModeloNavigation?.Nombre</span>
             </div>

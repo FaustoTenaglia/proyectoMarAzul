@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace NeoRemiseria.Models;
+﻿namespace NeoRemiseria.Models;
 
 public partial class Caja
 {
-    public uint Turno { get; set; }
+    public int Id {get; set;}
+    public DateOnly? Jornada { get; set; }
+    public decimal Entrada { get; set; }
+    public decimal Salida { get; set; }
+    public decimal Saldo { get; set; }
+    public DateTime? Apertura {get; set;}
+    public DateTime Cierre {get; set;}
 
-    public DateOnly Fecha { get; set; }
-
-    public decimal? Total { get; set; }
+    public virtual ICollection<Movimiento> Movimientos { get; set; } = [];
 }

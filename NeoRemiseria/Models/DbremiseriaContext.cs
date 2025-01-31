@@ -85,23 +85,32 @@ public partial class DbremiseriaContext : DbContext
 
         modelBuilder.Entity<Caja>(entity =>
         {
-            entity.HasKey(e => new { e.Turno, e.Fecha })
-                .HasName("PRIMARY")
-                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.ToTable("caja");
 
-            entity.Property(e => e.Turno)
-                .HasDefaultValueSql("'1'")
-                .HasColumnType("int(10) unsigned")
-                .HasColumnName("turno");
-            entity.Property(e => e.Fecha)
+            entity.Property(e => e.Jornada)
                 .HasDefaultValueSql("curdate()")
-                .HasColumnName("fecha");
-            entity.Property(e => e.Total)
+                .HasColumnName("jornada");
+            entity.Property(e => e.Apertura).HasColumnName("apertura");
+            entity.Property(e => e.Cierre).HasColumnName("cierre");
+            entity.Property(e => e.Entrada)
+                .HasPrecision(11,2)
+                .HasDefaultValueSql("'0.00'")
+                .HasColumnName("entrada");
+            entity.Property(e => e.Salida)
+                .HasPrecision(11,2)
+                .HasDefaultValueSql("'0.00'")
+                .HasColumnName("salida");
+            entity.Property(e => e.Saldo)
                 .HasPrecision(11, 2)
                 .HasDefaultValueSql("'0.00'")
-                .HasColumnName("total");
+                .HasColumnName("saldo");
+            /*entity.Property(e => e.Estado)
+                .HasMaxLength(1)
+                .HasDefaultValueSql("'A")
+                .IsFixedLength()
+                .HasColumnName("estado");*/
         });
 
         modelBuilder.Entity<Cartel>(entity =>
@@ -376,13 +385,14 @@ public partial class DbremiseriaContext : DbContext
             entity.ToTable("movimiento");
 
             entity.HasIndex(e => e.IdServicio, "Movimiento_fk_Servicio");
+            entity.HasIndex(e => e.IdServicio, "Movimiento_fk_Caja");
 
             entity.Property(e => e.Id)
-                .HasColumnType("int(10) unsigned")
+                .HasColumnType("int(10)")
                 .HasColumnName("id");
-            entity.Property(e => e.Fecha)
-                .HasDefaultValueSql("curdate()")
-                .HasColumnName("fecha");
+            entity.Property(e => e.Tiempo)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnName("tiempo");
             entity.Property(e => e.IdServicio)
                 .HasColumnType("int(10) unsigned")
                 .HasColumnName("id_servicio");
@@ -390,15 +400,19 @@ public partial class DbremiseriaContext : DbContext
                 .HasPrecision(10, 2)
                 .HasDefaultValueSql("'0.00'")
                 .HasColumnName("importe");
-            entity.Property(e => e.Turno)
-                .HasDefaultValueSql("'1'")
-                .HasColumnType("int(10) unsigned")
-                .HasColumnName("turno");
+            entity.Property(e => e.IdCaja)
+                .HasColumnType("int(10)")
+                .HasColumnName("id_caja");
 
             entity.HasOne(d => d.IdServicioNavigation).WithMany(p => p.Movimientos)
                 .HasForeignKey(d => d.IdServicio)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Movimiento_fk_Servicio");
+
+            entity.HasOne(d => d.IdCajaNavigation).WithMany(p => p.Movimientos)
+                .HasForeignKey(d => d.IdCaja)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Movimiento_fk_Caja");
         });
 
         modelBuilder.Entity<Pago>(entity =>

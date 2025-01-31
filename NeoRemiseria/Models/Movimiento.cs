@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace NeoRemiseria.Models;
+﻿namespace NeoRemiseria.Models;
 
 public partial class Movimiento
 {
-    public uint Id { get; set; }
+    public int Id { get; set; }
 
     public decimal? Importe { get; set; }
 
-    public DateOnly? Fecha { get; set; }
+    public DateTime? Tiempo { get; set; }
 
-    public uint? Turno { get; set; }
+    public int IdCaja { get; set; }
 
     public uint IdServicio { get; set; }
 
     public virtual Servicio IdServicioNavigation { get; set; } = null!;
+    public virtual Caja IdCajaNavigation { get; set; } = null!;
 }

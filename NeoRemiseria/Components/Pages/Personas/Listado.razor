@@ -16,6 +16,19 @@
              Titulo="Confirmación"
              OnResult=" async Task (int res) => {if(res == 1){await PersonaService.DeleteItem(personaSeleccionada.Id); await CargarDatos();}}" />
 
+<style>
+    .sortable-header {
+        cursor: pointer;
+        position: relative;
+    }
+
+        .sortable-header .arrow {
+            font-size: 0.7rem; /* Tamaño de las flechas */
+            visibility: visible; /* Flechas visibles desde el principio */
+            margin-left: 5px; /* Espaciado entre el texto y la flecha */
+        }
+</style>
+
 <div class="container mt-5">
     <div class="row mb-3">
         <div class="col">
@@ -64,11 +77,11 @@
             <table class="table table-bordered table-hover shadow-lg rounded" style="border-radius: 15px; overflow: hidden;">
                 <thead style="background: linear-gradient(90deg, #007bff, #00aaff);" class="text-white">
                     <tr>
-                        <th @onclick="@(() => OnSortChanged("Dni"))" style="cursor: pointer;">
-                            DNI @(currentSortProperty == "Dni" ? (isAscending ? "▲" : "▼") : "")
+                        <th class="sortable-header" @onclick="@(() => OnSortChanged("Dni"))">
+                            DNI <span class="arrow">@GetArrow("Dni")</span>
                         </th>
-                        <th @onclick="@(() => OnSortChanged("Apellido"))" style="cursor: pointer;">
-                            Apellido @(currentSortProperty == "Apellido" ? (isAscending ? "▲" : "▼") : "")
+                        <th class="sortable-header" @onclick="@(() => OnSortChanged("Apellido"))">
+                            Apellido <span class="arrow">@GetArrow("Apellido")</span>
                         </th>
                         <th>Nombre</th>
                         <th>Sexo</th>
@@ -147,6 +160,7 @@
 
     // Sugerencias para autocompletar
     private List<Persona> suggestions = new List<Persona>();
+    private List<Localidad> localidades = new List<Localidad>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -159,12 +173,13 @@
     {
         personasOriginales = await PersonaService.GetAll(); // Guarda los datos originales
         personas = new List<Persona>(personasOriginales); // Inicializa la lista a mostrar
+        localidades = await LocalidadService.GetAll();
         Filtrar(query);
     }
 
     private async Task Editar(uint id)
     {
-        Navigation.NavigateTo($"persona-form/{id}", true);
+        Navigation.NavigateTo($"persona-edit/{id}", true);
     }
 
     private async Task Eliminar(uint id)
@@ -273,5 +288,14 @@
         }
 
         StateHasChanged(); // Asegúrate de actualizar la UI
+    }
+
+    private string GetArrow(string column)
+    {
+        if (currentSortProperty != column)
+        {
+            return "▲▼"; // Mostrar ambas flechas si la columna no es la actual
+        }
+        return isAscending ? "▲" : "▼"; // Mostrar una flecha según el orden actual
     }
 }

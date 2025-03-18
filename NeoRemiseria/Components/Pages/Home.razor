@@ -1,46 +1,146 @@
 ﻿@page "/"
-@* Debe tener SOLO EL SIMBOLO DE RAIZ en la página que sea el home, no es necesario ingresar el nombre *@
 
 <style>
-    .img {
-        .container px-4 py-5
-
-    {
-        margin-top: 15%;
+    .container {
+        margin-top: 30px;
+        padding: 15px; /* Ajuste de padding */
     }
 
+    .feature {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        text-align: center;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        margin-bottom: 20px; /* Ajuste de margen */
+        margin-left: 10px; /* Reducción del tamaño a los costados */
+        margin-right: 10px;
+        flex: 1; /* Hacemos que los elementos tomen el mismo tamaño */
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centramos los elementos */
+    }
+
+        .feature:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        transition: color 0.3s ease-in-out;
+        width: 100%; /* Aseguramos que las imágenes ocupen todo el ancho del contenedor */
+        border-radius: 10px; /* Redondeamos las esquinas de las imágenes */
+    }
+
+    .feature-title a {
+        text-decoration: none;
+        color: #212529;
+        font-weight: bold;
+        transition: color 0.3s ease-in-out;
+        position: relative;
+        padding: 0; /* Eliminé el padding para que no se vea como botón */
+        border-radius: 0; /* Eliminé el borde redondeado */
+        border: none; /* Eliminé el borde */
+        background-color: transparent; /* Fondo transparente */
+        font-size: 1.2rem;
+        display: inline-block;
+        margin-top: 15px;
+    }
+
+        .feature-title a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 0%;
+            height: 3px;
+            background-color: #007bff;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .feature-title a:hover {
+            color: #007bff;
+        }
+
+            .feature-title a:hover::after {
+                width: 100%;
+            }
+
+            .feature-title a:hover .tooltip {
+                visibility: visible;
+                opacity: 1;
+            }
+
+    .feature p {
+        color: #6c757d;
+        font-size: 1.1rem;
+    }
+
+    .tooltip {
+        visibility: hidden;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 5px;
+        padding: 5px 10px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -60px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        width: 120px;
+    }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+
+    .feature-col {
+        flex: 1; /* Ajuste del tamaño flexible */
+        min-width: 200px; /* Tamaño mínimo para asegurar una buena presentación */
+    }
+
+    .row {
+        display: flex; /* Asegura que los elementos estén en la misma línea */
+        flex-wrap: nowrap; /* Evita que los elementos se muevan a la siguiente línea */
+        justify-content: center; /* Centra los elementos en la fila */
     }
 </style>
 
 <img src="images/remiseria-mar-azul-logo.svg" style="display: block; margin: 0 auto; width: 485.40px; height: 300px;">
-<div class="container px-4 py-5" style="margin-top: -100px;">
+<div class="container px-4 py-5">
     <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
-        <div class="feature col">
-            <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-                <svg style="vertical-align: -.125em; fill: currentColor;" width="1em" height="1em"><use href="#person-vcard" /></svg>
-                @* <i class="bi bi-person-vcard ></i>" *@
-            </div>
-            <h3 class="text-body-emphasis fs-2">Deudas</h3>
-            <p>Muestra los datos de las personas que poseen una deuda.</p>
-            <a href="/cobranzas/generar-deuda" class="icon-link">Ir a deudas</a>
+        <div class="feature feature-col">
+            <img src="images/deuda.jpeg" alt="Deudas" class="feature-icon">
+            <h3 class="feature-title fs-2">
+                <a href="/cobranzas/generar-deuda">Deudas<span class="tooltip">Muestra los datos de las personas que poseen una deuda.</span></a>
+            </h3>
         </div>
 
-        <div class="feature col">
-            <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-                <svg style="vertical-align: -.125em; fill: currentColor;" width="1em" height="1em"><use xlink:href="#people-circle" /></svg>
-            </div>
-            <h3 class="text-body-emphasis fs-2">Moviles</h3>
-            <p>Permite registrar la información de un nuevo movil.</p>
-            <a href="/movil-form" class="icon-link">Ir a móvil</a>
+        <div class="feature feature-col">
+            <img src="images/moviles.jpeg" alt="Móviles" class="feature-icon">
+            <h3 class="feature-title fs-2">
+                <a href="/movil-form">Móviles<span class="tooltip">Permite registrar la información de un nuevo móvil.</span></a>
+            </h3>
         </div>
 
-        <div class="feature col">
-            <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
-                <svg style="vertical-align: -.125em; fill: currentColor;" width="1em" height="1em"><use xlink:href="#person-fill-add" /></svg>
-            </div>
-            <h3 class="text-body-emphasis fs-2">Registrar Pago</h3>
-            <p>Redirigir al formulario de registro de pago</p>
-            <a href="/cobranzas/registrar-pago" class="icon-link">Ir a Pago</a>
+        <div class="feature feature-col">
+            <img src="images/registrar-pago.jpeg" alt="Registrar Pago" class="feature-icon">
+            <h3 class="feature-title fs-2">
+                <a href="/cobranzas/registrar-pago">Registrar Pago<span class="tooltip">Redirigir al formulario de registro de pago.</span></a>
+            </h3>
         </div>
     </div>
 </div>

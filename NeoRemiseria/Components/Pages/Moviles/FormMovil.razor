@@ -45,7 +45,7 @@
             <label for="Persona" class="form-label">Persona:</label>
             <InputSelect id="Persona" @bind-Value="movil.IdTitular" class="form-select" disabled="@(!isPatenteValid)">
                 <option value="0">Seleccione una Persona</option>
-                @foreach (var persona in Personaes)
+                @foreach (var persona in Personaes.OrderBy(p => p.NombreCompleto)) // Ordenar alfabéticamente
                 {
                     <option value="@persona.Id">@persona.NombreCompleto</option>
                 }

@@ -14,7 +14,7 @@ function closeBSModal(modalId){
 };
 
 // Guardar el estado en el local storage
-windwow.subMenuState = {
+window.subMenuState = {
     saveState: function(variableName, isExpanded){
         localStorage.setItem(variableName, isExpanded);
     },

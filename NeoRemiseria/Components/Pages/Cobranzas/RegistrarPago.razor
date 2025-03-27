@@ -15,8 +15,10 @@
 @inject ITable<Movil> MovilService
 @inject ITable<Modelo> ModeloService
 @inject PagoService PagoService
+@inject MovimientoService MovimientoService
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
+@inject CajaService CajaService
 
 @rendermode InteractiveServer
 
@@ -24,44 +26,43 @@
 @if (deudas != null){
     <ModalSearch Items="@deudas.Select(d => new{Id = d.Id, Periodo = d.Periodo, Movil = d.IdMovil, Saldo = d.Saldo}).OrderBy(d => d.Movil).ThenBy(d => d.Periodo).ToList()" 
                  OnSelected="(uint id) => BuscarMovil(id)" />
-                 @* OnSelected="(uint id) => {IdDeudaSeleccionada = (int)id;}" /> *@
 }
 
 <h3>Registrar Pago</h3>
 
-<EditForm Model="pago" OnValidSubmit="HandleSubmit" class="container">
+<EditForm Model="cobro" OnValidSubmit="HandleSubmit" class="container">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
     <div class="form-group mb-3">
-        <div class="input-group mb-2">
-            @* <label for="IdMovil">N° Móvil</label> *@
-            <span class="input-group-text" for="IdMovil">N°Móvil</span>
-            <input id="IdMovil" type="search" class="form-control" style="width: 18rem;" 
-                   @bind="IdMovilSeleccionado"
-                   @bind:after="CargarDeudas"
-                   required />
-            <button class="btn btn-outline-primary" type="button" @onclick="ShowModalBuscar">
-                <i class="bi bi-search"></i>
-            </button>
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">Periodo</span>
-            <select class="form-select" @bind="IdDeudaSeleccionada">
-                <option value="0">Seleccione un periodo de la lista</option>
-                @if(deudasMovilSeleccionado != null){
-                    var deudaAnterior = deudasMovilSeleccionado.First();
-                    foreach(var deuda in deudasMovilSeleccionado){
-                        if (deuda != deudaAnterior){
-                            <option selected disabled value="@deuda.Id">@deuda.Periodo.ToString("MMMM-yyyy")</option>
-                        }
-                        else{
-                            <option value="@deuda.Id">@deuda.Periodo.ToString("MMMM-yyyy")</option>
+        <div class="vstack col-md-6 mx-auto">
+            <div class="input-group mb-2 shadow">
+                <span class="input-group-text" for="IdMovil">N°Móvil</span>
+                <input id="IdMovil" type="search" class="form-control" style="width: 18rem;" 
+                    @bind="IdMovilSeleccionado"
+                    @bind:after="CargarDeudas"
+                    required />
+                <button class="btn btn-outline-primary" type="button" @onclick="ShowModalBuscar">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+            <div class="input-group mb-3 shadow">
+                <span class="input-group-text">Periodo</span>
+                <select class="form-select" @bind="IdDeudaSeleccionada">
+                    <option value="0">Seleccione un periodo de la lista</option>
+                    @if(deudasMovilSeleccionado != null){
+                        var deudaAnterior = deudasMovilSeleccionado.First();
+                        foreach(var deuda in deudasMovilSeleccionado){
+                            if (deuda != deudaAnterior){
+                                <option selected disabled value="@deuda.Id">@deuda.Periodo.ToString("MMMM-yyyy")</option>
+                            }
+                            else{
+                                <option value="@deuda.Id">@deuda.Periodo.ToString("MMMM-yyyy")</option>
+                            }
                         }
                     }
-                    @* IdDeudaSeleccionada = (int)deudaAnterior.Id; *@
-                }
-            </select>
+                </select>
+            </div>
         </div>
         @if(IdDeudaSeleccionada > 0){
             var deuda = deudas?.Find(d => d.Id == IdDeudaSeleccionada);
@@ -70,26 +71,32 @@
             if(deuda != null){
                 // Obtener el movil correspondiente a la deuda seleccionada y mostrar los datos
                 var movil = MovilService.GetById(deuda.IdMovil);
-                <div class="card my-3 container">
+                <div class="card col-md-6 mx-auto shadow">
                     <div class="card-header">
-                        @* <h5 class="text-center">Movil N°@deuda.IdMovil - Patente @deuda.IdMovilNavigation?.Patente</h5> *@
                         <h5>Movil N°@deuda.IdMovil - Patente @deuda.IdMovilNavigation?.Patente - @movil?.Result?.IdModeloNavigation?.IdMarcaNavigation?.Nombre @movil?.Result?.IdModeloNavigation?.Nombre</h5>
                     </div>
                     <div class="card-body">
                         <h5 class="card-title fw-bold">Total: @deuda.Importe.ToString("C")</h5>
                         <h6 class="@ClassSaldo(@deuda.Saldo)">Saldo: @deuda.Saldo?.ToString("C")</h6>
-                        <p class="card-text">Periodo: @deuda.Periodo.ToString("MMMM-yyyy")</p>
-                        @if(pagos != null){
+                        @* @if(pagos != null){ *@
+                        @if(cobros != null){
                             <h6><small>Pagos Anteriores</small></h6>
-                            <ol class="list-group list-group-numbered container mx-auto">
-                                @foreach(var pago in pagos.Where(p => p.IdDeuda == (uint)IdDeudaSeleccionada).OrderBy(p => p.Id)){
+                            <ol class="list-group list-group-numbered list-group-flush mx-auto">
+                                @foreach(var cobro in cobros.Where(p => p.IdDeuda == (uint)IdDeudaSeleccionada).OrderBy(p => p.Id)){
+                                    <li class="list-group-item">
+                                        <span>@cobro.Tiempo.ToString("dd/MM/yyyy")</span>
+                                        <span>@cobro.Importe?.ToString("C")</span>
+                                    </li>
+                                }
+                                @* @foreach(var pago in pagos.Where(p => p.IdDeuda == (uint)IdDeudaSeleccionada).OrderBy(p => p.Id)){
                                     <li class="list-group-item">
                                         <span>@pago.Fecha</span>
                                         <span>@pago.Importe.ToString("C")</span>
                                     </li>
-                                }
+                                } *@
                             </ol>
-                            <p class="mb-2">Subtotal:@pagos.Where(p => p.IdDeuda == (uint)IdDeudaSeleccionada).Sum(p => p.Importe).ToString("C")</p>                        
+                            @* <p class="mb-2">Subtotal:@cobros.Where(p => p.IdDeuda == (uint)IdDeudaSeleccionada).Sum(p => p.Importe).ToString("C")</p>                         *@
+                            <p class="mb-2">Subtotal: @cobros.Where(p => p.IdDeuda == (uint)IdDeudaSeleccionada).Sum(p => p.Importe)?.ToString("C")</p>                        
                         }
                     </div>
                 </div>
@@ -97,139 +104,173 @@
         }
     </div>
 
-    <div class="form-group mb-3">
-        <label for="Importe">Importe:</label>
-        <InputNumber @bind-Value="pago.Importe" class="form-control" step="0.01" required />
-    </div>
+    <div class="vstack col-md-6 gap-2 mx-auto">
+        <div class="form-group mb-3 shadow">
+            <label for="Importe">Importe:</label>
+            <InputNumber @bind-Value="cobro.Importe" class="form-control" step="0.01" required />
+        </div>
 
-    <div class="form-group mb-3">
-        <label for="Fecha">Fecha de Pago:</label>
-        <InputDate @bind-Value="pago.Fecha" class="form-control" required />
-    </div>
+        @* <div class="form-group mb-3">
+            <label for="Fecha">Fecha de Pago:</label>
+            <InputDate @bind-Value="pago.Fecha" class="form-control" required />
+        </div> *@
 
-    <button type="submit" class="btn btn-primary">Registrar Pago</button>
+        <div class="hstack gap-2">
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <button type="button" class="btn btn-danger" @onclick=@(() => {Navigation.NavigateTo($"/caja",true);})>Cancelar</button>
+        </div>
+    </div>
 </EditForm>
 
 @code{
-private Pago pago = new Pago{Importe = 0.00m, Fecha = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)};
-private Pago? UltimoPago {get;set;}
-private List<Pago>? pagos;
-private List<Deuda>? deudas, deudasMovilSeleccionado;
-private List<Movil>? moviles;
-private List<Modelo>? modelos;
+    private Pago pago = new Pago{Importe = 0.00m, Fecha = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day)};
+    private Pago? UltimoPago {get;set;}
+    private List<Pago>? pagos;
+    private List<Deuda>? deudas, deudasMovilSeleccionado;
+    private List<Movil>? moviles;
+    private List<Modelo>? modelos;
 
-[Required(ErrorMessage="Debe ingresar un valor para buscar.")]
-private int IdDeudaSeleccionada {get;set;} = 0;
-[Required(ErrorMessage="Debe ingresar un número de móvil para empezar.")]
-private int? IdMovilSeleccionado {get;set;}
+    private Movimiento cobro = new Movimiento {
+        IdServicio = 1,
+        Importe = 0.00m
+    };
+    private List<Movimiento>? cobros;
 
-protected override async Task OnInitializedAsync(){
-    moviles = await MovilService.GetAll();
-    modelos = await ModeloService.GetAll();
-    deudas = await DeudaService.GetAll(d => d.Saldo > 0);
-    pagos = await PagoService.ObtenerPagos();
+    [Required(ErrorMessage="Debe ingresar un valor para buscar.")]
+    private int IdDeudaSeleccionada {get;set;} = 0;
+    [Required(ErrorMessage="Debe ingresar un número de móvil para empezar.")]
+    private int? IdMovilSeleccionado {get;set;}
 
-    StateHasChanged();
-}
+    private int? idCaja;
 
- private async Task HandleSubmit()
- {
-    try
+    protected override async Task OnInitializedAsync(){
+        moviles = await MovilService.GetAll();
+        modelos = await ModeloService.GetAll();
+        deudas = await DeudaService.GetAll(d => d.Saldo > 0);
+        pagos = await PagoService.ObtenerPagos();
+        cobros = await MovimientoService.ObtenerIngresosAsync(m => m.IdServicio == 1);
+        idCaja = CajaService.IdCajaActual();
+
+        StateHasChanged();
+    }
+
+    private async Task HandleSubmit()
     {
-        // Verificar que el Id de deuda ingresado existe o si fue saldada
-        // Buscar la deuda, dado el Id. Si no lo encuentra, lanzar una excepcion
-        var deuda = await DeudaService.GetById((uint)IdDeudaSeleccionada) ?? throw new ArgumentException("No existe la deuda ingresada");
-        
-        // Verificar si la deuda fue saldada
-        if (deuda.Saldo <= 0){
-            throw new InvalidOperationException("La deuda ya fue pagada.");
+        try
+        {
+            // Verificar que el Id de deuda ingresado existe o si fue saldada
+            // Buscar la deuda, dado el Id. Si no lo encuentra, lanzar una excepcion
+            var deuda = await DeudaService.GetById((uint)IdDeudaSeleccionada) ?? throw new ArgumentException("No existe la deuda ingresada");
+            
+            // Verificar si la deuda fue saldada
+            if (deuda.Saldo <= 0){
+                throw new InvalidOperationException("La deuda ya fue pagada.");
+            }
+
+            // Verificar que se ingresó un importe válido
+            // No exceda al saldo
+            // if (pago.Importe > deuda.Saldo){
+            if (cobro.Importe > deuda.Saldo){
+                throw new InvalidOperationException("El importe ingresado no puede ser mayor al saldo.");
+            }
+            // No sea cero
+            if (cobro.Importe == 0m){throw new ArgumentOutOfRangeException("Ingrese un valor de importe.");}
+            // No sea negativo
+            if (cobro.Importe < 0m){throw new ArgumentOutOfRangeException("El importe ingresado no debe ser negativo.");}
+            // if (pago.Importe <= 0){throw new ArgumentOutOfRangeException(nameof(pago.Importe));}
+
+            // Verificar la fecha ingresada
+            // var hoy = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            // if (pago.Fecha > hoy){throw new ArgumentOutOfRangeException("La fecha ingresada no debe ser mayor a la fecha actual.");}
+
+
+            // Confirmar el pago
+            // var resp = await Swal.FireAsync("Confirmación","¿Desea registrar el cobro?",SweetAlertIcon.Question);
+            SweetAlertResult result = await Swal.FireAsync(new SweetAlertOptions{
+                                                    Title = "Información",
+                                                    Text = "¿Desea registrar el cobro?",
+                                                    Icon = SweetAlertIcon.Question,
+                                                    ShowDenyButton = true,
+                                                    ConfirmButtonText = "Si",
+                                                    DenyButtonText = "No"});
+            if (!string.IsNullOrEmpty(result.Value)){
+                cobro.IdCaja = idCaja.HasValue ? idCaja.Value : 0;
+                cobro.IdDeuda = (uint)IdDeudaSeleccionada;
+                cobro.Tiempo = DateTime.Now;
+                // await PagoService.RegistrarPago(pago);
+                await MovimientoService.Registrar(cobro);
+                // NOTA: actualizar el saldo en Deuda luego de registrar el movimiento
+                //      Antes estaba implementado en un trigger, que se ejecutaba luego de
+                // ingresar un registro en la tabla Pago
+                deuda.Saldo -= cobro.Importe;
+                await DeudaService.UpdateItem(deuda);
+                await Swal.FireAsync("Información","Pago realizado con éxito.",SweetAlertIcon.Success);
+            }
+
+            // Mantener en la vista de cobros
+            @* Navigation.NavigateTo($"/cobranzas/registrar-pago", true); *@
+            Navigation.NavigateTo($"/caja", true);
         }
-
-        // Verificar que se ingresó un importe válido
-        // No exceda al saldo
-        if (pago.Importe > deuda.Saldo){
-            throw new InvalidOperationException("El importe ingresado no puede ser mayor al saldo.");
+        catch (ArgumentOutOfRangeException e){
+            await Swal.FireAsync("Error", e.ParamName, SweetAlertIcon.Error);
         }
-        // No sea cero
-        if (pago.Importe == 0m){throw new ArgumentOutOfRangeException("Ingrese un valor de importe.");}
-        // No sea negativo
-        if (pago.Importe < 0m){throw new ArgumentOutOfRangeException("El importe ingresado no debe ser negativo.");}
-        // if (pago.Importe <= 0){throw new ArgumentOutOfRangeException(nameof(pago.Importe));}
-
-        // Verificar la fecha ingresada
-        var hoy = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-        if (pago.Fecha > hoy){throw new ArgumentOutOfRangeException("La fecha ingresada no debe ser mayor a la fecha actual.");}
-
-        pago.IdDeuda = (uint)IdDeudaSeleccionada;
-
-        // Confirmar el pago
-        var resp = Swal.FireAsync("Confirmación","¿Desea registrar el cobro?",SweetAlertIcon.Question);
-        await PagoService.RegistrarPago(pago);
-        await Swal.FireAsync("Información","Pago realizado con éxito.",SweetAlertIcon.Success);
-
-        // Mantener en la vista de cobros
-        Navigation.NavigateTo($"/cobranzas/registrar-pago", true);
+        catch (InvalidOperationException e){
+            await Swal.FireAsync("Información",e.Message, SweetAlertIcon.Error);
+        }
+        catch (ArgumentException e){
+            await Swal.FireAsync(new SweetAlertOptions{
+                                Title = "Información",
+                                Text= e.Message, 
+                                Icon = SweetAlertIcon.Info,
+                                ConfirmButtonText = "Aceptar",
+                                AllowOutsideClick = false,
+                                ShowCloseButton = true});
+        }
+        catch(Exception ex){// Otra excepcion
+            await Swal.FireAsync(new SweetAlertOptions{
+                                Title = "Error", 
+                                Text = ex.Message, 
+                                Icon = SweetAlertIcon.Error,
+                                ConfirmButtonText = "Aceptar",
+                                AllowOutsideClick = false,
+                                ShowCloseButton = true});
+        }
     }
-    catch (ArgumentOutOfRangeException e){
-        await Swal.FireAsync("Error", e.ParamName, SweetAlertIcon.Error);
-    }
-    catch (InvalidOperationException e){
-        await Swal.FireAsync("Información",e.Message, SweetAlertIcon.Error);
-    }
-    catch (ArgumentException e){
-        await Swal.FireAsync(new SweetAlertOptions{
-                             Title = "Información",
-                             Text= e.Message, 
-                             Icon = SweetAlertIcon.Info,
-                             ConfirmButtonText = "Aceptar",
-                             AllowOutsideClick = false,
-                             ShowCloseButton = true});
-    }
-    catch(Exception ex){// Otra excepcion
-        await Swal.FireAsync(new SweetAlertOptions{
-                             Title = "Error", 
-                             Text = ex.Message, 
-                             Icon = SweetAlertIcon.Error,
-                             ConfirmButtonText = "Aceptar",
-                             AllowOutsideClick = false,
-                             ShowCloseButton = true});
-    }
- }
 
- private async Task ShowModalBuscar(){
-    await JSRuntime.InvokeVoidAsync("showBSModal","modalBusqueda");
- }
-
-private string ClassSaldo(decimal? saldo){
-    string clase = "card-subtitle mb-2";
-    clase += saldo > 0m ? " text-danger" : "";
-    return clase;
-}
-
-private void BuscarMovil(uint id){
-    IdDeudaSeleccionada = (int)id;
-    var deuda = DeudaService.GetById(id) ?? null;
-    IdMovilSeleccionado = (deuda != null && deuda.IsCompletedSuccessfully && deuda.Result != null) ? (int)deuda.Result.IdMovil : 0;
-
-    deudasMovilSeleccionado = deudas?.Where(d => d.IdMovil == IdMovilSeleccionado).ToList() ?? null;
-    @* StateHasChanged(); *@
-}
-private async Task CargarDeudas (){
-    if (IdMovilSeleccionado > 0 && deudas != null && deudas.Any(d => d.IdMovil == IdMovilSeleccionado)){
-        deudasMovilSeleccionado = await DeudaService.GetAll(d => d.IdMovil == IdMovilSeleccionado && d.Saldo > 0m);
-        IdDeudaSeleccionada = deudasMovilSeleccionado != null ? (int)deudasMovilSeleccionado.First().Id : 0;
+    private async Task ShowModalBuscar(){
+        await JSRuntime.InvokeVoidAsync("showBSModal","modalBusqueda");
     }
-    else{
-        IdMovilSeleccionado = null;
-        deudasMovilSeleccionado = null;
-        IdDeudaSeleccionada = 0;
-        await Swal.FireAsync("Información","Número de móvil ingresado no es válido.", SweetAlertIcon.Info);
+
+    private string ClassSaldo(decimal? saldo){
+        string clase = "card-subtitle mb-2";
+        clase += saldo > 0m ? " text-danger" : "";
+        return clase;
     }
-}
-public string TiempoEntreFechas(DateOnly fecha1, DateOnly fecha2){
-    int diferenciaDias = fecha2.DayNumber - fecha1.DayNumber;
-    // Crear un TimeSpan a partir de la diferencia en dias
-    TimeSpan diferencia = TimeSpan.FromDays(diferenciaDias);
-    return diferencia.Humanize();
- }
+
+    private void BuscarMovil(uint id){
+        IdDeudaSeleccionada = (int)id;
+        var deuda = DeudaService.GetById(id) ?? null;
+        IdMovilSeleccionado = (deuda != null && deuda.IsCompletedSuccessfully && deuda.Result != null) ? (int)deuda.Result.IdMovil : 0;
+
+        deudasMovilSeleccionado = deudas?.Where(d => d.IdMovil == IdMovilSeleccionado).ToList() ?? null;
+    }
+
+    private async Task CargarDeudas (){
+        if (IdMovilSeleccionado > 0 && deudas != null && deudas.Any(d => d.IdMovil == IdMovilSeleccionado)){
+            deudasMovilSeleccionado = await DeudaService.GetAll(d => d.IdMovil == IdMovilSeleccionado && d.Saldo > 0m);
+            IdDeudaSeleccionada = deudasMovilSeleccionado != null ? (int)deudasMovilSeleccionado.First().Id : 0;
+        }
+        else{
+            IdMovilSeleccionado = null;
+            deudasMovilSeleccionado = null;
+            IdDeudaSeleccionada = 0;
+            await Swal.FireAsync("Información","Número de móvil ingresado no es válido.", SweetAlertIcon.Info);
+        }
+    }
+    public string TiempoEntreFechas(DateOnly fecha1, DateOnly fecha2){
+        int diferenciaDias = fecha2.DayNumber - fecha1.DayNumber;
+        // Crear un TimeSpan a partir de la diferencia en dias
+        TimeSpan diferencia = TimeSpan.FromDays(diferenciaDias);
+        return diferencia.Humanize();
+     }
 }

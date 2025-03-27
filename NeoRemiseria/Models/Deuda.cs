@@ -11,4 +11,6 @@ public partial class Deuda{
     public uint IdMovil {get; set;}
 
     public virtual Movil? IdMovilNavigation {get; set;}
+
+    public virtual ICollection<Movimiento> Movimientos {get; set;} = new List<Movimiento>();
 }

@@ -375,10 +375,14 @@ public partial class DbremiseriaContext : DbContext
 
             entity.ToTable("movimiento");
 
-            entity.HasIndex(e => e.IdServicio, "Movimiento_fk_Servicio");
+            // entity.HasIndex(e => e.IdServicio, "Movimiento_fk_Servicio");
+            // entity.HasIndex(e => e.IdCaja, "Movimiento_fk_Caja");
+            entity.HasIndex(e => e.IdCaja, "movimiento_ibfk_1");
+            entity.HasIndex(e => e.IdServicio, "movimiento_ibfk_2");
+            entity.HasIndex(e => e.IdDeuda, "movimiento_ibfk_3");
 
             entity.Property(e => e.Id)
-                .HasColumnType("int(10) unsigned")
+                .HasColumnType("int(11)")
                 .HasColumnName("id");
             entity.Property(e => e.Fecha)
                 .HasDefaultValueSql("curdate()")
@@ -386,19 +390,34 @@ public partial class DbremiseriaContext : DbContext
             entity.Property(e => e.IdServicio)
                 .HasColumnType("int(10) unsigned")
                 .HasColumnName("id_servicio");
+            entity.Property(e => e.IdDeuda)
+                .HasColumnType("int(10) unsigned")
+                .HasColumnName("id_deuda");
             entity.Property(e => e.Importe)
                 .HasPrecision(10, 2)
                 .HasDefaultValueSql("'0.00'")
                 .HasColumnName("importe");
-            entity.Property(e => e.Turno)
-                .HasDefaultValueSql("'1'")
-                .HasColumnType("int(10) unsigned")
-                .HasColumnName("turno");
+            entity.Property(e => e.IdCaja)
+                .HasColumnType("int(11)")
+                .HasColumnName("id_caja");
+
+            entity.HasOne(d => d.IdDeudaNavigation).WithMany(p => p.Movimientos)
+                .HasForeignKey(d => d.IdDeuda)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                // .HasConstraintName("Movimiento_fk_Servicio");
+                .HasConstraintName("movimiento_ibfk_3");
 
             entity.HasOne(d => d.IdServicioNavigation).WithMany(p => p.Movimientos)
                 .HasForeignKey(d => d.IdServicio)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("Movimiento_fk_Servicio");
+                // .HasConstraintName("Movimiento_fk_Servicio");
+                .HasConstraintName("movimiento_ibfk_2");
+
+            entity.HasOne(d => d.IdCajaNavigation).WithMany(p => p.Movimientos)
+                .HasForeignKey(d => d.IdCaja)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                // .HasConstraintName("Movimiento_fk_Caja");
+                .HasConstraintName("movimiento_ibfk_1");
         });
 
         modelBuilder.Entity<Pago>(entity =>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace NeoRemiseria.Models;
+﻿namespace NeoRemiseria.Models;
 
 public partial class Movimiento
 {
@@ -9,11 +6,15 @@ public partial class Movimiento
 
     public decimal? Importe { get; set; }
 
-    public DateOnly? Fecha { get; set; }
+    public DateTime Tiempo { get; set; }
 
-    public uint? Turno { get; set; }
+    public int? IdCaja { get; set; }
 
-    public uint IdServicio { get; set; }
+    public uint? IdServicio { get; set; }
+
+    public uint? IdDeuda { get; set; }
 
     public virtual Servicio IdServicioNavigation { get; set; } = null!;
+    public virtual Caja IdCajaNavigation { get; set; } = null!;
+    public virtual Deuda IdDeudaNavigation { get; set; } = null!;
 }

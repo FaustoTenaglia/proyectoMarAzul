@@ -37,6 +37,9 @@ builder.Services.AddScoped<ITable<Provincia>, ProvinciaService>();
 builder.Services.AddScoped<ITable<Telefono>, TelefonoService>();
 builder.Services.AddScoped<ITable<Chofer>, ChoferService>();
 builder.Services.AddScoped<ITable<Deuda>, DeudaService>();
+builder.Services.AddScoped<ITable<Servicio>, ServicioService>();
+builder.Services.AddScoped<CajaService>();
+builder.Services.AddScoped<MovimientoService>();
 builder.Services.AddScoped<PagoService>();
 builder.Services.AddScoped<IVista<VModelo>, VModeloService>(); // No se usa
 

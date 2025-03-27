@@ -46,7 +46,10 @@
                                     @ondblclick="() => OnFilaDblClick(item)" 
                                     data-bs-dismiss="@CerrarModalDesdeFila(item)">
                                     @foreach (var propiedad in typeof(T).GetProperties()){
-                                        <td>@propiedad.GetValue(item)</td>
+                                        // No mostrar el Id
+                                        if (propiedad.Name != "Id"){
+                                            <td>@propiedad.GetValue(item)</td>
+                                        }
                                     }
                                 </tr>
                             }

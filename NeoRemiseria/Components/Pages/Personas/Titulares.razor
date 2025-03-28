@@ -19,7 +19,8 @@
             <div class="col-md-6 mb-3 mb-sm-0">
                 <div class="card border-primary">
                     <div class="card-header text-primary">
-                     <a href="/persona-form/@persona.Id">@($"DNI: {persona.Dni}")</a>  
+                     @* <a href="/persona-form/@persona.Id">@($"DNI: {persona.Dni}")</a>   *@
+                     <a href="/persona-edit/@persona.Id">@($"DNI: {persona.Dni}")</a>  
                     </div>
                     <div class="card-body">
                         <h5 class="card-title"> @($"Titular: {persona.Apellido} {persona.Nombre}")</h5>

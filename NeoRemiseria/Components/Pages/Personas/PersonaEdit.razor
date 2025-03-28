@@ -85,7 +85,7 @@
                             <option value="-1">Seleccione o ingrese una localidad</option>
                             @foreach (var localidad in localidades.OrderBy(l => l.Nombre))
                             {
-                                <option value="@localidad.Id">@($"{localidad.Nombre} - {localidad.IdProvinciaNavigation.Nombre}")</option>
+                                <option value="@localidad.Id">@($"{localidad.Nombre} - {localidad.IdProvinciaNavigation?.Nombre}")</option>
                             }
                         </InputSelect>
                         <ValidationMessage For="@(() => persona.IdLocalidad)" />
@@ -133,7 +133,7 @@
     protected override async Task OnInitializedAsync()
     {
         localidades = await LocalidadService.GetAll();
-        persona = await PersonaService.GetById((uint)Id);
+        persona = await PersonaService.GetById((uint)Id) ?? new Persona();
         telefonos = await TelefonoService.GetAll(t => t.IdPersona == Id);
     }
 

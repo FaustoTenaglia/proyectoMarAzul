@@ -6,6 +6,10 @@
 @inject NavigationManager NavigationManager
 @inject ITable<Movil> MovilService
 
+@inject SweetAlertService Swal
+@inject ITable<Deuda> DeudaService
+@rendermode InteractiveServer
+
 <h3 class="mb-3 text-center text-primary">Lista de Móviles</h3>
 
 <div class="text-end mb-3">
@@ -65,7 +69,8 @@ else
 }
 
 @code {
-    private List<Movil> moviles;
+    private List<Movil> moviles = null!;
+    private List<Deuda>? deudasPorMovil;
 
     protected override async Task OnInitializedAsync()
     {
@@ -91,8 +96,17 @@ else
 
     private async Task ConfirmDeleteMovil(uint id)
     {
-        var confirmed = await ShowConfirmationDialog("¿Está seguro que desea eliminar este móvil?");
-        if (confirmed)
+        // Muestra un cuadro de diálogo para decidir si se elimina o no
+        @* var confirmed = await ShowConfirmationDialog("¿Está seguro que desea eliminar este móvil?"); *@
+        var confirmed = await Swal.FireAsync(new SweetAlertOptions{
+            Title = "Confirmación",
+            TitleText = "¿Está seguro que desea eliminar este móvil?",
+            ShowConfirmButton = true,
+            ConfirmButtonText = "Si",
+            ShowDenyButton = true,
+            Icon = SweetAlertIcon.Warning
+        });
+        if (confirmed.IsConfirmed)
         {
             await DeleteMovil(id);
         }
@@ -100,18 +114,42 @@ else
 
     private async Task DeleteMovil(uint id)
     {
-        if (await MovilService.DeleteItem(id))
+        try{
+            // Realizar las comprobaciones
+            // Obtener las deudas del movil
+            deudasPorMovil = await DeudaService.GetAll(d => d.IdMovil == id && d.Saldo != 0) ?? null;
+
+            // Tiene deuda, impedir la eliminación
+            if(deudasPorMovil != null && deudasPorMovil.Count > 0) throw new Exception("No se puede eliminar un móvil que registre deudas impagas.");
+
+            // TODO: comprobar como manejar la restriccion que es clave foranea en la tabla Chofer.
+
+            // Eliminar el móvil
+            bool eliminado = await MovilService.DeleteItem(id);
+            // Si no se pudo eliminar, lanzar excepción
+            if (!eliminado) throw new Exception("No se pudo realizar la eliminación");
+
+            // Se pudo eliminar...
+            await Swal.FireAsync("Información", $"Se eliminó el móvil {id}", SweetAlertIcon.Info);
+
+            // Actualizar los móviles
+            await LoadMoviles();
+        }
+        catch (Exception e){
+            await Swal.FireAsync("Error", e.Message, SweetAlertIcon.Error);
+        }
+        @* if (await MovilService.DeleteItem(id))
         {
             await LoadMoviles(); // Refresca la lista después de eliminar
         }
         else
         {
             // Manejar error de eliminación
-            await ShowErrorMessage("Error al eliminar el móvil.");
-        }
+            // await ShowErrorMessage("Error al eliminar el móvil.");
+        } *@
     }
 
-    private async Task<bool> ShowConfirmationDialog(string message)
+    @* private async Task<bool> ShowConfirmationDialog(string message)
     {
         // Implementa aquí la lógica para mostrar un diálogo de confirmación y retornar true/false.
         return true; // Cambiar esto según la implementación real.
@@ -120,5 +158,5 @@ else
     private async Task ShowErrorMessage(string message)
     {
         // Implementa aquí la lógica para mostrar un mensaje de error al usuario.
-    }
+    } *@
 }

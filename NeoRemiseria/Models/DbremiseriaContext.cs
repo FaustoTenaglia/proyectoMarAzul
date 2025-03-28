@@ -85,23 +85,31 @@ public partial class DbremiseriaContext : DbContext
 
         modelBuilder.Entity<Caja>(entity =>
         {
-            entity.HasKey(e => new { e.Turno, e.Fecha })
-                .HasName("PRIMARY")
-                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+            // entity.HasKey(e => new { e.Turno, e.Fecha })
+            entity.HasKey(e => e.Id)
+                .HasName("PRIMARY");
+                // .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
             entity.ToTable("caja");
 
-            entity.Property(e => e.Turno)
-                .HasDefaultValueSql("'1'")
-                .HasColumnType("int(10) unsigned")
-                .HasColumnName("turno");
-            entity.Property(e => e.Fecha)
+            entity.Property(e => e.Jornada)
                 .HasDefaultValueSql("curdate()")
-                .HasColumnName("fecha");
-            entity.Property(e => e.Total)
+                // .HasColumnType("int(10) unsigned")
+                .HasColumnName("jornada");
+            entity.Property(e => e.Apertura).HasColumnName("apertura");
+            entity.Property(e => e.Cierre).HasColumnName("cierre");
+            entity.Property(e => e.Entrada)
                 .HasPrecision(11, 2)
                 .HasDefaultValueSql("'0.00'")
-                .HasColumnName("total");
+                .HasColumnName("entrada");
+            entity.Property(e => e.Salida)
+                .HasPrecision(11, 2)
+                .HasDefaultValueSql("'0.00'")
+                .HasColumnName("salida");
+            entity.Property(e => e.Saldo)
+                .HasPrecision(11, 2)
+                .HasDefaultValueSql("'0.00'")
+                .HasColumnName("saldo");
         });
 
         modelBuilder.Entity<Cartel>(entity =>
@@ -384,9 +392,9 @@ public partial class DbremiseriaContext : DbContext
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("id");
-            entity.Property(e => e.Fecha)
+            entity.Property(e => e.Tiempo)
                 .HasDefaultValueSql("curdate()")
-                .HasColumnName("fecha");
+                .HasColumnName("tiempo");
             entity.Property(e => e.IdServicio)
                 .HasColumnType("int(10) unsigned")
                 .HasColumnName("id_servicio");

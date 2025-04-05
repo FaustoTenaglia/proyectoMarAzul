@@ -1,7 +1,7 @@
-using NeoRemiseria.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 using System.Data;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using NeoRemiseria.Models;
 
 namespace NeoRemiseria.Services;
 public class CajaService{
@@ -115,6 +115,11 @@ public class CajaService{
         // NOTE: es preferible una lista de elementos Caja o un listado con sólo los id?
         return await _context.Cajas.Where(c => !c.Cierre.HasValue).ToListAsync() ?? null;
     }
+    public async Task<List<Caja>?> ObtenerCajasCerradas(){
+        // Devuelve una lista de caja que se encuentren abiertas
+        // NOTE: es preferible una lista de elementos Caja o un listado con sólo los id?
+        return await _context.Cajas.Where(c => c.Cierre.HasValue).ToListAsync() ?? null;
+    }
     
     public async Task<Caja?> ObtenerCaja(int? id = null){
         // Obtiene una caja específica, dado el id
@@ -123,6 +128,19 @@ public class CajaService{
             return await _context.Cajas.FirstOrDefaultAsync(c => c.Id == id);
         }else{
             return await _context.Cajas.FirstOrDefaultAsync(c => c.Id == _idCajaActual);
+        }
+    }
+
+    public async Task<Caja?> ActualizarCaja(int? idCaja = null){
+        // Actualiza los valores desde la base de datos de una caja dada
+        // Este método debe llamarse luego de hacer una inserción en la tabla Movimiento,
+        // para que refleje los cambios que realiza el trigger en la base de datos.
+        
+        _context.ChangeTracker.Clear();
+        if (idCaja == null){
+            return await ObtenerCaja(); // Devolver la caja actual
+        }else{
+            return await ObtenerCaja(idCaja); // Devolver la caja especificada por `idCaja`
         }
     } 
 }

@@ -1,0 +1,209 @@
+@page "/caja"
+
+@rendermode InteractiveServer
+
+@using Humanizer
+
+@using Models
+@using Services
+
+@inject IJSRuntime Java
+@inject NavigationManager Navigation
+@inject SweetAlertService Swal
+@inject CajaService CajaService
+@inject ITable<Servicio> ServicioService
+@inject MovimientoService MovimientoService
+
+<PageTitle>Remisería Mar Azul - Caja</PageTitle>
+<HeadContent>
+    <link rel="stylesheet" href="global.css" />
+</HeadContent>
+
+<SectionContent SectionName="TopBar">
+    <div class="top-row px-4">
+        <a href="/" role="button" @onclick="@(() => {Navigation.NavigateTo("/", true);})">Inicio</a>
+    </div>
+</SectionContent>
+
+<RegistrarMovimiento Items="@servicios?.Where(s => s.Tipo == -1).OrderBy(s => s.Nombre).ToList()" OnGuardar="RegistrarGasto"/>
+
+<h3>Caja</h3>
+<div class="container vstack gap-3">
+    <div class="card col-md-6 mb-sm-0 mx-auto shadow">
+        <div class="card-header hstack gap-3">
+            @if(!cajaAbierta){
+                <button type="button" class="btn btn-sm text-nowrap p-2 ms-auto fw-bold" @onclick="AbrirCaja">
+                    Abrir caja
+                </button>
+            }else{
+                <button type="button" class="btn btn-sm text-nowrap p-2 ms-auto fw-bold" @onclick="CerrarCaja">
+                    Cerrar caja
+                </button>
+            }
+        </div>
+        @if(cajaActual != null){
+            <div class="card-body">
+                <h4 class="card-title fw-bold text-center my-2" style="font-size: xx-large;">TOTAL: @cajaActual.Saldo.ToString("C")</h4>
+                <h6 class="card-subtitle">
+                    Fecha: @cajaActual.Jornada?.ToString("dd/MM/yyyy")
+                </h6>
+                <p class="card-text row fw-bold" style="font-size: large;">
+                    <span class="text-start text-success col"><i class="bi bi-cash-stack"></i> @cajaActual.Entrada.ToString("C")</span>
+                    <span class="text-end text-danger col"><i class="bi bi-cash-coin"></i> @cajaActual.Salida.ToString("C")</span>
+                </p>
+            </div>
+        }
+            <div class="card-footer hstack gap-2 justify-content-center">
+                @if(cajaAbierta){
+                    <button class="btn btn-outline-success" @onclick=@(() => {Navigation.NavigateTo($"/cobranzas/registrar-pago",true);})>
+                        <i class="bi bi-cash-stack"></i>
+                        <div>Cobrar</div>
+                    </button>
+                    <button class="btn btn-outline-danger" @onclick="ShowModalPagar">
+                        <i class="bi bi-cash-coin"></i>
+                        <div>Gastos</div>
+                    </button>
+                }
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalHistorialCajas">
+                    <i class="bi bi-view-list"></i>
+                    <div>Historial</div>
+                </button>
+                <button type="button" class="btn btn-outline-secondary" @onclick=@(() => {Navigation.NavigateTo($"/cobranzas/generar-deuda",true);})>
+                    <i class="bi bi-receipt-cutoff"></i>
+                    <div>Generar</div>
+                </button>
+            </div>
+        @* } *@
+    </div>
+
+    <!-- Mostrar los ultimos movimientos de la caja -->
+    <div class="card col-md-6 mx-auto shadow">
+        @if(movimientos != null){
+            <div class="card-body">
+                <h6 class="card-title fw-bold">Últimos movimientos</h6>
+                <ul class="list-group list-group-flush">
+                @for(int i=movimientos.Count-1; i>=0 && i>=movimientos.Count-5; i--){
+                    <li @key="movimientos[i].Id" class="list-group-item hstack gap-2">
+                        @if(movimientos[i].Importe > 0){
+                            <span class="text-success"><i class="bi bi-cash-stack"></i></span> 
+                        }else{
+                            <span class="text-danger"><i class="bi bi-cash-coin"></i></span> 
+                        }
+                        <span>@movimientos[i].Tiempo.ToString("dd/MM/yyyy HH:mm")</span>
+                        <span class="ms-auto fw-bold">@movimientos[i].Importe?.ToString("C")</span>
+                    </li>
+                }
+                </ul>
+            </div>
+            @if(movimientos.Count > 5){
+                <div class="card-footer text-end">
+                    <a href=@($"/caja/movimientos/{cajaActual?.Id}") class="icon-link">Ver mas...</a>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<!-- Modal para momstrar el historial de cajas -->
+<div class="modal fade" id="modalHistorialCajas" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Historial de cajas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <section class="card my-2 mx-auto">
+                    <div class="card-body mb-1">
+                        <ul class="list-group list-group-flush">
+                            @if(cajasHistorial != null){
+                                foreach(var caja in cajasHistorial.OrderByDescending(c => c.Id)){
+                                    <li class="list-group-item">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="hstack">
+                                                    <div class="p-2">
+                                                        <h6 class="card-title">Jornada</h6>
+                                                        <h6 class="card-subtitle">@caja.Jornada?.ToString("dd/MM/yyyy")</h6>
+                                                    </div>
+                                                    <div class="p-2 ms-auto">
+                                                        <h5 class="card-title">TOTAL: @caja.Saldo.ToString("C")</h5>
+                                                        <h6 class="card-subtitle text-success">Caja Cerrada</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer text-end">
+                                                <a href="/caja/movimientos/@caja.Id" class="icon-link" role="button">Ver mas...</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </section>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+    private Caja? cajaActual = null;
+    private bool cajaAbierta = false;
+    private List<Movimiento>? movimientos;
+    private List<Caja>? cajasHistorial;
+    private List<Servicio>? servicios;
+
+    protected override async Task OnInitializedAsync(){
+        servicios = await ServicioService.GetAll();
+        cajasHistorial = await CajaService.ObtenerCajasCerradas();
+        cajaActual = await CajaService.ObtenerCaja();
+        cajaAbierta = await CajaService.EstaAbierta();
+        await ActualizarDatos();
+    }
+
+    public async Task ActualizarDatos(){
+        if (cajaActual != null){
+            movimientos = await MovimientoService.Obtener(m => m.IdCaja == cajaActual.Id);
+            StateHasChanged();
+        }
+    }
+
+    public async Task AbrirCaja (){
+        if (!cajaAbierta){
+            cajaActual = await CajaService.AbrirCaja();
+            cajaAbierta = true;
+        }
+    }
+
+    public async Task CerrarCaja(){
+        if (cajaActual != null  && cajaAbierta){
+            CajaService.CerrarCaja();
+            cajaAbierta = false;
+            cajasHistorial = await CajaService.ObtenerCajasCerradas();
+            await ActualizarDatos();
+        }
+    }
+
+    private async Task ShowModalPagar() => await Java.InvokeVoidAsync("showBSModal","pagarServicio");
+    
+    private async Task RegistrarGasto(Movimiento gasto){
+        if (gasto != null){// Gasto tiene datos cargados
+            // Completar los datos y guardar
+            gasto.IdCaja = cajaActual?.Id;
+            gasto.Tiempo = DateTime.Now;
+            await MovimientoService.Registrar(gasto); // Guarda el gasto
+            
+            // Se ingresó un movimiento, actualizar para reflejar el trigger
+            cajaActual = await CajaService.ActualizarCaja();
+            
+            // Actualizar los movimientos
+            await ActualizarDatos();
+        }
+    }
+}

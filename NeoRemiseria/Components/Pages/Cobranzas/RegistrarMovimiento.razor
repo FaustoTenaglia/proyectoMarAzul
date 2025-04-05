@@ -1,0 +1,111 @@
+@using System.Collections.Generic
+@using System.ComponentModel.DataAnnotations
+
+@using Models
+@using Services
+
+@inject ITable<Servicio> ServicioService
+
+<div id="pagarServicio" class="modal fade" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title fw-bold">Pagar servicio</h3>
+                <button class="btn btn-close" type="button" data-bs-dismiss="modal" @onclick="Cancelar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="vstack gap-3 mb-3">
+                    <div class="input-group">
+                        <label for="comboServicio" class="input-group-text">Nombre</label>
+                        <select id="comboServicio" class="form-select" @bind="IdServicio">
+                            <option value="0">Seleccione un servicio...</option>
+                            @if(Items != null){
+                                @foreach(var servicio in Items){
+                                    <option value="@servicio.Id">@servicio.Nombre</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="input-group col-sm-6 ms-auto">
+                        <label class="input-group-text">Importe</label>
+                        <input type="number" class="form-control" @bind="Importe">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-group-sm gap-1">
+                        <button type="button" class="btn btn-success" @onclick="Guardar" data-bs-dismiss="modal">Guardar</button>
+                        <button type="button" class="btn btn-secondary" @onclick="Cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+    [Parameter][Required]
+    public List<Servicio>? Items {get; set;} = null!;
+
+    private Movimiento? movimiento;
+    private uint IdServicio {get; set;}
+    private decimal Importe {get; set;} = 0.00m;
+
+    [Parameter]
+    public EventCallback<Movimiento> OnGuardar {get; set;}
+
+    private async Task Guardar(){
+        try{
+            if (IdServicio == 0){
+                throw new InvalidDataException("Valor seleccionado no es válido.");
+            }
+            if (Importe <= 0m){
+                throw new InvalidDataException("El importe debe ser un valor positivo.");
+            }
+            
+            // Guardar el tipo de servicio seleccionado y el importe
+            movimiento = new Movimiento();
+            movimiento.IdServicio = IdServicio;
+            movimiento.Importe = Importe;
+
+            var servicio = ServicioService.GetById(IdServicio);
+            if(servicio != null && servicio?.Result?.Tipo < 0) movimiento.Importe *= -1;
+
+            // Confirmar la operación
+            SweetAlertResult result = await Swal.FireAsync(new SweetAlertOptions{
+                Title = "Información",
+                Text = "¿Desea guardar los cambios?",
+                Icon = SweetAlertIcon.Question,
+                ShowDenyButton = true,
+                ConfirmButtonText = "Si",
+                DenyButtonText = "No"
+            });
+
+            if(result.IsConfirmed && !string.IsNullOrEmpty(result.Value) && result.Value == "true"){
+                await OnGuardar.InvokeAsync(movimiento);
+            }
+            else{
+                await OnGuardar.InvokeAsync(null);
+            }
+        }
+        catch(InvalidDataException e){
+            await Swal.FireAsync("Error", e.Message, SweetAlertIcon.Error);
+        }
+        catch(Exception e){
+            await Swal.FireAsync("Error", e.Message, SweetAlertIcon.Error);
+        }
+        finally{
+            Limpiar();
+        }
+    }
+
+    private async Task Cancelar(){
+        Limpiar();
+        await OnGuardar.InvokeAsync(null);
+    }
+
+    private void Limpiar(){
+        IdServicio = default;
+        Importe = default;
+        movimiento = null;
+    }
+}

@@ -1,0 +1,105 @@
+@page "/caja/movimientos/{id:int}"
+
+@rendermode InteractiveServer
+
+@using System.ComponentModel.DataAnnotations
+
+@using Models
+@using Services
+
+@inject MovimientoService MovimientoService
+@inject CajaService CajaService
+@inject ITable<Servicio> ServicioService
+@inject ITable<Deuda> DeudaService
+@inject ITable<Movil> MovilService
+
+
+<h3 class="text-center">Movimientos de Caja</h3>
+<div class="card shadow rounded col-sm-12 col-md-6 mx-auto mb-3">
+    <div class="card-header">
+        <h5>Resumen - Jornada @caja?.Jornada?.ToString("dddd, dd/MM/yyyy")</h5>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title fw-bold">TOTAL: @caja?.Saldo.ToString("C")</h5>
+        @if(caja?.Cierre != null){
+            <h6 class="card-subtitle mb-3 text-success">caja cerrada</h6>
+        }else{
+            <h6 class="card-subtitle mb-3 text-danger">caja abierta</h6>
+        }
+        <p class="card-text mb-0">Apertura: @caja?.Apertura?.ToString("dd-MMM HH:mm")</p>
+        <p class="card-text my-0">Cierre: @caja?.Cierre?.ToString("dd-MMM HH:mm")</p>
+    </div>
+</div>
+
+<div class="card shadow rounded col-sm-12 col-md-6 mx-auto mb-3">
+    <div class="card-body">
+        <h5 class="card-title fw-bold">Detalle</h5>
+        <div class="hstack gap-2 text-success">
+            <span class="card-text"><i class="bi bi-cash-stack"></i> Ingresos:</span>
+            <span class="ms-auto">@caja?.Entrada.ToString("C")</span>
+        </div>
+        <div class="hstack gap-2 text-danger mb-3">
+            <span class="card-text"><i class="bi bi-cash-coin"></i> Gastos:</span>
+            <span class="ms-auto">@caja?.Salida.ToString("C")</span>
+        </div>
+
+        @if(movimientos != null){
+            @foreach(var movimiento in movimientos.OrderByDescending(m => m.Id)){
+                <div class="card shadow ms-auto">
+                    <div class="hstack gap-0">
+                        <div>
+                            @if(movimiento.IdServicioNavigation.Tipo == 1){
+                                <i class="bi bi-cash-stack mx-3 text-success" style="font-size: 2rem;"></i>
+                            }else{
+                                <i class="bi bi-cash-coin mx-3 text-danger" style="font-size: 2rem;"></i>
+                            }
+                        </div>
+                        <div>
+                            <div class="card-body">
+                                <h5 class="card-title">@movimiento.Tiempo.ToString("dd-MMM HH:mm")</h5>
+                                <h6 class="card-subtitle text-secondary">
+                                    @movimiento.IdServicioNavigation.Nombre
+                                    @if(movimiento.IdServicioNavigation.Id == 1){
+                                        @($" - Movil {movimiento.IdDeudaNavigation.IdMovilNavigation?.Id}")
+                                    }
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="@Clase(movimiento.IdServicioNavigation.Tipo)">
+                            @movimiento.Importe?.ToString("C")
+                        </div>
+                    </div>
+                </div>
+            }
+        }else{
+            <p class="card-text">No se registraron movimientos</p>
+        }
+    </div>
+    <div class="hstack p-3 my-4">
+        <a href="/caja" class="btn btn-link ms-auto" role="button">Volver</a>
+    </div>
+</div>
+
+@code{
+    // Parámetro de ruta
+    [Parameter][Required]
+    public int Id {get; set;}
+    private Caja? caja;
+    private List<Movimiento>? movimientos;
+    private List<Servicio>? servicios;
+    private List<Deuda>? deudas;
+    private List<Movil>? moviles;
+
+        protected override async Task OnInitializedAsync(){
+            servicios = await ServicioService.GetAll();
+            caja = await CajaService.ObtenerCaja(Id);
+            movimientos = await MovimientoService.Obtener(m => m.IdCaja == Id) ?? null;
+            deudas = await DeudaService.GetAll();
+            moviles = await MovilService.GetAll();
+        }
+        
+        private string Clase(sbyte? tipo){
+            string s = "fw-bold ms-auto px-3";
+            return (tipo > 0)? $"{s} text-success" : $"{s} text-danger";
+        }
+}

@@ -9,7 +9,7 @@ public partial class Chofer
     
     public uint IdPersona { get; set; }
 
-    public uint NumeroMovil { get; set; }
+    public uint? NumeroMovil { get; set; }
 
     public DateOnly FechaDesde { get; set; } = DateOnly.FromDateTime(DateTime.Today);
 

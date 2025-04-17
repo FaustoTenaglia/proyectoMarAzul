@@ -1,17 +1,18 @@
 @page "/moviles/chofer-por-movil"
 
-@using NeoRemiseria.Models
-@using NeoRemiseria.Services
-
-@inject ITable<Movil> MovilService
-@inject ITable<Modelo> ModeloService
-@inject ITable<Persona> PersonaService
-@inject ITable<Localidad> LocalidadService
-@inject ITable<Provincia> ProvinciaService
-@inject ITable<Chofer> ChoferService
-@inject NavigationManager Navigation
-
 @rendermode InteractiveServer
+
+@using Models
+@using Services
+
+@inject NavigationManager Navigation
+@inject ITable<Chofer> ChoferService
+@inject ITable<Localidad> LocalidadService
+@inject ITable<Modelo> ModeloService
+@inject ITable<Movil> MovilService
+@inject ITable<Persona> PersonaService
+@inject ITable<Provincia> ProvinciaService
+
 
 <h3>Moviles</h3>
 @if (moviles != null && moviles.Any())
@@ -89,9 +90,9 @@ else
 
     private async Task CargarDatos()
     {
-        moviles = await MovilService.GetAll();
+        moviles = await MovilService.GetAll(m => m.Estado == 'A');
         modelos = await ModeloService.GetAll();
-        choferes = await ChoferService.GetAll();
+        choferes = await ChoferService.GetAll(ch => ch.Estado =='A');
         localidades = await LocalidadService.GetAll();
         provincias = await ProvinciaService.GetAll();
     }

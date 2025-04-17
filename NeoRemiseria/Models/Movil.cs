@@ -19,7 +19,7 @@ public partial class Movil
     public int? Año { get; set; }
     // public ushort? Año { get; set; }
 
-    [Required(ErrorMessage = "El modelo es obligatorio.")]
+    // [Required(ErrorMessage = "El modelo es obligatorio.")]
     public uint? IdModelo { get; set; }
 
     public uint? IdCartel { get; set; }

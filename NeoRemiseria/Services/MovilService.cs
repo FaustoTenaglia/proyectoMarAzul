@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 namespace NeoRemiseria.Services;
 public class MovilService: TableService<Movil>{
     public MovilService (DbremiseriaContext contexto): base(contexto) { }
+
     public override async Task<List<Movil>> GetAll(Expression<Func<Movil, bool>>? predicado=null){
         // Devuelve todos los registros de la tabla si predicado es null
         IQueryable<Movil> query = _context.Moviles;
@@ -12,9 +13,47 @@ public class MovilService: TableService<Movil>{
             query = query.Where(predicado);
         }
         return await query
-            .Include(m => m.IdModeloNavigation)
-            .Include(m => m.IdTitularNavigation)
+            .Include(m => m.IdTitularNavigation) // Incluir los datos de la tabla Titular
+            .Include(m => m.IdModeloNavigation)  // Incluir los datos de la tabla Modelo
             .ToListAsync();
+    }
+
+    public override async Task<bool> DeleteItem(uint id){
+        var movil = _context.Moviles.FirstOrDefault(m => m.Id == id);
+        if (movil != null){
+            movil.Choferes = _context.Choferes.Where(c => c.NumeroMovil == movil.Id)
+                                              .ToList();
+            if (movil.Choferes.Count != 0){
+                foreach(var chofer in movil.Choferes){
+                    if (chofer != null){
+                        _context.Entry(chofer).State = EntityState.Detached;
+                        chofer.FechaHasta = DateOnly.FromDateTime(DateTime.Now);
+                        chofer.Observacion = "Móvil fue dado de baja.";
+                        chofer.Estado = 'B';
+
+                        // Establecer que el chofer fue modificado en Choferes
+                        _context.Choferes.Attach(chofer);
+                        _context.Entry(chofer).State = EntityState.Modified;
+                    }
+                }
+            }
+
+            _context.Entry(movil).State = EntityState.Detached;
+
+            // Actualizar el movil
+            movil.Estado = 'B';
+
+            // Establecer que fue modificado
+            _context.Moviles.Attach(movil);
+            _context.Entry(movil).State = EntityState.Modified;
+
+            // Guardar los cambios
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
 /*

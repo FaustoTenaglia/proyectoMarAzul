@@ -1,15 +1,16 @@
 @page "/personas/dueños"
 
+@rendermode InteractiveServer
+
 @using NeoRemiseria
 @using Models
 @using Services
 
-@inject ITable<Modelo> ModeloService
-@inject ITable<Persona> PersonaService
-@inject ITable<Movil> MovilService
 @inject IJSRuntime JSRuntime
+@inject ITable<Modelo> ModeloService
+@inject ITable<Movil> MovilService
+@inject ITable<Persona> PersonaService
 
-@rendermode InteractiveServer
 
 @if(personas != null){
     <h3>Listado de Dueños de los móviles</h3>
@@ -52,9 +53,6 @@
         </div>
     }
 }
-else{
-    Console.WriteLine("No se encontró el dni ingresado");
-}
 
 @code{
     private string dni = "";
@@ -64,8 +62,8 @@ else{
     private Persona persona = new Persona();
 
     protected override async Task OnInitializedAsync(){
-        // Cargar los moviles que tienen registrado su titular
-        moviles = await MovilService.GetAll(m => m.IdTitular != null);
+        // Cargar los moviles que tienen registrado su titular y están activos
+        moviles = await MovilService.GetAll(m => m.IdTitular != null && m.Estado == 'A');
         
         // Cargar informacion sobre los modelos de moviles
         modelos = await ModeloService.GetAll();
@@ -83,18 +81,17 @@ else{
 
         // Devolver en una cadena de texto la marca y el nombre del modelo
         // desconocido si no se encontro el modelo
-        return modelo != null ? $"{modelo.IdMarcaNavigation.Nombre} {modelo.Nombre}" : "sin especificar";
+        return modelo != null ? $"{modelo.IdMarcaNavigation?.Nombre} {modelo.Nombre}" : "sin especificar";
     }
 
     public async Task BuscarPersona(){
         if(!string.IsNullOrWhiteSpace(dni)){
-            @* personas = await PersonaService.GetAll(p => p.Dni == dni); *@
             personas = await PersonaService.GetAll(p => p.Dni.Contains(dni));
             if(personas != null){
                 persona = personas[0];
             }
             else{
-                Console.WriteLine("No existe el dni ingresado.");
+                await Swal.FireAsync($"No existe el dni {dni} ingresado");
             }
         }
     }

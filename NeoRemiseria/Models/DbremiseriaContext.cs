@@ -367,7 +367,7 @@ public partial class DbremiseriaContext : DbContext
                 .HasColumnType("char")
                 .HasColumnName("estado");
 
-            entity.HasOne(d => d.IdModeloNavigation).WithMany(p => p.Moviles)
+            entity.HasOne(d => d.IdModeloNavigation).WithMany(p => p.Moviles).IsRequired(false)
                 .HasForeignKey(d => d.IdModelo)
                 .HasConstraintName("Movil_fk_Modelo");
 

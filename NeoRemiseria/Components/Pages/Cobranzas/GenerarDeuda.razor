@@ -1,17 +1,17 @@
 @page "/cobranzas/generar-deuda"
 
+@using System.ComponentModel.DataAnnotations
 @using Microsoft.EntityFrameworkCore
-@using Models
 @using MySql.Data.MySqlClient
+@using Models
 @using NeoRemiseria
 @using Services
-@using System.ComponentModel.DataAnnotations
 
 @inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
+@inject ITable<Deuda> DeudaService
 @inject ITable<Movil> MovilService
 @inject ITable<Persona> PersonaService
-@inject ITable<Deuda> DeudaService
 
 @rendermode InteractiveServer
 
@@ -46,7 +46,7 @@
             }
         </div>
     </div>
-    <div class="btn-group-sm form-check form-check-inline" role="group">
+    <div class="btn-group-sm form-check form-check-inline mt-sm-1" role="group">
         <input type="radio" value="1" name="seleccion" id="radioMovil" class="btn-check" autocomplete="off" @onchange="@CambiaSeleccion" checked >
         <label for="radioMovil" class="btn btn-outline-primary">Movil</label>
         
@@ -167,11 +167,13 @@
                 Seleccionado = false
             }).ToList();
         }else{
-            listaSeleccion = titulares.Select(p => new Item {
-                Id = p.Id,
-                Nombre = $"{p.Dni} - {p.Apellido} {p.Nombre}",
-                Seleccionado = false
-            }).ToList();
+            listaSeleccion = titulares.OrderBy(p => p.Apellido)
+                                      .ThenBy(p => p.Nombre)
+                                      .Select(p => new Item {
+                                                    Id = p.Id,
+                                                    Nombre = $"{p.Dni} - {p.Apellido} {p.Nombre}",
+                                                    Seleccionado = false
+                                    }).ToList();
         }
     }
 
@@ -192,7 +194,7 @@
                                     .ToList();
         }
         else{
-            movilesSeleccionado = moviles.Where(m => listaId.Contains((uint)m.IdTitular))
+            movilesSeleccionado = moviles.Where(m =>m.IdTitular != null && listaId.Contains((uint)m.IdTitular))
                                     .Select(m => new Movil {
                                         Id = m.Id,
                                         Patente = m.Patente
@@ -203,7 +205,6 @@
     }
 
     private async Task RegistrarDeuda(){
-        // TODO: realizar las validaciones
         // Verificar que el importe sea mayor a cero
         if (importeIngresado <= 0){
             await Swal.FireAsync("Error","El importe debe ser mayor a cero.", SweetAlertIcon.Info);
@@ -213,16 +214,17 @@
         if (movilesSeleccionado != null && movilesSeleccionado.Any()){
             // Obtener las deudas registradas para el periodo ingresado
             deudasRegistradas = deudas?.Where(d => d.Periodo == periodoIngresado).ToList() ?? null;
-            
-            deudasParaRegistrar = movilesSeleccionado
-                                .Where(m => !deudasRegistradas.Any(d => d.IdMovil == m.Id))
-                                .Select(m => new Deuda {
-                                    IdMovil = m.Id,
-                                    Periodo = periodoIngresado,
-                                    Importe = importeIngresado,
-                                    Saldo = importeIngresado
-                                })
-                                .ToList();
+            if(deudasRegistradas != null){
+                deudasParaRegistrar = movilesSeleccionado
+                                    .Where(m => !deudasRegistradas.Any(d => d.IdMovil == m.Id))
+                                    .Select(m => new Deuda {
+                                        IdMovil = m.Id,
+                                        Periodo = periodoIngresado,
+                                        Importe = importeIngresado,
+                                        Saldo = importeIngresado
+                                    })
+                                    .ToList();
+            }
         }
         if (deudasParaRegistrar != null && deudasParaRegistrar.Any()){
             foreach(var deuda in deudasParaRegistrar){
@@ -232,12 +234,10 @@
                 //catch{DbUpdateException ex} when (ex.InnerException is MySqlException mysqlEx && mysqlEx.Number == 1062){
                 catch (MySqlException ex){
                     if (ex.Number == 1062){
-                        // Console.WriteLine("Clave duplicada: no se pudo insertar el registro.");
                         await Swal.FireAsync("Error", "Clave dupilcada: no se pudo insertar el registro.", SweetAlertIcon.Error);
                     }
                 }
                 catch (Exception ex){
-                    //Console.WriteLine($"Error: {ex.Message}");
                     await Swal.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
                 }
             }

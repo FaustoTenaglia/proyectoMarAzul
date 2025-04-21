@@ -1,8 +1,9 @@
 @page "/cobranzas/consultar-deuda"
 
+@using System.Linq.Expressions
 @using Microsoft.EntityFrameworkCore
 @using MySql.Data.MySqlClient
-@using NeoRemiseria
+
 @using Models
 @using Services
 
@@ -12,6 +13,7 @@
 @inject ITable<Marca> MarcaService
 @inject ITable<Persona> PersonaService
 @inject ITable<Deuda> DeudaService
+@inject MovimientoService MovimientoService
 @inject PagoService PagoService
 
 @rendermode InteractiveServer
@@ -27,16 +29,6 @@
                  OnSelected="(uint id) => {queryCargarDni(id);}"
                  Id="modalBuscarTitular" />
 }
-
-<!-- Modales de mensajes de alerta -->
-<ModalDialog Id="alertaPagos"
-             Mensaje="No se registran pagos para éste período."
-             Titulo="Información" 
-             Tipo=" alert-primary"/>
-<ModalDialog Id="alertaFechaInvalida"
-             Mensaje="Los rangos ingresados no son válidos"
-             Titulo="Fecha no valida"
-             Tipo=" alert-primary" />
 
 <!-- Modal para mostrar el detalle de los pagos -->
 <section class="modal fade" id="periodoDetalle" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-hidden="true">
@@ -57,7 +49,8 @@
                         <p class="card-text">Detalle</p>
                         <ul class="list-group list-group-flush">
                             @foreach(var pago in pagosDetalle){
-                                <li class="list-group-item">@pago.Fecha @pago.Importe.ToString("C")</li>
+                                @* <li class="list-group-item">@pago.Fecha @pago.Importe.ToString("C")</li> *@
+                                <li class="list-group-item">@pago.Tiempo.ToString("dd/MM/yyyy") @pago.Importe?.ToString("C")</li>
                             }
                         </ul>
                     </div>
@@ -75,7 +68,6 @@
 <h3>Estado de Cuenta</h3>
 <div class="input-group mb-3">
     <span class="input-group-text">@((Seleccion == "1") ? "Móvil " : "DNI ")N°</span>
-    <!-- <input type="number"class="form-control" @bind="@IdSeleccionado" @bind:after="Buscar"/> -->
     <input type="text"class="form-control" @bind="@query" @bind:after="Buscar" />
     <button type="button" class="btn btn-outline-primary" @onclick="Buscar">
         @* @if (IdSeleccionado > 0){ *@
@@ -221,13 +213,13 @@ else{
     private string Seleccion {get;set;} = "1"; // Para indicar 1: movil, 2: dueños
     private List<Marca>? marcas; // Para el id
     private int IdSeleccionado {get; set;} 
-    private string? query {get;set;}
+    private string? query {get;set;} = "";
     private Movil? MovilSeleccionado; // Movil para el que se va a consultar
     private List<Movil>? moviles, movilesSeleccionados; // Los moviles de la remiseria y los moviles por dueño
     private List<Persona>? titulares; // Los dueños de los moviles
     private List<Deuda>? deudas; 
-    private List<Pago>? pagos;
-    private List<Pago> pagosDetalle = new List<Pago>();
+    private List<Movimiento>? pagos;
+    private List<Movimiento> pagosDetalle = new List<Movimiento>();
     private Deuda deudaActual = new Deuda();
     private DateOnly fechaDesde = new DateOnly(DateTime.Now.Year,1,1),
                      fechaHasta = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, 1);
@@ -235,8 +227,8 @@ else{
     protected override async Task OnInitializedAsync(){
         // Cargar datos desde la base de datos
         marcas = await MarcaService.GetAll();
-        moviles = await MovilService.GetAll(m => m.IdTitular != null);
-        titulares = await PersonaService.GetAll(p => 
+        moviles = await MovilService.GetAll(m => m.IdTitular != null && m.Estado == 'A');
+        titulares = await PersonaService.GetAll(p => p.Estado == 'A' &&
                             moviles.Select(m => m.IdTitular)
                                    .Distinct()
                                    .Contains(p.Id));   
@@ -261,21 +253,52 @@ else{
     }
     
     private async Task Buscar(){
-        @* if (string.IsNullOrEmpty(query) || string.IsNullOrWhiteSpace(query) || query == "0"){
-            await MostrarModalBusqueda();
-        } *@
         if (!string.IsNullOrEmpty(query) && !string.IsNullOrWhiteSpace(query)){
             try{
-                IdSeleccionado = (Seleccion == "1") ? Convert.ToInt32(query) : (int)titulares.FirstOrDefault(t=>t.Dni == query).Id;
-                @* if (Seleccion == "1"){
+                Expression<Func<Movil, bool>> condicion; // Para ingresar la condicion al WHERE al traer los móviles
+                
+                // Preguntar si se busca por número de móvil o número de DNI del titular
+                if (Seleccion == "1"){// Por número de móvil
+                    // Convertir lo ingresado en el input text en un entero
                     IdSeleccionado = Convert.ToInt32(query);
+
+                    // Buscar el móvil que coincida con lo ingresado y que esté activo
+                    condicion = movil => movil.Id == IdSeleccionado && movil.Estado == 'A';
                 }
-                else{
+                else{// Por número de titular
+                    // Bucar al titular cuyo DNI coincida con lo ingresado
                     var titular = titulares?.FirstOrDefault(t => t.Dni == query);
-                    if (titular != null){
-                        IdSeleccionado = (int)titular.Id;
-                    }
-                } *@
+                    
+                    // No se encontró el titular, lanzar la excepción
+                    if (titular == null) throw new KeyNotFoundException("No se encuentra el número de DNI ingresado.");
+                    
+                    // Trabajar con el ID del titular, no con su DNI
+                    IdSeleccionado = (int)titular.Id;
+
+                    // Móviles cuyo titular tenga el Id seleccionado
+                    condicion = m => m.IdTitularNavigation != null && m.IdTitularNavigation.Id == (uint)IdSeleccionado;
+                }
+
+                // Traer los moviles que cumplan la condición
+                movilesSeleccionados = await MovilService.GetAll(condicion);
+
+                // Separar el movil que se eligió
+                MovilSeleccionado = movilesSeleccionados != null && movilesSeleccionados.Count == 1 ? movilesSeleccionados[0] : null;
+                if (MovilSeleccionado != null){
+                    // SE encuentra el móvil, consultar la deuda
+                    await Consultar(MovilSeleccionado.Id);
+                }else{
+                    // NO se encuentra el movil, lanzar excepción
+                    if (Seleccion == "1")throw new KeyNotFoundException("No se encuentra el número de móvil ingresado");
+                }
+            }
+            catch (KeyNotFoundException e){
+                await Swal.FireAsync(new SweetAlertOptions {
+                    TitleText = "Información",
+                    Text = e.Message, // valor ingresado no existe
+                    Icon = SweetAlertIcon.Info,
+                    AllowOutsideClick = false
+                });
             }
             catch (Exception e){
                 await Swal.FireAsync(new SweetAlertOptions {
@@ -288,70 +311,13 @@ else{
         }
         else{
             await MostrarModalBusqueda();
-        }
-
-        @* if (IdSeleccionado <= 0){
-            try{
-                await MostrarModalBusqueda();
-                StateHasChanged();
-            }
-            catch (Exception e){
-                await Swal.FireAsync(new SweetAlertOptions {
-                    TitleText = "Error",
-                    Text = e.Message, //"Valor ingresado no es válido",
-                    Icon = SweetAlertIcon.Error,
-                    AllowOutsideClick = false
-                });
-            }
-            // IdSeleccionado = 0;
-            if (IdSeleccionado <= 0){
-                query = "";
-                return;
-            }
-        } *@
-
-        // Elegir los moviles dependiendo que se selecciono
-        if (Seleccion == "1"){
-            movilesSeleccionados = await MovilService.GetAll(m => m.Id == IdSeleccionado);
-            // MovilSeleccionado = movilesSeleccionados[0] ?? null;
-            MovilSeleccionado = movilesSeleccionados.First() ?? null;
-            if (movilesSeleccionados != null && movilesSeleccionados.Any() && MovilSeleccionado != null){
-                await Consultar(MovilSeleccionado.Id);
-            }
-            else{
-                await Swal.FireAsync(new SweetAlertOptions {
-                    TitleText = "Información",
-                    Text = $"No se encontró el número de móvil {IdSeleccionado} ingresado.",
-                    Icon = SweetAlertIcon.Info,
-                    AllowOutsideClick = false
-                });
-                return;
-            }
-        }else{
-            // movilesSeleccionados = await MovilService.GetAll(m => m.IdTitularNavigation.Dni == IdSeleccionado.ToString());
-            movilesSeleccionados = await MovilService.GetAll(m => m.IdTitularNavigation.Id == (uint)IdSeleccionado);
-            if (movilesSeleccionados != null && movilesSeleccionados.Any()){
-                MovilSeleccionado = null;
-            }
-            else{
-                await Swal.FireAsync(new SweetAlertOptions {
-                    TitleText = "Información",
-                    Text = $"No se encontró el titular con DNI {IdSeleccionado}.",
-                    Icon = SweetAlertIcon.Info,
-                    AllowOutsideClick = false
-                });
-            }
         }
     }
 
     private async Task MostrarModalBusqueda(){
         // Mostrar el modal de acuerdo a si se busca por movil o por dueño del movil
-        if (Seleccion == "1"){
-            await JSRuntime.InvokeVoidAsync("showBSModal","modalBuscarMovil");
-        }
-        else{
-            await JSRuntime.InvokeVoidAsync("showBSModal","modalBuscarTitular");
-        }
+        var modal = Seleccion == "1" ? "modalBuscarMovil" : "modalBuscarTitular";
+        await JSRuntime.InvokeVoidAsync("showBSModal", modal);
     }
 
     private void SeleccionarFila (Movil m){
@@ -373,13 +339,14 @@ else{
         if (idMovil > 0 && fechaDesde <= fechaHasta){
             deudas = await DeudaService.GetAll(d => d.IdMovil == idMovil && d.Periodo >= fechaDesde && d.Periodo <= fechaHasta);
             if (deudas != null){
-                pagos = await PagoService.ObtenerPagos(p => deudas.Select(d => d.Id).Contains(p.IdDeuda));
+                //pagos = await PagoService.ObtenerPagos(p => deudas.Select(d => d.Id).Contains(p.IdDeuda));
+                pagos = await MovimientoService.Obtener(p => p.IdDeuda != null); // && deudas.Select(d => d.Id).Contains(p.IdDeuda));
             }else{
                 await Swal.FireAsync("Información","No se registran deudas.",SweetAlertIcon.Info);
             }
         }
         else if(fechaHasta < fechaDesde){
-            // await JSRuntime.InvokeVoidAsync("showBSModal","alertaFechaInvalida");
+            // Mostrar cartel de rangos de fecha no son válidos
             await Swal.FireAsync("Información", "Los rangos ingresados no son válidos", SweetAlertIcon.Info);
         }
     }
@@ -396,7 +363,6 @@ else{
             if (pagosDetalle != null && pagosDetalle.Any()){
                 await JSRuntime.InvokeVoidAsync("showBSModal","periodoDetalle");
             }else{
-                // await JSRuntime.InvokeVoidAsync("showBSModal","alertaPagos");
                 await Swal.FireAsync("Información", "No se registran pagos para éste período.", SweetAlertIcon.Info);
             }
         }

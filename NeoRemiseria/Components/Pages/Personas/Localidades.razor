@@ -1,13 +1,12 @@
 @page "/localidades"
 
-@using NeoRemiseria
 @using Models
 @using Services
 
 @inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
 @inject ITable<Localidad> LocalidadService
 @inject ITable<Provincia> ProvinciaService
-@inject NavigationManager Navigation
 
 @rendermode InteractiveServer
 
@@ -19,10 +18,10 @@
 </div>
 
 <ModalDialog 
-    Mensaje=@($"¿Desea eliminar la localidad {@localidadSeleccionada.Nombre}?") 
+    Mensaje=@($"¿Desea eliminar la localidad {@localidadSeleccionada?.Nombre}?") 
     Id="modalEliminar" 
     Titulo = "Confirmación"
-    OnResult=" async Task (int res) => {if(res == 1){await LocalidadService.DeleteItem(localidadSeleccionada.Id); await CargarDatos();}}" />
+    OnResult=" async Task (int res) => {if(localidadSeleccionada != null && res == 1){await LocalidadService.DeleteItem(localidadSeleccionada.Id); await CargarDatos();}}" />
 
 @if(localidades != null){
     <table class="table table-hover">
@@ -59,7 +58,7 @@ else{
 @code{
     private List<Localidad> localidades = new List<Localidad>();
     private List<Provincia> provincias = new List<Provincia>();
-    private Localidad localidadSeleccionada = new Localidad();
+    private Localidad? localidadSeleccionada; //= new Localidad();
 
     protected override async Task OnInitializedAsync(){
         localidades = await LocalidadService.GetAll();
@@ -73,15 +72,22 @@ else{
 
     private async Task ConfirmarEliminacion(uint id){
         localidadSeleccionada = await LocalidadService.GetById(id);
-        JSRuntime.InvokeVoidAsync("showBSModal","modalEliminar");
+        if (localidadSeleccionada != null){
+            await JSRuntime.InvokeVoidAsync("showBSModal","modalEliminar");
+        }else{
+            await Swal.FireAsync("Información","No se pudo eliminar la localidad seleccionada.", SweetAlertIcon.Info);
+        }
     }
 
-    private async Task Handle(Localidad localidad){
-        if(localidad.Id > 0){
+    private void Handle(Localidad? localidad){
+        var ruta =  localidad != null ? $"/localidad-form/{localidad.Id}" : $"/localidad-form";
+        Navigation.NavigateTo(ruta, true);
+
+        @* if(localidad.Id > 0){
             Navigation.NavigateTo($"/localidad-form/{localidad.Id}");
         }
         else{
             Navigation.NavigateTo($"/localidad-form");
-        }
+        } *@
     }
 }

@@ -1,12 +1,13 @@
 @page "/provincias"
-@using NeoRemiseria
-@using Models
-@using Services
+
 @using Microsoft.EntityFrameworkCore
 
-@inject ITable<Provincia> ProvinciaService
+@using Models
+@using Services
+
 @inject DbremiseriaContext DBRemiseria
 @inject IJSRuntime JSRuntime
+@inject ITable<Provincia> ProvinciaService
 
 @rendermode InteractiveServer
 
@@ -156,18 +157,17 @@
     }
 
     public async void ActualizarProvincia(ItemProvincia provincia){
-        Provincia _provincia;
+        Provincia? _provincia;
 
         if (provincia.EditMode & !string.IsNullOrWhiteSpace(provincia.Nombre)){
             _provincia = await ProvinciaService.GetById(provincia.Id);
-            if (provincia.Nombre != _provincia.Nombre){
+            if (_provincia != null && provincia.Nombre != _provincia.Nombre){
                 _provincia.Nombre = provincia.Nombre;
                 await ProvinciaService.UpdateItem(_provincia);
             }
         }
         
         provincia.cambiarEditMode();
-
         StateHasChanged();
     }
 
@@ -176,7 +176,6 @@
 
         // Volver a cargar la lista de Provincias
         await CargarProvincias();
-
 
         // Forzar la actualizacion del estado del componente
         StateHasChanged();

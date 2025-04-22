@@ -1,11 +1,11 @@
 @page "/modelo"
-@using NeoRemiseria
+
 @using Models
 @using Services
 
-@inject ITable<Marca> MarcaService
 @inject DbremiseriaContext _context
 @inject IJSRuntime JSRuntime
+@inject ITable<Marca> MarcaService
 @inject ITable<Modelo> ModeloService
 
 @rendermode InteractiveServer
@@ -35,7 +35,6 @@
                     <td>@modelo.Nombre</td>
                     <td>@modelo.IdMarcaNavigation?.Nombre</td>
                     <td class="btn-group-sm">
-                        @* <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#EditForm"> *@
                         <button class="btn btn-outline-primary" @onclick="() => EditarItem(modelo)">
                             <i class="bi bi-pen-fill"></i>
                         </button>
@@ -220,7 +219,7 @@
         modeloActual.Nombre = modelo.Nombre;
         modeloActual.IdMarca = modelo.IdMarca;
 
-        marcaSeleccionadaId = (uint) modeloActual.IdMarca;
+        marcaSeleccionadaId = modeloActual.IdMarca != null ? (uint) modeloActual.IdMarca : (uint) 0;
 
         // Llamar al modal para la edicion
         JSRuntime.InvokeVoidAsync("showBSModal","EditForm");

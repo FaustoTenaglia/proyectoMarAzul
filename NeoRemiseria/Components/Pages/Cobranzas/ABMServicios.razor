@@ -1,0 +1,317 @@
+@page "/cobranzas/servicios"
+
+@using Models
+@using Services
+
+@inject IJSRuntime JS
+@inject ITable<Servicio> Servicios;
+
+@rendermode InteractiveServer
+
+<PageTitle>Remiseria Mar Azul - Servicios</PageTitle>
+<HeadContent>
+    <link rel="stylesheet" href="global.css" />
+</HeadContent>
+
+<SectionContent SectionName="TopBar">
+    <div class="top-row gap-2">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#modalAgregarServicio">Agregar</a>
+        <a href="/">Inicio</a>
+        <div class="col-sm-6 col-md-3">
+            <div class="input-group input-group-sm">
+                @* <label class="input-group-text">Buscar</label> *@
+                <input type="search" class="form-control form-control-sm mx-1" placeholder="filtrar..." />
+            </div>
+        </div>
+    </div>
+</SectionContent>
+
+<!-- modal para agregar servicio -->
+<div class="modal fade" id="modalAgregarServicio" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-bg-success">
+                <h5 class="modal-title">Agregar servicio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" @onclick="Limpiar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mx-auto has-validation">
+                    <label class="input-group-text">Nombre</label>
+                    <input type="text" id="inputNombre" class="form-control" @bind="@nombreIngresado" @bind:after="ValidarIngreso" maxlength="@inputMaxLength" required>
+                </div>
+            
+            @if(msjError != null){
+                <div class="my-2">
+                    <p style="color: red; font-size: 0.75em;">
+                        <i class="bi bi-exclamation-circle-fill" style="margin-right: 0.3em;"/>@msjError
+                    </p>
+                </div>
+            }
+
+                <div class="my-2" role="group">
+                    <input type="radio" id="tipoGasto" name="tipo" value="-1" class="btn-check" autocomplete="false" @onchange="SeleccionarTipo"/>
+                    <label for="tipoGasto" class="btn btn-outline-danger">Gasto</label>
+
+                    <input type="radio" id="tipo0" name="tipo" value="0" class="btn-check" autocomplete="false" @onchange="SeleccionarTipo" checked/>
+                    <label for="tipo0" class="btn btn-outline-secondary" checked>No especificado</label>
+
+                    <input type="radio" id="tipoIngreso" name="tipo" value="1" class="btn-check" autocomplete="false" @onchange="SeleccionarTipo" />
+                    <label for="tipoIngreso" class="btn btn-outline-success">Ingreso</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success" disabled="@(msjError != null || string.IsNullOrEmpty(nombreIngresado))" @onclick="() => Agregar()" data-bs-dismiss="modal">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="Limpiar">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3>Servicios</h3>
+
+@if(servicios != null){
+    <div class="container vstack">
+        <div class="container-sm mx-auto col-md-6 shadow">
+            <ul class="list-group list-group-flush">
+                @foreach(var servicio in servicios.OrderBy(s => s.Nombre)){
+                    <li class="list-group-item">
+                        <div class="hstack gap-1 mx-auto">
+                            <span style="cursor: pointer;" @onclick="() => EditarTipo(servicio)">
+                            @switch(servicio.Tipo){
+                                case 1:
+                                    <i class="bi bi-cash-stack text-success"></i>
+                                    break;
+                                case 0:
+                                    <i class="bi bi-x"></i>
+                                    break;
+                                case -1:
+                                    <i class="bi bi-cash-coin text-danger"></i>
+                                    break;
+                            }
+                            </span>
+                            @servicio.Nombre
+                            <div class="btn-group ms-auto">
+                                <button type="button" class="btn btn-outline-primary btn-sm" @onclick="() => EditarNombre(servicio)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-sm" @onclick="() => Eliminar(servicio)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}else{
+    <div class="container-sm ms-auto">
+        <p>Cargando...</p>
+    </div>
+}
+
+@code{
+    private List<Servicio>? servicios;
+    private string tipoSeleccionado {get; set;} = "0"; 
+    private string nombreIngresado {get; set;} = string.Empty;
+    private string? msjError;
+    private uint idservicio {get; set;}
+    private SweetAlertMixin EditarMixin {get; set;} = null!;
+    private const int inputMaxLength = 15;
+
+    protected override async Task OnInitializedAsync(){
+        // Cargar los datos
+        servicios = await Servicios.GetAll();
+        // NOTA:
+        //      No lo hago con el método CargarDatos porque se ejecuta dos veces
+
+        // Inicializar el modal para las modificaciones
+        EditarMixin = Swal.Mixin(new SweetAlertOptions {
+                        Title = "Modificar",
+                        ConfirmButtonText = "Guardar",
+                        ConfirmButtonColor = "green",
+                        ShowCancelButton = true,
+                        CancelButtonText = "Cancelar",
+                        CancelButtonColor = "grey",
+                        AllowOutsideClick = false
+        });
+    }
+    
+    private async Task CargarDatos(){
+        servicios = await Servicios.GetAll();
+    }
+
+    private void SeleccionarTipo (ChangeEventArgs e){
+        tipoSeleccionado = e.Value?.ToString() ?? "0";
+    }
+
+    private void Limpiar(){
+        msjError = null;
+        nombreIngresado = string.Empty;
+        tipoSeleccionado = "0";
+    }
+
+    private async Task ValidarIngreso(){
+        msjError = null;
+
+        // Validar que se haya ingresado algo
+        if (string.IsNullOrWhiteSpace(nombreIngresado) || string.IsNullOrEmpty(nombreIngresado)){
+            msjError = $"Debe ingresar un nombre de hasta {inputMaxLength} caracteres";
+            await JS.InvokeVoidAsync("focusAndSelect","inputNombre");
+            return;
+        }
+
+        // Validar que no tenga mas de 15 caracteres (por las dudas :-)
+        if (nombreIngresado.Length > inputMaxLength){
+            msjError = $"El nombre no debe ser mayor de {inputMaxLength} caracteres.";
+            return;
+        }
+        
+        // Validar que no se encuentre repetido
+        if (servicios != null &&
+            servicios.Any(s => s.Nombre.Equals(nombreIngresado, StringComparison.OrdinalIgnoreCase))){
+            msjError = $"El nombre {nombreIngresado} ya existe.";
+            await JS.InvokeVoidAsync("focusAndSelect","inputNombre");
+            return;
+        }
+    }
+
+    private async Task Agregar(){
+        // Agregar a la tabla
+        try{
+            // Crear un servicio nuevo
+            Servicio servicio = new Servicio();
+
+            // Obtener el Id (la tabla no tiene Id autoincremental, y me da fiaca ponerle xD)
+            servicio.Id = servicios?.Max(s => s.Id) + 1 ?? 1;
+
+            // Asignar los demás valores
+            servicio.Tipo = Convert.ToSByte(tipoSeleccionado);
+            servicio.Nombre = nombreIngresado;
+
+            // Agregar el servicio
+            servicio = await Servicios.AddItem(servicio);
+            await Swal.FireAsync("Información","Servicio agregado con éxito",SweetAlertIcon.Success);
+            await CargarDatos();
+            Limpiar();
+            StateHasChanged();
+        }
+        catch (Exception e){
+            await Swal.FireAsync("Error", e.Message, SweetAlertIcon.Error);
+        }
+    }
+    
+    private async Task EditarNombre(Servicio servicio){
+        String nombreNuevo = servicio.Nombre;
+
+        SweetAlertResult res = await EditarMixin.FireAsync(new SweetAlertOptions{
+                                    Title = "Modificar",
+                                    Input = "text",
+                                    @* Html = @"<div class='input-group'>
+                                                <label class='input-group-text'>Nombre</label>
+                                                <input type='text' class='form-control' value='() => {return nombreNuevo}' maxlength=""15""/>
+                                            </div>", *@
+                                    InputLabel = "Nombre",
+                                    InputValue = @nombreNuevo,
+                                    InputValidator = new InputValidatorCallback ((string input) => input.Length > inputMaxLength
+                                                ? $"La longitud del nombre no debe exceder los {inputMaxLength} caracteres." 
+                                                : null, this)
+        });
+
+        // Sólo para mejorar la legibilidad e interpretación...
+        nombreNuevo = res.Value;
+
+        if (res.IsConfirmed && !string.IsNullOrEmpty(nombreNuevo)){
+            try{
+                // Verificar que el nombre no exista...
+                var idServicioEncontrado = servicios?.FirstOrDefault(s => s.Nombre.Equals(nombreNuevo,StringComparison.OrdinalIgnoreCase));
+                if (idServicioEncontrado != null &&
+                    idServicioEncontrado.Id != servicio.Id) throw new Exception($"El nombre ingresado ya existe");
+                
+                // Verificar que la longitud del nombre no exceda los 15 caracteres
+                if (nombreNuevo.Length > 15) throw new Exception($"La longitud del nombre no debe exceder los {inputMaxLength} caracteres.");
+
+                // Actualizar la tabla si es que existe la modificación
+                if (!servicio.Nombre.Equals(nombreNuevo, StringComparison.OrdinalIgnoreCase)){
+                    // Si se modificó, actualizar
+                    servicio.Nombre = nombreNuevo;
+                    await Servicios.UpdateItem(servicio);
+                    await Swal.FireAsync("Información","Modificación realizada con éxito.", SweetAlertIcon.Success);
+                    await CargarDatos();
+                    StateHasChanged();
+                }
+            }
+            catch(Exception e){
+                await Swal.FireAsync("Error", e.Message, SweetAlertIcon.Error);
+            }
+        }
+    }
+    private async Task EditarTipo(Servicio servicio){
+        // Declarar diccionarios para las opciones y los atributos para el select
+        Dictionary<string,string> opciones = new Dictionary<string,string>{{"-1","Gasto"},{"0","No especificado"},{"1","Ingreso"}};
+        Dictionary<string,string> atributos = new Dictionary<string,string>{{"class","form-select"},{"value","@${valor}"}};
+
+        // Convertir el tipo de servicio a string
+        string valor = Convert.ToString(servicio.Tipo) ?? "0";
+
+        // Mostrar el modal para modificar el tipo
+        SweetAlertResult res = await EditarMixin.FireAsync(new SweetAlertOptions {
+             @* Html = $@"<div class='input-group'>
+                            <label class='input-group-text'>Tipo</label>
+                            <select class='form-select' value='@valor'>
+                                <option value='-1'>Gasto</option>
+                                <option value='0'>No especificado</option>
+                                <option value='1'>Ingreso</option>
+                            </select>
+                        </div>", *@
+            Input = "select",
+            InputLabel = "Tipo",
+            InputValue = @valor,
+            InputOptions = opciones,
+            InputAttributes = atributos
+        });
+        
+        // Realizar la modificación
+        if (res.IsConfirmed && !string.IsNullOrEmpty(res.Value)){
+            try{
+                sbyte tipoNuevo = Convert.ToSByte(res.Value);
+                if (servicio.Tipo != tipoNuevo){
+                    servicio.Tipo = tipoNuevo;
+                    await Servicios.UpdateItem(servicio);
+                    await Swal.FireAsync("Información","Modificación realizada con éxito", SweetAlertIcon.Success);
+                    await CargarDatos();
+                    StateHasChanged();
+                }
+            }
+            catch (Exception e){
+                await Swal.FireAsync("Error", e.Message, SweetAlertIcon.Error);
+            }
+        }
+    }
+
+    private async Task Eliminar(Servicio servicio){
+        SweetAlertResult res = await Swal.FireAsync(new SweetAlertOptions{
+                                    Title = "Eliminacion",
+                                    Html = $"¿Desea eliminar el servicio <b>{servicio.Nombre}</b>?",
+                                    Icon = SweetAlertIcon.Warning,
+                                    ConfirmButtonText = "Si",
+                                    ConfirmButtonColor = "green",
+                                    DenyButtonText = "No",
+                                    ShowDenyButton = true,
+                                    DenyButtonColor = "grey",
+                                    AllowOutsideClick = false, 
+                                    FocusDeny = true
+        });
+        if (res.IsConfirmed){
+            try{
+                await Servicios.DeleteItem(servicio.Id);
+                await Swal.FireAsync("Información","Servicio eliminado con éxito.", SweetAlertIcon.Info);
+                await CargarDatos();
+                StateHasChanged();
+            }
+            catch (Exception e){
+                await Swal.FireAsync("Error", e.Message, SweetAlertIcon.Error);
+            }
+        }
+    }
+}

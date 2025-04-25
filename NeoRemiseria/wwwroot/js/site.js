@@ -13,6 +13,21 @@ function closeBSModal(modalId){
     modal.hide();
 };
 
+//Función para poner el foco en un elemento y seleccionar su contenido
+function focusAndSelect (elementId){
+    var element = document.getElementById(elementId);
+    if(element){
+        element.focus();
+        element.select();
+    }
+}
+
+// Función para poner el foco en un elemento
+function focusOn (elementId){
+    var element = document.getElementById(elementId);
+    if (element) element.focus();
+}
+
 // Guardar el estado en el local storage
 window.subMenuState = {
     saveState: function(variableName, isExpanded){

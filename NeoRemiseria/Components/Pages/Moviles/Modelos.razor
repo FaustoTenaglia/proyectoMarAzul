@@ -29,7 +29,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach(var modelo in modelos){
+            @foreach(var modelo in modelos.OrderBy(m => m.Nombre)){
                 <tr>
                     <td>@modelo.Id</td>
                     <td>@modelo.Nombre</td>
@@ -53,55 +53,75 @@
         <div class="modal-content">
             <div class="modal-header alert-success">
                 <h1 class="modal-title fs-5">Agregar</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" @onclick="() => msjError = null"></button>
             </div>
             <div class="modal-body">
                 <div class="input-group p-2">
                     <span class="input-group-text">Nombre</span>
-                    <input type="text" class="form-control" @bind-value="@modeloActual.Nombre">
+                    <input type="text" id="inputNombre" class="form-control" @bind="@modeloActual.Nombre" @bind:after="() => ValidarNombre(false)" />
                 </div>
+
+                @if(msjError != null){
+                    <div class="my-2">
+                        <p class="text-bg-danger">
+                            <i class="bi bi-exclamation-circle-fill mx-2" style="margin-right: 0.3em;"/>@msjError
+                        </p>
+                    </div>
+                }
+
                 <div class="input-group p-2">
                     <span class="input-group-text">Marca</span>
                     <select class="form-select" @bind="@marcaSeleccionadaId">
                         <option value="0">Seleccione una marca de la lista</option>
-                        @foreach(var marca in marcas){
+                        @foreach(var marca in marcas.OrderBy(m => m.Nombre)){
                             <option value="@marca.Id">@marca.Nombre</option>
                         }
                     </select>
                 </div>
             </div>
+
             <div class="modal-footer">
-                <button type="button"class="btn btn-success" data-bs-dismiss="modal" @onclick="() => AgregarModeloNuevo(modeloActual)">Aceptar</button>
-                <button type="button"class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button"class="btn btn-success" data-bs-dismiss="modal" @onclick="() => AgregarModeloNuevo(modeloActual)">Guardar</button>
+                <button type="button"class="btn btn-secondary" data-bs-dismiss="modal" @onclick="() => msjError = null">Cancelar</button>
             </div>
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="EditForm" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header alert-primary">
                 <h1 class="modal-title fs-5">Editar</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" @onclick="() => msjError = null"></button>
             </div>
             <div class="modal-body">
                 <div class="input-group p-2">
                     <span class="input-group-text">Nombre</span>
-                    <input type="text" class="form-control" @bind-value="@modeloActual.Nombre">
+                    <input type="text" id="InputNombre" class="form-control" @bind="@modeloActual.Nombre" @bind:after="() => ValidarNombre(true)">
                 </div>
+
+                @if(msjError != null){
+                    <div class="my-2">
+                        <p class="text-bg-danger">
+                            <i class="bi bi-exclamation-circle-fill mx-2" style="margin-right: 0.3em;"/>@msjError
+                        </p>
+                    </div>
+                }
+
                 <div class="input-group p-2">
                     <span class="input-group-text">Marca</span>
                     <select class="form-select" @bind="@marcaSeleccionadaId">
                         <option value="0">Seleccione una marca de la lista</option>
-                        @foreach(var marca in marcas){
+                        @foreach(var marca in marcas.OrderBy(m => m.Nombre)){
                             <option value="@marca.Id">@marca.Nombre</option>
                         }
                     </select>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button"class="btn btn-primary" data-bs-dismiss="modal" @onclick="() => ActualizarModelo(modeloActual)">Aceptar</button>
-                <button type="button"class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button"class="btn btn-primary" data-bs-dismiss="modal" @onclick="() => ActualizarModelo(modeloActual)">Guardar</button>
+                <button type="button"class="btn btn-secondary" data-bs-dismiss="modal" @onclick="() => msjError = null">Cancelar</button>
             </div>
         </div>
     </div>
@@ -148,6 +168,7 @@
     private Modelo modeloActual = new Modelo();
     private uint marcaSeleccionadaId;
     private string errorMensaje = "";
+    private string? msjError;
     
     // Metodos
     protected override async Task OnInitializedAsync(){
@@ -238,5 +259,27 @@
         modeloActual.IdMarca = modelo.IdMarca;
 
         JSRuntime.InvokeVoidAsync("showBSModal","ConfirmDelForm");
+    }
+
+    private void ValidarNombre (bool edit){
+        string idElement = edit ? "InputNombre" : "inputNombre";
+        msjError = null;
+
+        if (string.IsNullOrEmpty(modeloActual.Nombre)){
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(modeloActual.Nombre)){
+            msjError = "Ingrese un nombre.";
+            JSRuntime.InvokeVoidAsync("focusAndSelect",idElement);
+            return;
+        }
+
+        if (modelos != null &&
+            modelos.Any(m => m.Nombre.Equals(modeloActual.Nombre, StringComparison.OrdinalIgnoreCase))){
+            msjError = $"El nombre {modeloActual.Nombre} ya existe.";
+            JSRuntime.InvokeVoidAsync("focusAndSelect",idElement);
+            return;
+        }
     }
 }

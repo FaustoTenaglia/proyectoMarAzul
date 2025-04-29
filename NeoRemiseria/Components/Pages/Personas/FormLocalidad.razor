@@ -1,15 +1,15 @@
 @page "/localidad-form/{Id:int?}"
 
-@using NeoRemiseria
+@using Microsoft.AspNetCore.Components.Forms
+
 @using Models
 @using Services
 
-@using Microsoft.AspNetCore.Components.Forms
 
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
 @inject ITable<Localidad> LocalidadService
 @inject ITable<Provincia> ProvinciaService
-@inject NavigationManager Navigation
-@inject IJSRuntime JSRuntime
 
 @rendermode InteractiveServer
 
@@ -61,7 +61,7 @@
 
     protected override async Task OnInitializedAsync(){
         provincias = await ProvinciaService.GetAll();
-        JSRuntime.InvokeVoidAsync("showBSModal","modalFormLocalidad");
+        await JSRuntime.InvokeVoidAsync("showBSModal","modalFormLocalidad");
 
         // Comprobar si se paso el id de una localidad
         if(Id.HasValue && Id.Value > 0){
@@ -81,7 +81,7 @@
         }
 
         // Cerrar modal
-        JSRuntime.InvokeVoidAsync("closeBSModal","modalFormLocalidad");
+        await JSRuntime.InvokeVoidAsync("closeBSModal","modalFormLocalidad");
         // Redirigir a la vista anterior
         Navigation.NavigateTo(urlRegreso, true);
     }

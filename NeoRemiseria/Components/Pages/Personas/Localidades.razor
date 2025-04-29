@@ -27,7 +27,6 @@
     <table class="table table-hover">
         <thead>
             <tr class="table-dark">
-                @* <th>#</th> *@
                 <th>Nombre</th>
                 <th colspan="2">Provincia</th>
             </tr>
@@ -35,7 +34,6 @@
         <tbody>
             @foreach(var localidad in localidades.OrderBy(l => l.Nombre)){
                 <tr>
-                    @* <td>@localidad.Id</td> *@
                     <td>@localidad.Nombre</td>
                     <td>@localidad.IdProvinciaNavigation?.Nombre</td>
                     <td class="btn-group-sm">
@@ -58,11 +56,23 @@ else{
 @code{
     private List<Localidad> localidades = new List<Localidad>();
     private List<Provincia> provincias = new List<Provincia>();
-    private Localidad? localidadSeleccionada; //= new Localidad();
+    private Localidad? localidadSeleccionada;
+    private SweetAlertMixin SwalBootstrap {get; set;} = null!;
 
     protected override async Task OnInitializedAsync(){
         localidades = await LocalidadService.GetAll();
         provincias = await ProvinciaService.GetAll();
+
+        // Inicializar el modal SweetAlert2 con estilo Bootstrap
+        SwalBootstrap = Swal.Mixin (new SweetAlertOptions {
+            CustomClass = new SweetAlertCustomClass{
+                ConfirmButton = "btn btn-primary",
+                DenyButton = "btn btn-danger",
+                CancelButton = "btn btn-secondary",
+            },
+            ButtonsStyling = false,
+            AllowOutsideClick = false
+        });
     }
 
     private async Task CargarDatos(){
@@ -73,21 +83,38 @@ else{
     private async Task ConfirmarEliminacion(uint id){
         localidadSeleccionada = await LocalidadService.GetById(id);
         if (localidadSeleccionada != null){
-            await JSRuntime.InvokeVoidAsync("showBSModal","modalEliminar");
+            // await JSRuntime.InvokeVoidAsync("showBSModal","modalEliminar");
+
+            // Mostrar modal de SweetAlert para confirmar la eliminación
+            SweetAlertResult res = await SwalBootstrap.FireAsync(new SweetAlertOptions {
+                Title = "Confirmación",
+                Html = $"¿Desea elminar la localidad <b>{localidadSeleccionada.Nombre}</b>?",
+                Icon = SweetAlertIcon.Question,
+                ConfirmButtonText = "Sí",
+                DenyButtonText = "No",
+                ShowDenyButton = true,
+                FocusDeny = true
+            });
+
+            // Eliminar el registro
+            if (res.IsConfirmed){
+                try{
+                    await LocalidadService.DeleteItem(localidadSeleccionada.Id);
+                    await SwalBootstrap.FireAsync("Información", $"Se eliminó con éxito la localidad {localidadSeleccionada.Nombre}.", SweetAlertIcon.Success);
+                    await CargarDatos();
+                    StateHasChanged();
+                }
+                catch (Exception e){
+                    await SwalBootstrap.FireAsync("Error", e.Message, SweetAlertIcon.Error);
+                }
+            }
         }else{
-            await Swal.FireAsync("Información","No se pudo eliminar la localidad seleccionada.", SweetAlertIcon.Info);
+            await SwalBootstrap.FireAsync("Información","No se pudo eliminar la localidad seleccionada.", SweetAlertIcon.Info);
         }
     }
 
     private void Handle(Localidad? localidad){
         var ruta =  localidad != null ? $"/localidad-form/{localidad.Id}" : $"/localidad-form";
         Navigation.NavigateTo(ruta, true);
-
-        @* if(localidad.Id > 0){
-            Navigation.NavigateTo($"/localidad-form/{localidad.Id}");
-        }
-        else{
-            Navigation.NavigateTo($"/localidad-form");
-        } *@
     }
 }

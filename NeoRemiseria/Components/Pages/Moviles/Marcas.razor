@@ -17,11 +17,18 @@
     <div class="container-fluid mx-auto my-3">
         <div class="input-group">
             <span class="input-group-text">Nombre</span>
-            <input type="text" class="form-control" placeholder="Ingrese una marca" @bind="marcaNueva.Nombre">
-            <button class="btn btn-outline-success" @onclick="() => {AgregarMarca();}">
+            <input type="text" id="inputNombre" class="form-control" placeholder="Ingrese una marca" @bind="marcaNueva.Nombre" @bind:after="ValidarNombre">
+            <button class="btn btn-outline-success" @onclick="AgregarMarca">
                 <i class="bi bi-plus-lg"></i>
             </button>
         </div>
+        @if(msjError != null){
+            <div class="my-2">
+                <p style="color: red; font-size: 0.75em;">
+                    <i class="bi bi-exclamation-circle-fill" style="margin-right: 0.3em;"/>@msjError
+                </p>
+            </div>
+        }    
     </div>
 
     @if(marcas != null){
@@ -113,6 +120,7 @@
     private ItemMarca marcaActual = new ItemMarca();
     public Marca marcaNueva = new Marca ();
     public List<ItemMarca> marcas = new List<ItemMarca>();
+    private string? msjError {get; set;}
     
     protected override async Task OnInitializedAsync(){
         // Cargar los datos desde la tabla de la base de datos
@@ -142,7 +150,7 @@
         return (idMax+1) ?? 0;
     }
 
-    public async void AgregarMarca(){
+    public async Task AgregarMarca(){
         if (!string.IsNullOrWhiteSpace(marcaNueva.Nombre)){
             await MarcaService.AddItem(marcaNueva);
 
@@ -197,5 +205,26 @@
 
         //Mostrar el modal
         JSRuntime.InvokeVoidAsync("showBSModal","ConfirmDelForm");
+    }
+
+    private async Task ValidarNombre (){
+        msjError = null;
+
+        if (string.IsNullOrEmpty(marcaNueva.Nombre)){
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(marcaNueva.Nombre)){
+            msjError = "Ingrese un nombre.";
+            await JSRuntime.InvokeVoidAsync("focusAndSelect","inputNombre");
+            return;
+        }
+
+        if (marcas != null &&
+            marcas.Any(m => m.Nombre.Equals(marcaNueva.Nombre, StringComparison.OrdinalIgnoreCase))){
+                msjError = $"El nombre {marcaNueva.Nombre} ya existe.";
+                await JSRuntime.InvokeVoidAsync("focusAndSelect","inputNombre");
+                return;
+            }
     }
 }

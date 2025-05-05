@@ -17,12 +17,11 @@
     <div class="top-row gap-2">
         <a href="#" data-bs-toggle="modal" data-bs-target="#modalAgregarServicio">Agregar</a>
         <a href="/">Inicio</a>
-        <div class="col-sm-6 col-md-3">
+        @* <div class="col-sm-6 col-md-3">
             <div class="input-group input-group-sm">
-                @* <label class="input-group-text">Buscar</label> *@
-                <input type="search" class="form-control form-control-sm mx-1" placeholder="filtrar..." />
+                <input type="text" class="form-control form-control-sm mx-1" placeholder="filtrar..." @bind="valorFiltro"  @oninput="OnInputChanged" />
             </div>
-        </div>
+        </div> *@
     </div>
 </SectionContent>
 
@@ -118,6 +117,8 @@
     private uint idservicio {get; set;}
     private SweetAlertMixin EditarMixin {get; set;} = null!;
     private const int inputMaxLength = 15;
+    private const int minLength = 3;
+    private string valorFiltro {get; set;} = string.Empty;
 
     protected override async Task OnInitializedAsync(){
         // Cargar los datos
@@ -127,12 +128,17 @@
 
         // Inicializar el modal para las modificaciones
         EditarMixin = Swal.Mixin(new SweetAlertOptions {
+                        // Poner estilo Bootstrap a los botones
+                        CustomClass = new SweetAlertCustomClass{
+                            ConfirmButton = "btn btn-primary",
+                            DenyButton = "btn btn-danger",
+                            CancelButton = "btn btn-secondary"
+                        },
+                        ButtonsStyling = false, // Importante para que tome el estilo Bootstrap
                         Title = "Modificar",
                         ConfirmButtonText = "Guardar",
-                        ConfirmButtonColor = "green",
-                        ShowCancelButton = true,
                         CancelButtonText = "Cancelar",
-                        CancelButtonColor = "grey",
+                        ShowCancelButton = true,
                         AllowOutsideClick = false
         });
     }
@@ -312,6 +318,24 @@
             catch (Exception e){
                 await Swal.FireAsync("Error", e.Message, SweetAlertIcon.Error);
             }
+        }
+    }
+
+    private void OnInputChanged(ChangeEventArgs e){
+        if(e.Value != null){
+            valorFiltro = e.Value.ToString() ?? string.Empty;
+            if (valorFiltro.Length > minLength) FiltrarPor();
+        }
+    }
+    private void FiltrarPor(){
+        if (!string.IsNullOrEmpty(valorFiltro) && servicios != null){
+            if (valorFiltro.Length > minLength){
+                servicios = servicios.Where(s => s.Nombre.Contains(valorFiltro, StringComparison.OrdinalIgnoreCase)).ToList();
+                StateHasChanged();
+            }
+            @* else{
+                await CargarDatos();
+            } *@
         }
     }
 }
